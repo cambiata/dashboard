@@ -1,6 +1,7 @@
 package app;
 import haxe.ds.StringMap;
 import haxe.Serializer;
+import Main;
 import nx3.NScore;
 import nx3.test.TestItemsBach;
 import ufront.web.Controller;
@@ -31,9 +32,7 @@ import nx3.render.TargetSvgXml;
 	 PermYes;
 	 PermNo;
  }
- 
-
- 
+  
 class MainController extends  ufront.web.Controller {	
 	
 	public function new() {
@@ -50,6 +49,22 @@ class MainController extends  ufront.web.Controller {
 	}
 	@:route( '/info' ) public function info() return  loadContent(this.context.request.uri);
 	
+	@:route( '/slask' ) public function slask() {				
+		//var userID = this.context.auth.currentUser.userID;
+		
+		//this.context.ufTrace(this.context.session);
+		//this.context.ufTrace(this.context.auth);
+		//this.context.ufTrace(this.context.auth.currentUser);
+		var auth = this.context.auth;
+		this.ufTrace(auth);
+		var user = auth.currentUser;
+		this.ufTrace(user);
+		
+		var content = 'slask';		
+		return new IsoResult(content);
+	}
+	
+	
 	@:route( '/contact/', GET ) public function contact() return new IsoResult("<div class='page-header'><h1>Contact</h1></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method='POST' action='/contact/'><div class='col-xs-3'><p>Name:<br/><input name='name' class='form-control'/></p><p>Age:<br/><input name='age' class='form-control' /></p><input type='submit'/></div></form>");
 	@:route( '/contact/', POST ) public function contactPost( args: { ?name:String, ?age:Int}) return new IsoResult("<div class='page-header'><h1>Contact Post</h1></div>" + Std.string(args)); 
 	
@@ -62,7 +77,7 @@ class MainController extends  ufront.web.Controller {
 	
 	@:route( '/login/', POST ) public function loginPost( args: { ?username:String, ?password:String } ) {
 		this.context.session.init();		
-		var user = (args.username != '' && args.password != '') ?  { username:args.username, password:args.password } : null;
+		var user = (args.username != '' && args.password != '') ? new Main.TestUser(args.username, args.password, 'Test', 'Deltagare') : null;
 		this.context.session.set('user', user);
 		return new IsoResult('<div class="page-header"><h1>Login</h1><p>Current user: <b>${Std.string(user)}</b></p></div>' + Std.string(args)); 		
 	}

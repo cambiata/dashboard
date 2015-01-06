@@ -2,6 +2,13 @@ package;
 
 import app.Iso;
 import app.MainController;
+import ufront.auth.NobodyAuthHandler;
+import ufront.auth.UFAuthHandler;
+import ufront.auth.UFAuthUser;
+import ufront.web.context.HttpContext;
+import ufront.web.session.UFHttpSession;
+
+
 /**
  * Main
  * @author Jonas Nyström
@@ -24,7 +31,8 @@ class Main
 					
 					// Timer can be used to dely the client side execution - useful when finding out what's going on...
 					//haxe.Timer.delay(function() {					
-						app.execute(new  ufront.web.context.HttpContext( new ClientRequest(), new ClientResponse() , new app.ClientSession('session')));
+					
+						app.execute(new  ufront.web.context.HttpContext( new ClientRequest(), new ClientResponse() , null,  new app.ClientSession(), new TestAuth()));
 					//}, 1000);
 				}
 				Iso.setUI(js.Browser.window.location.pathname);
@@ -45,7 +53,8 @@ class Main
 		if ( app==null ) {
 			var config:ufront.web.UfrontConfiguration = {
 				indexController: MainController,
-				basePath: '/',				
+				basePath: '/',	
+				authImplementation: TestAuth,
 			}						
 			app = new ufront.app.UfrontApplication(config);
 		}
@@ -73,17 +82,69 @@ class ClientRequest extends  ufront.web.context.HttpRequest {
 class ClientResponse extends  ufront.web.context.HttpResponse {
 	public function new() { 
 		super(); 
-		Iso.setLoadinfoLabel('PushState', 'label label-success');
-		
+		Iso.setLoadinfoLabel('PushState', 'label label-success');		
 	}
 	
-	override function flush() {		
-		
+	override function flush() {				
 		// Note! Only the content part of the page is served here...
 		var contentHtml = _buff.toString();
 		// and injected into the content div
-		js.Browser.document.getElementById('content').innerHTML = contentHtml;
-		
+		js.Browser.document.getElementById('content').innerHTML = contentHtml;		
 	}
 }
+
+
 #end
+
+
+class TestUser implements UFAuthUser {	
+	public function new(userID:String, password:String, firstname:String, lastname:String) {
+		this.userID = userID;
+		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
+	}
+		
+	public var password:String;
+	public var firstname:String;
+	public var lastname:String;
+	
+	public function can( ?permission:EnumValue, ?permissions:Iterable<EnumValue> ) return true;
+	public var userID(get, null):String;
+	function get_userID() return 'TEST_USER';	
+}
+
+class TestAuth implements UFAuthHandler<UFAuthUser> {
+	public function new() { this._currentUser = new TestUser('123', 'pass', 'John', 'Doe'); }
+	@inject public var context(default,null):HttpContext;
+	public var currentUser(get,null):UFAuthUser;
+	public function isLoggedIn() { return true;}
+	public function requireLogin() {	}
+	public function isLoggedInAs( user:UFAuthUser ) { return true; }
+	public function requireLoginAs( user:UFAuthUser ) { 	}
+	public function hasPermission( permission:EnumValue ) { return true; }
+	public function hasPermissions( permissions:Iterable<EnumValue> ) { return true; }
+	public function requirePermission( permission:EnumValue ) {  }
+	public function requirePermissions( permissions:Iterable<EnumValue> ) { }
+	public function setCurrentUser( user:UFAuthUser ) { 	}
+	var _currentUser:TestUser;
+	var _hackSession:UFHttpSession;
+	function get_currentUser() { 
+		#if Client
+		var session = (this.context  != null)  ? context.session : {
+			if (_hackSession == null) _hackSession = new app.ClientSession();
+			_hackSession;
+		}
+		#end		
+		#if Server
+		var session = this.context.session;
+		#end
+		var sessionUser = session.get('user');
+		if (sessionUser != null) _currentUser = sessionUser;
+		return _currentUser; 		
+	}
+	public function getUserByID( id:String ) { return null; 	}
+	public function toString() { return 'TestAuth';}
+
+}		
+

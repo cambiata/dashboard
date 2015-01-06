@@ -19,10 +19,12 @@ class ClientSession  implements UFHttpSession
 	var sessionData = new StringMap<Dynamic>();
 	public var id(get,null):String;
 	
-	public function new(sessionElementID:String) {
+	public function new(sessionElementID:String = 'session') {
+		//Lib.alert('client session');
 		var sessionElement = js.Browser.document.getElementById(sessionElementID);		
 		var dataStr = sessionElement.innerHTML;
-		if (dataStr != null) sessionData = Unserializer.run(cx.CryptTools.decrypt(dataStr));
+		if (dataStr != null) this.sessionData = Unserializer.run(cx.CryptTools.decrypt(dataStr));
+		//Lib.alert(this.sessionData);
 	}
 
 	public function setExpiry( e:Int ) {}

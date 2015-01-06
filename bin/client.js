@@ -332,7 +332,7 @@ Main.main = function() {
 	Main.initApplication();
 	pushstate.PushState.init();
 	pushstate.PushState.addEventListener(null,function(url) {
-		if(!app.Iso.isFirstRequest()) Main.app.execute(new ufront.web.context.HttpContext(new ClientRequest(),new ClientResponse(),null,new app.ClientSession("session")));
+		if(!app.Iso.isFirstRequest()) Main.app.execute(new ufront.web.context.HttpContext(new ClientRequest(),new ClientResponse(),null,new app.ClientSession(),new TestAuth()));
 		app.Iso.setUI(window.location.pathname);
 	});
 	app.Iso.addFirstRequestToCache();
@@ -340,7 +340,7 @@ Main.main = function() {
 };
 Main.initApplication = function() {
 	if(Main.app == null) {
-		var config = { indexController : app.MainController, basePath : "/"};
+		var config = { indexController : app.MainController, basePath : "/", authImplementation : TestAuth};
 		Main.app = new ufront.app.UfrontApplication(config);
 	}
 };
@@ -586,6 +586,107 @@ ClientResponse.prototype = $extend(ufront.web.context.HttpResponse.prototype,{
 	}
 	,__class__: ClientResponse
 });
+ufront.auth = {};
+ufront.auth.UFAuthUser = function() { };
+$hxClasses["ufront.auth.UFAuthUser"] = ufront.auth.UFAuthUser;
+ufront.auth.UFAuthUser.__name__ = ["ufront","auth","UFAuthUser"];
+ufront.auth.UFAuthUser.prototype = {
+	can: null
+	,userID: null
+	,__class__: ufront.auth.UFAuthUser
+};
+var TestUser = function(userID,password,firstname,lastname) {
+	this.userID = userID;
+	this.password = password;
+	this.firstname = firstname;
+	this.lastname = lastname;
+};
+$hxClasses["TestUser"] = TestUser;
+TestUser.__name__ = ["TestUser"];
+TestUser.__interfaces__ = [ufront.auth.UFAuthUser];
+TestUser.prototype = {
+	password: null
+	,firstname: null
+	,lastname: null
+	,can: function(permission,permissions) {
+		return true;
+	}
+	,userID: null
+	,get_userID: function() {
+		return "TEST_USER";
+	}
+	,__class__: TestUser
+	,__properties__: {get_userID:"get_userID"}
+};
+ufront.auth.UFAuthHandler = function() { };
+$hxClasses["ufront.auth.UFAuthHandler"] = ufront.auth.UFAuthHandler;
+ufront.auth.UFAuthHandler.__name__ = ["ufront","auth","UFAuthHandler"];
+ufront.auth.UFAuthHandler.prototype = {
+	isLoggedIn: null
+	,requireLogin: null
+	,isLoggedInAs: null
+	,requireLoginAs: null
+	,hasPermission: null
+	,hasPermissions: null
+	,requirePermission: null
+	,requirePermissions: null
+	,getUserByID: null
+	,setCurrentUser: null
+	,toString: null
+	,__class__: ufront.auth.UFAuthHandler
+};
+var TestAuth = function() {
+	this._currentUser = new TestUser("123","pass","John","Doe");
+};
+$hxClasses["TestAuth"] = TestAuth;
+TestAuth.__name__ = ["TestAuth"];
+TestAuth.__interfaces__ = [ufront.auth.UFAuthHandler];
+TestAuth.prototype = {
+	context: null
+	,currentUser: null
+	,isLoggedIn: function() {
+		return true;
+	}
+	,requireLogin: function() {
+	}
+	,isLoggedInAs: function(user) {
+		return true;
+	}
+	,requireLoginAs: function(user) {
+	}
+	,hasPermission: function(permission) {
+		return true;
+	}
+	,hasPermissions: function(permissions) {
+		return true;
+	}
+	,requirePermission: function(permission) {
+	}
+	,requirePermissions: function(permissions) {
+	}
+	,setCurrentUser: function(user) {
+	}
+	,_currentUser: null
+	,_hackSession: null
+	,get_currentUser: function() {
+		var session;
+		if(this.context != null) session = this.context.session; else {
+			if(this._hackSession == null) this._hackSession = new app.ClientSession();
+			session = this._hackSession;
+		}
+		var sessionUser = session.get("user");
+		if(sessionUser != null) this._currentUser = sessionUser;
+		return this._currentUser;
+	}
+	,getUserByID: function(id) {
+		return null;
+	}
+	,toString: function() {
+		return "TestAuth";
+	}
+	,__class__: TestAuth
+	,__properties__: {get_currentUser:"get_currentUser"}
+};
 var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
@@ -1165,6 +1266,7 @@ ufront.web.session.UFHttpSession.prototype = {
 };
 var app = {};
 app.ClientSession = function(sessionElementID) {
+	if(sessionElementID == null) sessionElementID = "session";
 	this.sessionData = new haxe.ds.StringMap();
 	var sessionElement = window.document.getElementById(sessionElementID);
 	var dataStr = sessionElement.innerHTML;
@@ -1462,6 +1564,14 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 	,info: function() {
 		return this.loadContent(this.context.request.get_uri());
 	}
+	,slask: function() {
+		var auth = this.context.auth;
+		this.ufTrace(auth,{ fileName : "MainController.hx", lineNumber : 59, className : "app.MainController", methodName : "slask"});
+		var user = auth.get_currentUser();
+		this.ufTrace(user,{ fileName : "MainController.hx", lineNumber : 61, className : "app.MainController", methodName : "slask"});
+		var content = "slask";
+		return new app.IsoResult(content);
+	}
 	,contact: function() {
 		return new app.IsoResult("<div class='page-header'><h1>Contact</h1></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method='POST' action='/contact/'><div class='col-xs-3'><p>Name:<br/><input name='name' class='form-control'/></p><p>Age:<br/><input name='age' class='form-control' /></p><input type='submit'/></div></form>");
 	}
@@ -1471,13 +1581,13 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 	,login: function() {
 		this.context.session.init();
 		var user = this.context.session.get("user");
-		this.ufTrace(this.context.session,{ fileName : "MainController.hx", lineNumber : 59, className : "app.MainController", methodName : "login"});
+		this.ufTrace(this.context.session,{ fileName : "MainController.hx", lineNumber : 74, className : "app.MainController", methodName : "login"});
 		return new app.IsoResult("<div class=\"page-header\"><h1>Login</h1><p>Current user: <b>" + Std.string(user) + "</b></p></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method=\"POST\" action=\"/login/\"><div class=\"col-xs-3\"><p>Username:<br/><input name=\"username\" class=\"form-control\"/></p><p>Password:<br/><input name=\"password\" class=\"form-control\" /></p><input type=\"submit\"/></div></form>");
 	}
 	,loginPost: function(args) {
 		this.context.session.init();
 		var user;
-		if(args.username != "" && args.password != "") user = { username : args.username, password : args.password}; else user = null;
+		if(args.username != "" && args.password != "") user = new TestUser(args.username,args.password,"Test","Deltagare"); else user = null;
 		this.context.session.set("user",user);
 		return new app.IsoResult("<div class=\"page-header\"><h1>Login</h1><p>Current user: <b>" + Std.string(user) + "</b></p></div>" + Std.string(args));
 	}
@@ -1489,7 +1599,7 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 	,seqController: null
 	,scoreController: null
 	,loadContent: function(uri) {
-		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 92, className : "app.MainController", methodName : "loadContent"});
+		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 107, className : "app.MainController", methodName : "loadContent"});
 		var f = new tink.core.FutureTrigger();
 		if(app.Iso.contentCache.exists(uri)) {
 			var cachedContent = app.Iso.contentCache.get(uri);
@@ -1497,7 +1607,7 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 			f.trigger(tink.core.Outcome.Success(new app.IsoResult(content)));
 			app.Iso.setLoadinfoLabel("PushState - Loaded from cache","label label-warning");
 		} else {
-			this.ufTrace("Load from " + uri,{ fileName : "MainController.hx", lineNumber : 108, className : "app.MainController", methodName : "loadContent"});
+			this.ufTrace("Load from " + uri,{ fileName : "MainController.hx", lineNumber : 123, className : "app.MainController", methodName : "loadContent"});
 			var request = new XMLHttpRequest();
 			request.open("GET",uri);
 			request.setRequestHeader(app.Iso.REQUEST_TYPE,app.Iso.AJAX);
@@ -1509,7 +1619,7 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 				app.Iso.setLoadinfoLabel("PushState - Loaded using ajax","label label-success");
 			};
 			request.onerror = function(e1) {
-				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 122, className : "app.MainController", methodName : "loadContent"})));
+				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 137, className : "app.MainController", methodName : "loadContent"})));
 			};
 			request.send(null);
 		}
@@ -1564,14 +1674,22 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 				var result3 = this.wrapResult(this.info(),wrappingRequired3);
 				this.setContextActionResultWhenFinished(result3);
 				return result3;
+			} else if(1 == uriParts.length && uriParts[0] == "slask") {
+				this.context.actionContext.action = "slask";
+				this.context.actionContext.args = [];
+				this.context.actionContext.get_uriParts().splice(0,1);
+				var wrappingRequired4 = haxe.rtti.Meta.getFields(app.MainController).slask.wrapResult[0];
+				var result4 = this.wrapResult(this.slask(),wrappingRequired4);
+				this.setContextActionResultWhenFinished(result4);
+				return result4;
 			} else if(method.toLowerCase() == "get" && 1 == uriParts.length && uriParts[0] == "contact") {
 				this.context.actionContext.action = "contact";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired4 = haxe.rtti.Meta.getFields(app.MainController).contact.wrapResult[0];
-				var result4 = this.wrapResult(this.contact(),wrappingRequired4);
-				this.setContextActionResultWhenFinished(result4);
-				return result4;
+				var wrappingRequired5 = haxe.rtti.Meta.getFields(app.MainController).contact.wrapResult[0];
+				var result5 = this.wrapResult(this.contact(),wrappingRequired5);
+				this.setContextActionResultWhenFinished(result5);
+				return result5;
 			} else if(method.toLowerCase() == "post" && 1 == uriParts.length && uriParts[0] == "contact") {
 				var _param_tmp_name = ufront.core._MultiValueMap.MultiValueMap_Impl_.get(params,"name");
 				var _param_tmp_age = Std.parseInt(ufront.core._MultiValueMap.MultiValueMap_Impl_.get(params,"age"));
@@ -1579,18 +1697,18 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 				this.context.actionContext.action = "contactPost";
 				this.context.actionContext.args = [args];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired5 = haxe.rtti.Meta.getFields(app.MainController).contactPost.wrapResult[0];
-				var result5 = this.wrapResult(this.contactPost(args),wrappingRequired5);
-				this.setContextActionResultWhenFinished(result5);
-				return result5;
+				var wrappingRequired6 = haxe.rtti.Meta.getFields(app.MainController).contactPost.wrapResult[0];
+				var result6 = this.wrapResult(this.contactPost(args),wrappingRequired6);
+				this.setContextActionResultWhenFinished(result6);
+				return result6;
 			} else if(method.toLowerCase() == "get" && 1 == uriParts.length && uriParts[0] == "login") {
 				this.context.actionContext.action = "login";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired6 = haxe.rtti.Meta.getFields(app.MainController).login.wrapResult[0];
-				var result6 = this.wrapResult(this.login(),wrappingRequired6);
-				this.setContextActionResultWhenFinished(result6);
-				return result6;
+				var wrappingRequired7 = haxe.rtti.Meta.getFields(app.MainController).login.wrapResult[0];
+				var result7 = this.wrapResult(this.login(),wrappingRequired7);
+				this.setContextActionResultWhenFinished(result7);
+				return result7;
 			} else if(method.toLowerCase() == "post" && 1 == uriParts.length && uriParts[0] == "login") {
 				var _param_tmp_username = ufront.core._MultiValueMap.MultiValueMap_Impl_.get(params,"username");
 				var _param_tmp_password = ufront.core._MultiValueMap.MultiValueMap_Impl_.get(params,"password");
@@ -1598,42 +1716,42 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 				this.context.actionContext.action = "loginPost";
 				this.context.actionContext.args = [args1];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired7 = haxe.rtti.Meta.getFields(app.MainController).loginPost.wrapResult[0];
-				var result7 = this.wrapResult(this.loginPost(args1),wrappingRequired7);
-				this.setContextActionResultWhenFinished(result7);
-				return result7;
+				var wrappingRequired8 = haxe.rtti.Meta.getFields(app.MainController).loginPost.wrapResult[0];
+				var result8 = this.wrapResult(this.loginPost(args1),wrappingRequired8);
+				this.setContextActionResultWhenFinished(result8);
+				return result8;
 			} else if(1 == uriParts.length && uriParts[0] == "logout") {
 				this.context.actionContext.action = "logout";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired8 = haxe.rtti.Meta.getFields(app.MainController).logout.wrapResult[0];
-				var result8 = this.wrapResult(this.logout(),wrappingRequired8);
-				this.setContextActionResultWhenFinished(result8);
-				return result8;
+				var wrappingRequired9 = haxe.rtti.Meta.getFields(app.MainController).logout.wrapResult[0];
+				var result9 = this.wrapResult(this.logout(),wrappingRequired9);
+				this.setContextActionResultWhenFinished(result9);
+				return result9;
 			} else if(1 <= uriParts.length && uriParts[0] == "sub") {
 				this.context.actionContext.action = "execute_subController";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired9 = haxe.rtti.Meta.getFields(app.MainController).execute_subController.wrapResult[0];
-				var result9 = this.wrapResult(this.execute_subController(),wrappingRequired9);
-				this.setContextActionResultWhenFinished(result9);
-				return result9;
+				var wrappingRequired10 = haxe.rtti.Meta.getFields(app.MainController).execute_subController.wrapResult[0];
+				var result10 = this.wrapResult(this.execute_subController(),wrappingRequired10);
+				this.setContextActionResultWhenFinished(result10);
+				return result10;
 			} else if(1 <= uriParts.length && uriParts[0] == "seq") {
 				this.context.actionContext.action = "execute_seqController";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired10 = haxe.rtti.Meta.getFields(app.MainController).execute_seqController.wrapResult[0];
-				var result10 = this.wrapResult(this.execute_seqController(),wrappingRequired10);
-				this.setContextActionResultWhenFinished(result10);
-				return result10;
+				var wrappingRequired11 = haxe.rtti.Meta.getFields(app.MainController).execute_seqController.wrapResult[0];
+				var result11 = this.wrapResult(this.execute_seqController(),wrappingRequired11);
+				this.setContextActionResultWhenFinished(result11);
+				return result11;
 			} else if(1 <= uriParts.length && uriParts[0] == "score") {
 				this.context.actionContext.action = "execute_scoreController";
 				this.context.actionContext.args = [];
 				this.context.actionContext.get_uriParts().splice(0,1);
-				var wrappingRequired11 = haxe.rtti.Meta.getFields(app.MainController).execute_scoreController.wrapResult[0];
-				var result11 = this.wrapResult(this.execute_scoreController(),wrappingRequired11);
-				this.setContextActionResultWhenFinished(result11);
-				return result11;
+				var wrappingRequired12 = haxe.rtti.Meta.getFields(app.MainController).execute_scoreController.wrapResult[0];
+				var result12 = this.wrapResult(this.execute_scoreController(),wrappingRequired12);
+				this.setContextActionResultWhenFinished(result12);
+				return result12;
 			}
 			throw ufront.web.HttpError.pageNotFound({ fileName : "ControllerMacros.hx", lineNumber : 433, className : "app.MainController", methodName : "execute"});
 		} catch( e ) {
@@ -17220,7 +17338,6 @@ ufront.app.UfrontApplication.prototype = $extend(ufront.app.HttpApplication.prot
 	}
 	,__class__: ufront.app.UfrontApplication
 });
-ufront.auth = {};
 ufront.auth.AuthError = $hxClasses["ufront.auth.AuthError"] = { __ename__ : ["ufront","auth","AuthError"], __constructs__ : ["NotLoggedIn","LoginFailed","NotLoggedInAs","NoPermission"] };
 ufront.auth.AuthError.NotLoggedIn = ["NotLoggedIn",0];
 ufront.auth.AuthError.NotLoggedIn.toString = $estr;
@@ -17229,23 +17346,6 @@ ufront.auth.AuthError.LoginFailed = function(msg) { var $x = ["LoginFailed",1,ms
 ufront.auth.AuthError.NotLoggedInAs = function(u) { var $x = ["NotLoggedInAs",2,u]; $x.__enum__ = ufront.auth.AuthError; $x.toString = $estr; return $x; };
 ufront.auth.AuthError.NoPermission = function(p) { var $x = ["NoPermission",3,p]; $x.__enum__ = ufront.auth.AuthError; $x.toString = $estr; return $x; };
 ufront.auth.AuthError.__empty_constructs__ = [ufront.auth.AuthError.NotLoggedIn];
-ufront.auth.UFAuthHandler = function() { };
-$hxClasses["ufront.auth.UFAuthHandler"] = ufront.auth.UFAuthHandler;
-ufront.auth.UFAuthHandler.__name__ = ["ufront","auth","UFAuthHandler"];
-ufront.auth.UFAuthHandler.prototype = {
-	isLoggedIn: null
-	,requireLogin: null
-	,isLoggedInAs: null
-	,requireLoginAs: null
-	,hasPermission: null
-	,hasPermissions: null
-	,requirePermission: null
-	,requirePermissions: null
-	,getUserByID: null
-	,setCurrentUser: null
-	,toString: null
-	,__class__: ufront.auth.UFAuthHandler
-};
 ufront.auth.NobodyAuthHandler = function() {
 };
 $hxClasses["ufront.auth.NobodyAuthHandler"] = ufront.auth.NobodyAuthHandler;
@@ -17294,14 +17394,6 @@ ufront.auth.NobodyAuthHandler.prototype = {
 	}
 	,__class__: ufront.auth.NobodyAuthHandler
 	,__properties__: {get_currentUser:"get_currentUser"}
-};
-ufront.auth.UFAuthUser = function() { };
-$hxClasses["ufront.auth.UFAuthUser"] = ufront.auth.UFAuthUser;
-ufront.auth.UFAuthUser.__name__ = ["ufront","auth","UFAuthUser"];
-ufront.auth.UFAuthUser.prototype = {
-	can: null
-	,userID: null
-	,__class__: ufront.auth.UFAuthUser
 };
 ufront.auth.YesBossAuthHandler = function() {
 };
@@ -19461,6 +19553,9 @@ ufront.web.context.HttpResponse.FOUND = 302;
 ufront.web.context.HttpResponse.UNAUTHORIZED = 401;
 ufront.web.context.HttpResponse.NOT_FOUND = 404;
 ufront.web.context.HttpResponse.INTERNAL_SERVER_ERROR = 500;
+ufront.auth.UFAuthUser.__meta__ = { obj : { 'interface' : null}};
+ufront.auth.UFAuthHandler.__meta__ = { obj : { 'interface' : null}};
+TestAuth.__meta__ = { fields : { context : { type : ["ufront.web.context.HttpContext"], inject : null}}};
 IMap.__meta__ = { obj : { 'interface' : null}};
 ufront.web.session.UFHttpSession.__meta__ = { obj : { 'interface' : null}};
 app.Iso.REQUEST_TYPE = "UF_ISO_TYPE";
@@ -19469,7 +19564,7 @@ app.Iso.REQ_TYPE_SERVER = "SERVER";
 app.Iso.stateChangeCount = 0;
 app.Iso.contentCache = new haxe.ds.StringMap();
 ufront.web.Controller.__meta__ = { fields : { context : { type : ["ufront.web.context.HttpContext"], inject : null}}};
-app.MainController.__meta__ = { fields : { index : { wrapResult : [4]}, home : { wrapResult : [4]}, noPS : { wrapResult : [3]}, info : { wrapResult : [4]}, contact : { wrapResult : [3]}, contactPost : { wrapResult : [3]}, login : { wrapResult : [3]}, loginPost : { wrapResult : [3]}, logout : { wrapResult : [3]}, execute_subController : { wrapResult : [0]}, execute_seqController : { wrapResult : [0]}, execute_scoreController : { wrapResult : [0]}}};
+app.MainController.__meta__ = { fields : { index : { wrapResult : [4]}, home : { wrapResult : [4]}, noPS : { wrapResult : [3]}, info : { wrapResult : [4]}, slask : { wrapResult : [3]}, contact : { wrapResult : [3]}, contactPost : { wrapResult : [3]}, login : { wrapResult : [3]}, loginPost : { wrapResult : [3]}, logout : { wrapResult : [3]}, execute_subController : { wrapResult : [0]}, execute_seqController : { wrapResult : [0]}, execute_scoreController : { wrapResult : [0]}}};
 app.SubController.__meta__ = { fields : { subA : { wrapResult : [3]}, subB : { wrapResult : [3]}, subElse : { wrapResult : [3]}}};
 app.SeqController.__meta__ = { fields : { seqA : { wrapResult : [3]}, seqB : { wrapResult : [3]}, seqTest : { wrapResult : [3]}}};
 app.ScoreController.__meta__ = { fields : { seqA : { wrapResult : [3]}, seqB : { wrapResult : [3]}, scoreFile : { wrapResult : [3]}}};
@@ -19733,8 +19828,6 @@ ufront.app.UFResponseMiddleware.__meta__ = { obj : { 'interface' : null}};
 ufront.app.UFRequestMiddleware.__meta__ = { obj : { 'interface' : null}};
 ufront.app.UFMiddleware.__meta__ = { obj : { 'interface' : null}};
 ufront.app.UFRequestHandler.__meta__ = { obj : { 'interface' : null}};
-ufront.auth.UFAuthHandler.__meta__ = { obj : { 'interface' : null}};
-ufront.auth.UFAuthUser.__meta__ = { obj : { 'interface' : null}};
 ufront.core.InjectionRef.pool = [];
 ufront.log.FileLogger.REMOVENL = new EReg("[\n\r]","g");
 ufront.middleware.InlineSessionMiddleware.alwaysStart = false;
