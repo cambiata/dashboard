@@ -6,6 +6,7 @@ import haxe.Template;
 import ufront.web.context.ActionContext;
 import ufront.web.context.HttpContext;
 import ufront.web.HttpError;
+import Main;
 
 /**
  * IsoResult
@@ -44,8 +45,8 @@ class IsoResult extends ufront.web.result.ActionResult
 			#if Server
 				// Check if it is a standard request or an ajax request
 				var requestType = actionContext.httpContext.request.clientHeaders.get(Iso.REQUEST_TYPE);				
-				// If it isn't an ajax request...
-				if  (requestType != Iso.AJAX) return  new AppLayout('app/template.html', actionContext.httpContext).templateContent(content);
+				// If it isn't an ajax request...				
+				if  (requestType != Iso.AJAX) return  new AppLayout(actionContext.httpContext.contentDirectory + '/templates/index.html', actionContext.httpContext).templateContent(content);
 			#end
 			
 			// The following will happen...
@@ -81,10 +82,24 @@ class AppLayout {
 	
 	public function templateContent(content:Dynamic) {
 		//var data = {user: user)
+		
+		/*
 		this.context.session.init();
 		var session = this.context.session;				
 		var sessionData = session.getSessionData();
 		var user = sessionData.get('user');
+		*/
+		
+		//
+		//var user = this.context.auth.currentUser;
+		
+		var testApi = new TestApi();
+		
+		var user = testApi.getUserFromSession(this.context.session);
+		this.context.ufTrace(user);
+		
+		var sessionData = testApi.getSessiondata(this.context.session);
+		
 		return  template.execute( { content: content, session: CryptTools.crypt(Serializer.run(sessionData)), user:user } );					
 	}
 }

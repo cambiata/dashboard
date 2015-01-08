@@ -7,7 +7,7 @@
 <!-- Mirrored from seantheme.com/color-admin-v1.4/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Dec 2014 10:13:13 GMT -->
 <head>
 	<meta charset="utf-8" />
-	<title>Dashboard</title>
+	<title>Körakademin</title>
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -131,7 +131,7 @@
 					<li class="dropdown navbar-user">
 						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 							<img src="/assets/img/user-13.jpg" alt="" /> 
-							<span class="hidden-xs">::user.userID::</span> <b class="caret"></b>
+							<span class="hidden-xs">::user.firstname:: ::user.lastname::</span> <b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu animated fadeInLeft">
 							<!--
@@ -210,7 +210,7 @@
 					<li><a rel="pushstate" href="/slask"><i class="fa"></i> <span>Slask</span></a></li>					
 					
 					
-					<li class="has-sub active">
+					<li class="has-sub">
 						<a href="javascript:;">
 						    <b class="caret pull-right"></b>
 						    <i class="fa fa-laptop"></i>
@@ -368,9 +368,7 @@
 						<div class="panel-heading">
 							<div class="panel-heading-btn">
 								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
 								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 							</div>
 							<h4 class="panel-title">Content</h4>
 						</div>
@@ -383,7 +381,21 @@
 						</div>
 					</div>
 					
-				</div>
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Search results</h4>
+						</div>
+						<div id="search-result" class="panel-body" style="display:none;">
+							Search results
+						</div>
+					</div>
+					
+				</div>				
+				
 				<!-- end col-8 -->
 				<!-- begin col-4 -->
 				<div class="col-md-4">
@@ -392,10 +404,7 @@
 					<div class="panel panel-inverse">
 						<div class="panel-heading">
 							<div class="panel-heading-btn">
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
 								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 							</div>
 							<h4 class="panel-title">Sök</h4>
 						</div>
@@ -434,56 +443,72 @@
 					<div class="panel panel-inverse">
 						<div class="panel-heading">
 							<div class="panel-heading-btn">
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
 								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 							</div>
-							<h4 class="panel-title">Analytics Details</h4>
+							<h4 class="panel-title">Information</h4>
 						</div>
 						<div class="panel-body p-t-0">
-							<table class="table table-valign-middle m-b-0">
-								<thead>
-									<tr>	
-										<th>Source</th>
-										<th>Total</th>
-										<th>Trend</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><label class="label label-danger">Unique Visitor</label></td>
-										<td>13,203 <span class="text-success"><i class="fa fa-arrow-up"></i></span></td>
-										<td><div id="sparkline-unique-visitor"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-warning">Bounce Rate</label></td>
-										<td>28.2%</td>
-										<td><div id="sparkline-bounce-rate"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-success">Total Page Views</label></td>
-										<td>1,230,030</td>
-										<td><div id="sparkline-total-page-views"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-primary">Avg Time On Site</label></td>
-										<td>00:03:45</td>
-										<td><div id="sparkline-avg-time-on-site"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-default">% New Visits</label></td>
-										<td>40.5%</td>
-										<td><div id="sparkline-new-visits"></div></td>
-									</tr>
-									<tr>
-										<td><label class="label label-inverse">Return Visitors</label></td>
-										<td>73.4%</td>
-										<td><div id="sparkline-return-visitors"></div></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+							
+
+							
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" href="#default-tab-1">Körakademin</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-2">Ansökan</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-3">Kontakt</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-user">User</a></li>
+							</ul>
+							
+							
+							<div class="tab-content">
+								<div id="default-tab-1" class="tab-pane fade active in">
+									<h3 class="m-t-10">Välkommen till Körakademin!</h3>
+
+									<img width="300" src="/app/img/korakademin.png" />
+									<p class="text-right m-b-0">
+										<a class="btn btn-white m-r-5" href="javascript:;">Default</a>
+										<a class="btn btn-primary" href="javascript:;">Primary</a>
+									</p>
+								</div>
+								<div id="default-tab-2" class="tab-pane fade">
+									<blockquote>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+										<small>Someone famous in <cite title="Source Title">Source Title</cite></small>
+									</blockquote>
+									<h4>Lorem ipsum dolor sit amet</h4>
+									<p>
+										Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit ligula. 
+										In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris convallis, 
+										sit amet scelerisque lectus adipiscing.
+									</p>
+								</div>
+								<div id="default-tab-3" class="tab-pane fade">
+									<p>
+										<span class="fa-stack fa-4x pull-left m-r-10">
+											<i class="fa fa-square-o fa-stack-2x"></i>
+											<i class="fa fa-twitter fa-stack-1x"></i>
+										</span>
+										Praesent tincidunt nulla ut elit vestibulum viverra. Sed placerat magna eget eros accumsan elementum. 
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis lobortis neque. 
+										Maecenas justo odio, bibendum fringilla quam nec, commodo rutrum quam. 
+										Donec cursus erat in lacus congue sodales. Nunc bibendum id augue sit amet placerat. 
+										Quisque et quam id felis tempus volutpat at at diam. Vivamus ac diam turpis.Sed at lacinia augue. 
+										Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
+										Quisque adipiscing dui nec orci fermentum blandit.
+										Sed at lacinia augue. Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
+										Quisque adipiscing dui nec orci fermentum blandit.
+									</p>
+								</div>
+								
+								<div id="default-tab-user" class="tab-pane fade">
+									<p>User:</p>
+									<p>::user::</p>
+									<p>::user._permissions::</p>
+									
+								</div>								
+							</div>					
+						
+						</div>						
+						
 					</div>
 					
 				

@@ -1,0 +1,6 @@
+[
+	{id:"term-allegro", file:"terms/allegro.txt", title:"Allegro", meta:{search:['tempo', 'term', 'snabbt']}}
+	{id:"term-adagio", file:"terms/adagio.txt", title:"Adagio", meta:{search:['tempo', 'term', 'lugnt']}}
+	{id:"voice-skarvar", file:"voice/skarvar.txt", title:"Skarvar", meta:{search:['röst', 'problem', 'målbrott']}}
+	{id:"voice-baryton", file:"voice/baryton.txt", title:"Baryton", meta:{search:['röst', 'röstläge', 'mansröst']}}
+]

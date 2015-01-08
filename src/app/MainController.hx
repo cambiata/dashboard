@@ -2,9 +2,11 @@ package app;
 import haxe.ds.StringMap;
 import haxe.Serializer;
 import Main;
+import Main.TestPermissions;
 import nx3.NScore;
 import nx3.test.TestItemsBach;
 import ufront.web.Controller;
+import ufront.web.result.ActionResult;
 import ufront.web.result.ContentResult;
 import ufront.web.result.RedirectResult;
 
@@ -35,11 +37,20 @@ import nx3.render.TargetSvgXml;
   
 class MainController extends  ufront.web.Controller {	
 	
+	//var testApi:TestApi;
+	
+	
+	
 	public function new() {
-		super();				
+		super();						
 	}
 	
-	@:route( '/' ) public function index() return loadContent(this.context.request.uri);	
+	@:route( '/' ) public function index() {		
+		if (this.context.auth.isLoggedIn())  
+			return loadContent('/home')
+		else
+			return loadContent('/home', '-guest');	
+	}
 	@:route( '/home' ) public function home() return index();
 	@:route( '/nops' ) public function noPS() {
 		this.context.session.init();
@@ -54,11 +65,19 @@ class MainController extends  ufront.web.Controller {
 		
 		//this.context.ufTrace(this.context.session);
 		//this.context.ufTrace(this.context.auth);
-		//this.context.ufTrace(this.context.auth.currentUser);
-		var auth = this.context.auth;
-		this.ufTrace(auth);
-		var user = auth.currentUser;
-		this.ufTrace(user);
+		this.context.ufTrace(this.context.auth.currentUser);
+		//this.context.auth.requirePermission(TestPermissions.CanThat);
+		//this.context.auth.currentUser)
+		
+		ufTrace(this.context.contentDirectory);
+
+		this.ufTrace(this.context.auth.isLoggedIn());
+		this.context.ufTrace('Hello');
+		var testUser:TestUser = cast this.context.auth.currentUser;
+		ufTrace(testUser);
+		
+		this.context.auth.requireLogin();
+		this.context.auth.requirePermission(Super);
 		
 		var content = 'slask';		
 		return new IsoResult(content);
@@ -69,21 +88,28 @@ class MainController extends  ufront.web.Controller {
 	@:route( '/contact/', POST ) public function contactPost( args: { ?name:String, ?age:Int}) return new IsoResult("<div class='page-header'><h1>Contact Post</h1></div>" + Std.string(args)); 
 	
 	@:route( '/login/', GET ) public function login() {
+		
+		/*
 		this.context.session.init();
 		var user = this.context.session.get('user');
 		this.ufTrace(this.context.session);
+		*/
+		var user = this.context.auth.currentUser;
+		
 		return new IsoResult('<div class="page-header"><h1>Login</h1><p>Current user: <b>${Std.string(user)}</b></p></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method="POST" action="/login/"><div class="col-xs-3"><p>Username:<br/><input name="username" class="form-control"/></p><p>Password:<br/><input name="password" class="form-control" /></p><input type="submit"/></div></form>');
 	}
 	
-	@:route( '/login/', POST ) public function loginPost( args: { ?username:String, ?password:String } ) {
-		this.context.session.init();		
-		var user = (args.username != '' && args.password != '') ? new Main.TestUser(args.username, args.password, 'Test', 'Deltagare') : null;
-		this.context.session.set('user', user);
-		return new IsoResult('<div class="page-header"><h1>Login</h1><p>Current user: <b>${Std.string(user)}</b></p></div>' + Std.string(args)); 		
+	@:route( '/login/', POST ) public function loginPost( args: { ?username:String, ?password:String } ):ActionResult {
+		
+		var user = new TestApi().attemptLogin(this.context.session, args.username, args.password);
+		if (user == null) return new IsoResult ('Could not log in: ${args.username} / ${args.password}');
+		return new RedirectResult('/');
+		//return new IsoResult('<div class="page-header"><h1>Login</h1><p>Current user: <b>${Std.string(user)}</b></p></div>' + Std.string(args)); 		
 	}
 	
 	@:route( '/logout' ) public function logout() {
-		this.context.session.set('user', null);
+		var testApi = new TestApi();
+		testApi.logout(this.context.session);
 		return  new RedirectResult('/');
 	}
 	
@@ -91,6 +117,10 @@ class MainController extends  ufront.web.Controller {
 	@:route( '/sub/*' ) public var subController:SubController;
 	@:route( '/seq/*' ) public var seqController:SeqController;
 	@:route( '/score/*' ) public var scoreController:ScoreController;
+	
+	
+	
+	
 	
 	//===========================================================================
 	// Model stuff here
@@ -102,7 +132,7 @@ class MainController extends  ufront.web.Controller {
 	// when navigating back through the pushstate controlled browser history
 	// 
 	
-	function loadContent(uri:String):Surprise<IsoResult, Error> {
+	function loadContent(uri:String, tag=''):Surprise<IsoResult, Error> {
 		
 			this.ufTrace(uri);
 		
@@ -111,7 +141,7 @@ class MainController extends  ufront.web.Controller {
 			// First, check if the content has been cached:			
 			
 			if (Iso.contentCache.exists(uri)) {
-				
+				ufTrace('Try get $uri from cache');
 				// Get content from client cache
 				var cachedContent = Iso.contentCache.get(uri);
 				var content = cachedContent;
@@ -149,15 +179,15 @@ class MainController extends  ufront.web.Controller {
 	#end
 	
 	#if Server
-	function loadContent(uri:String):Surprise<IsoResult, Error> {
+	function loadContent(uri:String, tag=''):Surprise<IsoResult, Error> {
 		
 		var f = Future.trigger();
 
 		// Load stuff from database or whatever
 		// Here we just load some simple file content...
 		
-		if (uri == '/') uri = '/home';
-		var filename ='app/content$uri.txt';
+		//if (uri == '/') uri = '/home';		
+		var filename =this.context.contentDirectory + '/content$uri$tag.xml';
 		if (!sys.FileSystem.exists(filename)) {
 			f.trigger( Failure(new Error('MainController: Server couldn\'t load content from $filename')));
 		} else {

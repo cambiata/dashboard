@@ -1,4 +1,4 @@
-body{background:#d9e0e7;font-size:12px;font-family:'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif;color:#707478}
+body{background:#d9e0e7;font-size:12px;font-family:'Open Sans',"Helvetica Neue",Helvetica,Arial,sans-serif;color:#242a30}
 h1,h2,h3,h4,h5,h6{font-weight:500;color:#242a30}
 h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-size:60%;font-weight:300;color:#7c7f83}
 a{transition:color 100ms ease-in-out;-o-transition:color 100ms ease-in-out;-ms-transition:color 100ms ease-in-out;-moz-transition:color 100ms ease-in-out;-webkit-transition:color 100ms ease-in-out}
@@ -1142,3 +1142,4 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before,ul.tag
 .attached-document .document-name a{color:#2d353c}
 .attached-document>li img{max-width:100%}
 .attached-document>li .document-name{padding:5px 10px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#content{font-size:13px;}

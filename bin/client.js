@@ -268,6 +268,14 @@ Lambda.indexOf = function(it,v) {
 	}
 	return -1;
 };
+Lambda.find = function(it,f) {
+	var $it0 = $iterator(it)();
+	while( $it0.hasNext() ) {
+		var v = $it0.next();
+		if(f(v)) return v;
+	}
+	return null;
+};
 var List = function() {
 	this.length = 0;
 };
@@ -595,11 +603,12 @@ ufront.auth.UFAuthUser.prototype = {
 	,userID: null
 	,__class__: ufront.auth.UFAuthUser
 };
-var TestUser = function(userID,password,firstname,lastname) {
+var TestUser = function(userID,password,firstname,lastname,permissions) {
 	this.userID = userID;
 	this.password = password;
 	this.firstname = firstname;
 	this.lastname = lastname;
+	if(this._permissions == null) this._permissions = [TestPermissions.Super];
 };
 $hxClasses["TestUser"] = TestUser;
 TestUser.__name__ = ["TestUser"];
@@ -608,7 +617,17 @@ TestUser.prototype = {
 	password: null
 	,firstname: null
 	,lastname: null
+	,_permissions: null
 	,can: function(permission,permissions) {
+		var permissions1;
+		if(permissions != null) permissions1 = Lambda.array(permissions); else permissions1 = new Array();
+		if(permissions1 != null) permissions1.push(permission);
+		var _g = 0;
+		while(_g < permissions1.length) {
+			var perm = permissions1[_g];
+			++_g;
+			if(!Lambda.has(Lambda.array(this._permissions),perm)) return false;
+		}
 		return true;
 	}
 	,userID: null
@@ -636,18 +655,20 @@ ufront.auth.UFAuthHandler.prototype = {
 	,__class__: ufront.auth.UFAuthHandler
 };
 var TestAuth = function() {
-	this._currentUser = new TestUser("123","pass","John","Doe");
+	this.testApi = new TestApi();
 };
 $hxClasses["TestAuth"] = TestAuth;
 TestAuth.__name__ = ["TestAuth"];
 TestAuth.__interfaces__ = [ufront.auth.UFAuthHandler];
 TestAuth.prototype = {
 	context: null
+	,testApi: null
 	,currentUser: null
 	,isLoggedIn: function() {
-		return true;
+		return this.get_currentUser() != null;
 	}
 	,requireLogin: function() {
+		if(!this.isLoggedIn()) throw ufront.auth.AuthError.NotLoggedIn;
 	}
 	,isLoggedInAs: function(user) {
 		return true;
@@ -661,10 +682,23 @@ TestAuth.prototype = {
 		return true;
 	}
 	,requirePermission: function(permission) {
+		if(!this.get_currentUser().can(permission)) throw ufront.auth.AuthError.NoPermission(permission);
 	}
 	,requirePermissions: function(permissions) {
+		var $it0 = $iterator(permissions)();
+		while( $it0.hasNext() ) {
+			var permission = $it0.next();
+			this.requirePermission(permission);
+		}
 	}
 	,setCurrentUser: function(user) {
+		var session;
+		if(this.context != null) session = this.context.session; else {
+			if(this._hackSession == null) this._hackSession = new app.ClientSession();
+			session = this._hackSession;
+		}
+		this.testApi.setUserFromSession(session,user);
+		this._currentUser = user;
 	}
 	,_currentUser: null
 	,_hackSession: null
@@ -674,9 +708,7 @@ TestAuth.prototype = {
 			if(this._hackSession == null) this._hackSession = new app.ClientSession();
 			session = this._hackSession;
 		}
-		var sessionUser = session.get("user");
-		if(sessionUser != null) this._currentUser = sessionUser;
-		return this._currentUser;
+		return this.testApi.getUserFromSession(session);
 	}
 	,getUserByID: function(id) {
 		return null;
@@ -687,6 +719,55 @@ TestAuth.prototype = {
 	,__class__: TestAuth
 	,__properties__: {get_currentUser:"get_currentUser"}
 };
+var TestPermissions = $hxClasses["TestPermissions"] = { __ename__ : ["TestPermissions"], __constructs__ : ["Plusdeltagare","Kantorsstud","Hsandstud","Super"] };
+TestPermissions.Plusdeltagare = ["Plusdeltagare",0];
+TestPermissions.Plusdeltagare.toString = $estr;
+TestPermissions.Plusdeltagare.__enum__ = TestPermissions;
+TestPermissions.Kantorsstud = ["Kantorsstud",1];
+TestPermissions.Kantorsstud.toString = $estr;
+TestPermissions.Kantorsstud.__enum__ = TestPermissions;
+TestPermissions.Hsandstud = ["Hsandstud",2];
+TestPermissions.Hsandstud.toString = $estr;
+TestPermissions.Hsandstud.__enum__ = TestPermissions;
+TestPermissions.Super = ["Super",3];
+TestPermissions.Super.toString = $estr;
+TestPermissions.Super.__enum__ = TestPermissions;
+TestPermissions.__empty_constructs__ = [TestPermissions.Plusdeltagare,TestPermissions.Kantorsstud,TestPermissions.Hsandstud,TestPermissions.Super];
+var TestApi = function() {
+};
+$hxClasses["TestApi"] = TestApi;
+TestApi.__name__ = ["TestApi"];
+TestApi.prototype = {
+	getUserFromSession: function(session) {
+		if(session == null) throw "TestApi: No valid session found";
+		var sessionUser = session.get("user");
+		return sessionUser;
+	}
+	,setUserFromSession: function(session,user) {
+		if(session == null) throw "TestApi: No valid session found";
+		session.set("user",user);
+		return user;
+	}
+	,getSessiondata: function(session) {
+		return session.getSessionData();
+	}
+	,attemptLogin: function(session,userID,password) {
+		var foundUser = Lambda.find(DummyUserList.users,function(user) {
+			return user.userID == userID && user.password == password;
+		});
+		var user1;
+		if(foundUser != null) user1 = new TestUser(foundUser.userID,foundUser.password,foundUser.firstname,foundUser.lastname,foundUser.permissions); else user1 = null;
+		this.setUserFromSession(session,user1);
+		return user1;
+	}
+	,logout: function(session) {
+		this.setUserFromSession(session,null);
+	}
+	,__class__: TestApi
+};
+var DummyUserList = function() { };
+$hxClasses["DummyUserList"] = DummyUserList;
+DummyUserList.__name__ = ["DummyUserList"];
 var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
@@ -1551,7 +1632,7 @@ app.MainController.__name__ = ["app","MainController"];
 app.MainController.__super__ = ufront.web.Controller;
 app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 	index: function() {
-		return this.loadContent(this.context.request.get_uri());
+		if(this.context.auth.isLoggedIn()) return this.loadContent("/home"); else return this.loadContent("/home","-guest");
 	}
 	,home: function() {
 		return this.index();
@@ -1565,10 +1646,14 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 		return this.loadContent(this.context.request.get_uri());
 	}
 	,slask: function() {
-		var auth = this.context.auth;
-		this.ufTrace(auth,{ fileName : "MainController.hx", lineNumber : 59, className : "app.MainController", methodName : "slask"});
-		var user = auth.get_currentUser();
-		this.ufTrace(user,{ fileName : "MainController.hx", lineNumber : 61, className : "app.MainController", methodName : "slask"});
+		this.context.ufTrace(this.context.auth.get_currentUser(),{ fileName : "MainController.hx", lineNumber : 68, className : "app.MainController", methodName : "slask"});
+		this.ufTrace(this.context.get_contentDirectory(),{ fileName : "MainController.hx", lineNumber : 72, className : "app.MainController", methodName : "slask"});
+		this.ufTrace(this.context.auth.isLoggedIn(),{ fileName : "MainController.hx", lineNumber : 74, className : "app.MainController", methodName : "slask"});
+		this.context.messages.push({ msg : "Hello", pos : { fileName : "MainController.hx", lineNumber : 75, className : "app.MainController", methodName : "slask"}, type : ufront.log.MessageType.Trace});
+		var testUser = this.context.auth.get_currentUser();
+		this.ufTrace(testUser,{ fileName : "MainController.hx", lineNumber : 77, className : "app.MainController", methodName : "slask"});
+		this.context.auth.requireLogin();
+		this.context.auth.requirePermission(TestPermissions.Super);
 		var content = "slask";
 		return new app.IsoResult(content);
 	}
@@ -1579,35 +1664,34 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 		return new app.IsoResult("<div class='page-header'><h1>Contact Post</h1></div>" + Std.string(args));
 	}
 	,login: function() {
-		this.context.session.init();
-		var user = this.context.session.get("user");
-		this.ufTrace(this.context.session,{ fileName : "MainController.hx", lineNumber : 74, className : "app.MainController", methodName : "login"});
+		var user = this.context.auth.get_currentUser();
 		return new app.IsoResult("<div class=\"page-header\"><h1>Login</h1><p>Current user: <b>" + Std.string(user) + "</b></p></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method=\"POST\" action=\"/login/\"><div class=\"col-xs-3\"><p>Username:<br/><input name=\"username\" class=\"form-control\"/></p><p>Password:<br/><input name=\"password\" class=\"form-control\" /></p><input type=\"submit\"/></div></form>");
 	}
 	,loginPost: function(args) {
-		this.context.session.init();
-		var user;
-		if(args.username != "" && args.password != "") user = new TestUser(args.username,args.password,"Test","Deltagare"); else user = null;
-		this.context.session.set("user",user);
-		return new app.IsoResult("<div class=\"page-header\"><h1>Login</h1><p>Current user: <b>" + Std.string(user) + "</b></p></div>" + Std.string(args));
+		var user = new TestApi().attemptLogin(this.context.session,args.username,args.password);
+		if(user == null) return new app.IsoResult("Could not log in: " + args.username + " / " + args.password);
+		return new ufront.web.result.RedirectResult("/");
 	}
 	,logout: function() {
-		this.context.session.set("user",null);
+		var testApi = new TestApi();
+		testApi.logout(this.context.session);
 		return new ufront.web.result.RedirectResult("/");
 	}
 	,subController: null
 	,seqController: null
 	,scoreController: null
-	,loadContent: function(uri) {
-		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 107, className : "app.MainController", methodName : "loadContent"});
+	,loadContent: function(uri,tag) {
+		if(tag == null) tag = "";
+		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 137, className : "app.MainController", methodName : "loadContent"});
 		var f = new tink.core.FutureTrigger();
 		if(app.Iso.contentCache.exists(uri)) {
+			this.ufTrace("Try get " + uri + " from cache",{ fileName : "MainController.hx", lineNumber : 144, className : "app.MainController", methodName : "loadContent"});
 			var cachedContent = app.Iso.contentCache.get(uri);
 			var content = cachedContent;
 			f.trigger(tink.core.Outcome.Success(new app.IsoResult(content)));
 			app.Iso.setLoadinfoLabel("PushState - Loaded from cache","label label-warning");
 		} else {
-			this.ufTrace("Load from " + uri,{ fileName : "MainController.hx", lineNumber : 123, className : "app.MainController", methodName : "loadContent"});
+			this.ufTrace("Load from " + uri,{ fileName : "MainController.hx", lineNumber : 153, className : "app.MainController", methodName : "loadContent"});
 			var request = new XMLHttpRequest();
 			request.open("GET",uri);
 			request.setRequestHeader(app.Iso.REQUEST_TYPE,app.Iso.AJAX);
@@ -1619,7 +1703,7 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 				app.Iso.setLoadinfoLabel("PushState - Loaded using ajax","label label-success");
 			};
 			request.onerror = function(e1) {
-				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 137, className : "app.MainController", methodName : "loadContent"})));
+				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 167, className : "app.MainController", methodName : "loadContent"})));
 			};
 			request.send(null);
 		}
@@ -19556,6 +19640,7 @@ ufront.web.context.HttpResponse.INTERNAL_SERVER_ERROR = 500;
 ufront.auth.UFAuthUser.__meta__ = { obj : { 'interface' : null}};
 ufront.auth.UFAuthHandler.__meta__ = { obj : { 'interface' : null}};
 TestAuth.__meta__ = { fields : { context : { type : ["ufront.web.context.HttpContext"], inject : null}}};
+DummyUserList.users = [{ firstname : "Jonas", lastname : "Nyström", userID : "jonasnys@gmail.com", password : "cambiata", permissions : [TestPermissions.Super,TestPermissions.Plusdeltagare]},{ firstname : "Lillemor", lastname : "Bodin Carlson", userID : "lillemor.bodin.carlson.mellansel@folkbildning.net", password : "123", permissions : [TestPermissions.Plusdeltagare]},{ firstname : "Plus", lastname : "Deltagare", userID : "plus@google.com", password : "123", permissions : [TestPermissions.Plusdeltagare]},{ firstname : "Kantor", lastname : "Studerande", userID : "kantor@google.com", password : "123", permissions : [TestPermissions.Kantorsstud]}];
 IMap.__meta__ = { obj : { 'interface' : null}};
 ufront.web.session.UFHttpSession.__meta__ = { obj : { 'interface' : null}};
 app.Iso.REQUEST_TYPE = "UF_ISO_TYPE";
