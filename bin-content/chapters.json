@@ -2,8 +2,8 @@
 	{
 		title: 'Musiktermer', 
 		docs: [
-			{id:'term-allegro'}
-			, {id: 'term-adagio'}
+			{id:'terms/allegro.txt'}
+			, {id: 'terms/adagio.txt'}
 			, {id: 'nisse'}
 		]
 	}
@@ -11,8 +11,8 @@
 	{
 		title: 'Röst', 
 		docs: [
-			{id:'voice-skarvar'}
-			, {id: 'voice-baryton'}
+			{id:'voice/skarvar.txt'}
+			, {id: 'voice/baryton.txt'}
 			, {id: 'kalle'}
 		]
 	}	

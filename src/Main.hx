@@ -244,8 +244,7 @@ class TestApi  {
 	
 	public function logout(session:UFHttpSession) {
 		setUserFromSession(session, null);
-	}	
-	
+	}		
 }
 
 typedef DummyUser = { firstname:String, lastname:String, userID:String, password:String, permissions:Array<TestPermissions> };

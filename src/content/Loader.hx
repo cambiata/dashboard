@@ -25,8 +25,7 @@ class Loader
 		var docs:Docs = new Docs();
 		for (jdoc in jdocs) {
 			var doc:Doc = jdoc;
-			if (doc.id == null) throw "Missing doc.id";
-			if (doc.file == null) throw "Missing doc.file : " + doc.id;
+			if (doc.id == null) throw "Missing doc.id";			
 			if (doc.title == null) throw "Missing doc.title : " + doc.id;
 			if (doc.meta == null) doc.meta = { };
 			if (doc.meta.authors == null) doc.meta.authors = [];

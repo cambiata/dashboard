@@ -15,8 +15,7 @@ package content;
 typedef Doc = {
 	id:String,
 	title:String,
-	meta:Meta,
-	file:String,
+	meta:Meta,	
 }
 
 typedef Docs = Array<Doc>;
