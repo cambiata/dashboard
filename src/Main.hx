@@ -215,12 +215,14 @@ class TestApi  {
 	
 	public function getUserFromSession(session:UFHttpSession):TestUser {
 		if (session == null ) throw 'TestApi: No valid session found';
+		session.init();
 		var sessionUser = session.get('user');
 		return cast sessionUser;
 	}
 	
 	public function setUserFromSession(session:UFHttpSession, user:UFAuthUser):TestUser {
 		if (session == null ) throw 'TestApi: No valid session found';
+		session.init();
 		session.set('user', user);		
 		return cast user;
 	}
@@ -249,8 +251,7 @@ class TestApi  {
 
 typedef DummyUser = { firstname:String, lastname:String, userID:String, password:String, permissions:Array<TestPermissions> };
 
-class DummyUserList {
-	
+class DummyUserList {	
 	static public  var users:Array<DummyUser> = [
 		 { firstname:'Jonas', lastname:'Nyström', userID:'jonasnys@gmail.com', password:'cambiata', permissions:[Super, Plusdeltagare] }
 		 , { firstname:'Lillemor', lastname:'Bodin Carlson', userID:'lillemor.bodin.carlson.mellansel@folkbildning.net', password:'123', permissions:[Plusdeltagare] }

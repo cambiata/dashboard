@@ -740,11 +740,13 @@ TestApi.__name__ = ["TestApi"];
 TestApi.prototype = {
 	getUserFromSession: function(session) {
 		if(session == null) throw "TestApi: No valid session found";
+		session.init();
 		var sessionUser = session.get("user");
 		return sessionUser;
 	}
 	,setUserFromSession: function(session,user) {
 		if(session == null) throw "TestApi: No valid session found";
+		session.init();
 		session.set("user",user);
 		return user;
 	}
