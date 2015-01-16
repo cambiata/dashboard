@@ -59,8 +59,7 @@ var EReg = function(r,opt) {
 $hxClasses["EReg"] = EReg;
 EReg.__name__ = ["EReg"];
 EReg.prototype = {
-	r: null
-	,match: function(s) {
+	match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
 		this.r.m = this.r.exec(s);
 		this.r.s = s;
@@ -282,10 +281,7 @@ var List = function() {
 $hxClasses["List"] = List;
 List.__name__ = ["List"];
 List.prototype = {
-	h: null
-	,q: null
-	,length: null
-	,add: function(item) {
+	add: function(item) {
 		var x = [item];
 		if(this.h == null) this.h = x; else this.q[1] = x;
 		this.q = x;
@@ -362,66 +358,51 @@ ufront.web.context.HttpRequest.create = function() {
 	throw new thx.core.error.NotImplemented({ fileName : "HttpRequest.hx", lineNumber : 33, className : "ufront.web.context.HttpRequest", methodName : "create"});
 };
 ufront.web.context.HttpRequest.prototype = {
-	params: null
-	,get_params: function() {
+	get_params: function() {
 		if(null == this.params) this.params = ufront.core._MultiValueMap.MultiValueMap_Impl_.combine([this.get_cookies(),this.get_query(),this.get_post()]);
 		return this.params;
 	}
-	,queryString: null
 	,get_queryString: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 64, className : "ufront.web.context.HttpRequest", methodName : "get_queryString"});
 	}
-	,postString: null
 	,get_postString: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 72, className : "ufront.web.context.HttpRequest", methodName : "get_postString"});
 	}
-	,query: null
 	,get_query: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 78, className : "ufront.web.context.HttpRequest", methodName : "get_query"});
 	}
-	,post: null
 	,get_post: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 91, className : "ufront.web.context.HttpRequest", methodName : "get_post"});
 	}
-	,files: null
 	,get_files: function() {
 		if(null == this.files) this.files = new haxe.ds.StringMap();
 		return this.files;
 	}
-	,cookies: null
 	,get_cookies: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 110, className : "ufront.web.context.HttpRequest", methodName : "get_cookies"});
 	}
-	,hostName: null
 	,get_hostName: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 116, className : "ufront.web.context.HttpRequest", methodName : "get_hostName"});
 	}
-	,clientIP: null
 	,get_clientIP: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 122, className : "ufront.web.context.HttpRequest", methodName : "get_clientIP"});
 	}
-	,uri: null
 	,get_uri: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 130, className : "ufront.web.context.HttpRequest", methodName : "get_uri"});
 	}
-	,clientHeaders: null
 	,get_clientHeaders: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 136, className : "ufront.web.context.HttpRequest", methodName : "get_clientHeaders"});
 	}
-	,userAgent: null
 	,get_userAgent: function() {
 		if(this.userAgent == null) this.userAgent = ufront.web.UserAgent.fromString(ufront.core._MultiValueMap.MultiValueMap_Impl_.get(this.get_clientHeaders(),"User-Agent"));
 		return this.userAgent;
 	}
-	,httpMethod: null
 	,get_httpMethod: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 156, className : "ufront.web.context.HttpRequest", methodName : "get_httpMethod"});
 	}
-	,scriptDirectory: null
 	,get_scriptDirectory: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 168, className : "ufront.web.context.HttpRequest", methodName : "get_scriptDirectory"});
 	}
-	,authorization: null
 	,get_authorization: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 180, className : "ufront.web.context.HttpRequest", methodName : "get_authorization"});
 	}
@@ -469,6 +450,7 @@ ClientRequest.prototype = $extend(ufront.web.context.HttpRequest.prototype,{
 	,__class__: ClientRequest
 });
 ufront.web.context.HttpResponse = function() {
+	this.iso = false;
 	this.clear();
 	this._flushed = false;
 };
@@ -478,17 +460,11 @@ ufront.web.context.HttpResponse.create = function() {
 	return new ufront.web.context.HttpResponse();
 };
 ufront.web.context.HttpResponse.prototype = {
-	charset: null
-	,status: null
-	,_buff: null
-	,_headers: null
-	,_cookies: null
-	,_flushed: null
-	,preventFlush: function() {
+	preventFlush: function() {
 		this._flushed = true;
 	}
 	,flush: function() {
-		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 108, className : "ufront.web.context.HttpResponse", methodName : "flush"});
+		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 110, className : "ufront.web.context.HttpResponse", methodName : "flush"});
 	}
 	,clear: function() {
 		this.clearCookies();
@@ -599,9 +575,7 @@ ufront.auth.UFAuthUser = function() { };
 $hxClasses["ufront.auth.UFAuthUser"] = ufront.auth.UFAuthUser;
 ufront.auth.UFAuthUser.__name__ = ["ufront","auth","UFAuthUser"];
 ufront.auth.UFAuthUser.prototype = {
-	can: null
-	,userID: null
-	,__class__: ufront.auth.UFAuthUser
+	__class__: ufront.auth.UFAuthUser
 };
 var TestUser = function(userID,password,firstname,lastname,permissions) {
 	this.userID = userID;
@@ -614,11 +588,7 @@ $hxClasses["TestUser"] = TestUser;
 TestUser.__name__ = ["TestUser"];
 TestUser.__interfaces__ = [ufront.auth.UFAuthUser];
 TestUser.prototype = {
-	password: null
-	,firstname: null
-	,lastname: null
-	,_permissions: null
-	,can: function(permission,permissions) {
+	can: function(permission,permissions) {
 		var permissions1;
 		if(permissions != null) permissions1 = Lambda.array(permissions); else permissions1 = new Array();
 		if(permissions1 != null) permissions1.push(permission);
@@ -630,7 +600,6 @@ TestUser.prototype = {
 		}
 		return true;
 	}
-	,userID: null
 	,get_userID: function() {
 		return "TEST_USER";
 	}
@@ -641,18 +610,7 @@ ufront.auth.UFAuthHandler = function() { };
 $hxClasses["ufront.auth.UFAuthHandler"] = ufront.auth.UFAuthHandler;
 ufront.auth.UFAuthHandler.__name__ = ["ufront","auth","UFAuthHandler"];
 ufront.auth.UFAuthHandler.prototype = {
-	isLoggedIn: null
-	,requireLogin: null
-	,isLoggedInAs: null
-	,requireLoginAs: null
-	,hasPermission: null
-	,hasPermissions: null
-	,requirePermission: null
-	,requirePermissions: null
-	,getUserByID: null
-	,setCurrentUser: null
-	,toString: null
-	,__class__: ufront.auth.UFAuthHandler
+	__class__: ufront.auth.UFAuthHandler
 };
 var TestAuth = function() {
 	this.testApi = new TestApi();
@@ -661,10 +619,7 @@ $hxClasses["TestAuth"] = TestAuth;
 TestAuth.__name__ = ["TestAuth"];
 TestAuth.__interfaces__ = [ufront.auth.UFAuthHandler];
 TestAuth.prototype = {
-	context: null
-	,testApi: null
-	,currentUser: null
-	,isLoggedIn: function() {
+	isLoggedIn: function() {
 		return this.get_currentUser() != null;
 	}
 	,requireLogin: function() {
@@ -700,8 +655,6 @@ TestAuth.prototype = {
 		this.testApi.setUserFromSession(session,user);
 		this._currentUser = user;
 	}
-	,_currentUser: null
-	,_hackSession: null
 	,get_currentUser: function() {
 		var session;
 		if(this.context != null) session = this.context.session; else {
@@ -774,10 +727,7 @@ var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
 IMap.prototype = {
-	get: null
-	,exists: null
-	,keys: null
-	,__class__: IMap
+	__class__: IMap
 };
 Math.__name__ = ["Math"];
 var Random = function() { };
@@ -868,11 +818,6 @@ Reflect.isFunction = function(f) {
 Reflect.compare = function(a,b) {
 	if(a == b) return 0; else if(a > b) return 1; else return -1;
 };
-Reflect.compareMethods = function(f1,f2) {
-	if(f1 == f2) return true;
-	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
-	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
-};
 Reflect.isObject = function(v) {
 	if(v == null) return false;
 	var t = typeof(v);
@@ -913,8 +858,7 @@ var StringBuf = function() {
 $hxClasses["StringBuf"] = StringBuf;
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype = {
-	b: null
-	,add: function(x) {
+	add: function(x) {
 		this.b += Std.string(x);
 	}
 	,addSub: function(s,pos,len) {
@@ -1007,10 +951,6 @@ Type.getClass = function(o) {
 	if(o == null) return null;
 	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
 };
-Type.getEnum = function(o) {
-	if(o == null) return null;
-	return o.__enum__;
-};
 Type.getSuperClass = function(c) {
 	return c.__super__;
 };
@@ -1076,13 +1016,6 @@ Type.createEnumIndex = function(e,index,params) {
 	var c = e.__constructs__[index];
 	if(c == null) throw index + " is not a valid enum constructor index";
 	return Type.createEnum(e,c,params);
-};
-Type.getInstanceFields = function(c) {
-	var a = [];
-	for(var i in c.prototype) a.push(i);
-	HxOverrides.remove(a,"__class__");
-	HxOverrides.remove(a,"__properties__");
-	return a;
 };
 Type.getEnumConstructs = function(e) {
 	var a = e.__constructs__;
@@ -1172,13 +1105,7 @@ Xml.createDocument = function() {
 	return r;
 };
 Xml.prototype = {
-	nodeType: null
-	,_nodeName: null
-	,_nodeValue: null
-	,_attributes: null
-	,_children: null
-	,_parent: null
-	,get_nodeName: function() {
+	get_nodeName: function() {
 		if(this.nodeType != Xml.Element) throw "bad nodeType";
 		return this._nodeName;
 	}
@@ -1331,37 +1258,20 @@ ufront.web.session.UFHttpSession = function() { };
 $hxClasses["ufront.web.session.UFHttpSession"] = ufront.web.session.UFHttpSession;
 ufront.web.session.UFHttpSession.__name__ = ["ufront","web","session","UFHttpSession"];
 ufront.web.session.UFHttpSession.prototype = {
-	id: null
-	,init: null
-	,clear: null
-	,get: null
-	,set: null
-	,exists: null
-	,remove: null
-	,isActive: null
-	,close: null
-	,setExpiry: null
-	,commit: null
-	,triggerCommit: null
-	,regenerateID: null
-	,getSessionData: null
-	,__class__: ufront.web.session.UFHttpSession
+	__class__: ufront.web.session.UFHttpSession
 };
 var app = {};
 app.ClientSession = function(sessionElementID) {
 	if(sessionElementID == null) sessionElementID = "session";
 	this.sessionData = new haxe.ds.StringMap();
-	var sessionElement = window.document.getElementById(sessionElementID);
-	var dataStr = sessionElement.innerHTML;
-	if(dataStr != null) this.sessionData = haxe.Unserializer.run(cx.CryptTools.decrypt(dataStr));
+	var cookieStr = js.Cookie.get(app.Iso.UF_CLIENT_SESSION);
+	this.sessionData = haxe.Unserializer.run(cx.CryptTools.decrypt(cookieStr));
 };
 $hxClasses["app.ClientSession"] = app.ClientSession;
 app.ClientSession.__name__ = ["app","ClientSession"];
 app.ClientSession.__interfaces__ = [ufront.web.session.UFHttpSession];
 app.ClientSession.prototype = {
-	sessionData: null
-	,id: null
-	,setExpiry: function(e) {
+	setExpiry: function(e) {
 	}
 	,init: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Success(tink.core.Noise.Noise));
@@ -1409,8 +1319,7 @@ $hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
 haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
 haxe.ds.StringMap.__interfaces__ = [IMap];
 haxe.ds.StringMap.prototype = {
-	h: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		this.h["$" + key] = value;
 	}
 	,get: function(key) {
@@ -1494,9 +1403,7 @@ app.ClientUser = function(firstname,lastname) {
 $hxClasses["app.ClientUser"] = app.ClientUser;
 app.ClientUser.__name__ = ["app","ClientUser"];
 app.ClientUser.prototype = {
-	firstname: null
-	,lastname: null
-	,__class__: app.ClientUser
+	__class__: app.ClientUser
 };
 ufront.web.result = {};
 ufront.web.result.ActionResult = function() { };
@@ -1522,8 +1429,7 @@ $hxClasses["app.IsoResult"] = app.IsoResult;
 app.IsoResult.__name__ = ["app","IsoResult"];
 app.IsoResult.__super__ = ufront.web.result.ActionResult;
 app.IsoResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	content: null
-	,executeResult: function(actionContext) {
+	executeResult: function(actionContext) {
 		var content = this.getContent(actionContext,this.content);
 		actionContext.httpContext.response.write(content);
 		return ufront.core.Sync.success();
@@ -1550,9 +1456,7 @@ ufront.web.Controller = function() {
 $hxClasses["ufront.web.Controller"] = ufront.web.Controller;
 ufront.web.Controller.__name__ = ["ufront","web","Controller"];
 ufront.web.Controller.prototype = {
-	context: null
-	,baseUri: null
-	,execute: function() {
+	execute: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Failure(ufront.web.HttpError.internalServerError("Field execute() in ufront.web.Controller is an abstract method, please override it in " + this.toString() + " ",null,{ fileName : "Controller.hx", lineNumber : 134, className : "ufront.web.Controller", methodName : "execute"})));
 	}
 	,executeSubController: function(controller) {
@@ -1679,9 +1583,6 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 		testApi.logout(this.context.session);
 		return new ufront.web.result.RedirectResult("/");
 	}
-	,subController: null
-	,seqController: null
-	,scoreController: null
 	,loadContent: function(uri,tag) {
 		if(tag == null) tag = "";
 		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 137, className : "app.MainController", methodName : "loadContent"});
@@ -2059,9 +1960,7 @@ $hxClasses["app.SeqResult"] = app.SeqResult;
 app.SeqResult.__name__ = ["app","SeqResult"];
 app.SeqResult.__super__ = app.IsoResult;
 app.SeqResult.prototype = $extend(app.IsoResult.prototype,{
-	max: null
-	,nr: null
-	,wrapContent: function(actionContext,content) {
+	wrapContent: function(actionContext,content) {
 		var uriSegments = actionContext.httpContext.request.get_uri().split("/");
 		var pagination = "<ul class=\"pagination pagination-lg m-t-0 m-b-10\">";
 		var url = "/" + uriSegments[1] + "/" + uriSegments[2];
@@ -2183,6 +2082,16 @@ cx.ArrayTools.diff = function(array1,array2) {
 		var item1 = array2[_g1];
 		++_g1;
 		if(!Lambda.has(array1,item1)) result.push(item1);
+	}
+	return result;
+};
+cx.ArrayTools.hasNot = function(array1,array2) {
+	var result = new Array();
+	var _g = 0;
+	while(_g < array2.length) {
+		var item = array2[_g];
+		++_g;
+		if(!Lambda.has(array1,item)) result.push(item);
 	}
 	return result;
 };
@@ -2340,9 +2249,7 @@ haxe.io.Bytes.ofString = function(s) {
 	return new haxe.io.Bytes(a.length,a);
 };
 haxe.io.Bytes.prototype = {
-	length: null
-	,b: null
-	,get: function(pos) {
+	get: function(pos) {
 		return this.b[pos];
 	}
 	,set: function(pos,v) {
@@ -2907,9 +2814,7 @@ dtx.DOMCollection = function(nodes) {
 $hxClasses["dtx.DOMCollection"] = dtx.DOMCollection;
 dtx.DOMCollection.__name__ = ["dtx","DOMCollection"];
 dtx.DOMCollection.prototype = {
-	collection: null
-	,length: null
-	,iterator: function() {
+	iterator: function() {
 		return HxOverrides.iter(this.collection);
 	}
 	,getNode: function(i) {
@@ -4602,13 +4507,7 @@ haxe.Serializer.run = function(v) {
 	return s.toString();
 };
 haxe.Serializer.prototype = {
-	buf: null
-	,cache: null
-	,shash: null
-	,scount: null
-	,useCache: null
-	,useEnumIndex: null
-	,toString: function() {
+	toString: function() {
 		return this.buf.b;
 	}
 	,serializeString: function(s) {
@@ -4871,12 +4770,7 @@ haxe.Template = function(str) {
 $hxClasses["haxe.Template"] = haxe.Template;
 haxe.Template.__name__ = ["haxe","Template"];
 haxe.Template.prototype = {
-	expr: null
-	,context: null
-	,macros: null
-	,stack: null
-	,buf: null
-	,execute: function(context,macros) {
+	execute: function(context,macros) {
 		if(macros == null) this.macros = { }; else this.macros = macros;
 		this.context = context;
 		this.stack = new List();
@@ -5261,13 +5155,7 @@ haxe.Unserializer.run = function(v) {
 	return new haxe.Unserializer(v).unserialize();
 };
 haxe.Unserializer.prototype = {
-	buf: null
-	,pos: null
-	,length: null
-	,cache: null
-	,scache: null
-	,resolver: null
-	,setResolver: function(r) {
+	setResolver: function(r) {
 		if(r == null) this.resolver = { resolveClass : function(_) {
 			return null;
 		}, resolveEnum : function(_1) {
@@ -5527,10 +5415,7 @@ haxe.crypto.BaseCode = function(base) {
 $hxClasses["haxe.crypto.BaseCode"] = haxe.crypto.BaseCode;
 haxe.crypto.BaseCode.__name__ = ["haxe","crypto","BaseCode"];
 haxe.crypto.BaseCode.prototype = {
-	base: null
-	,nbits: null
-	,tbl: null
-	,encodeBytes: function(b) {
+	encodeBytes: function(b) {
 		var nbits = this.nbits;
 		var base = this.base;
 		var size = b.length * 8 / nbits | 0;
@@ -5600,8 +5485,7 @@ $hxClasses["haxe.ds.IntMap"] = haxe.ds.IntMap;
 haxe.ds.IntMap.__name__ = ["haxe","ds","IntMap"];
 haxe.ds.IntMap.__interfaces__ = [IMap];
 haxe.ds.IntMap.prototype = {
-	h: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		this.h[key] = value;
 	}
 	,get: function(key) {
@@ -5627,17 +5511,13 @@ $hxClasses["haxe.ds.ObjectMap"] = haxe.ds.ObjectMap;
 haxe.ds.ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
 haxe.ds.ObjectMap.__interfaces__ = [IMap];
 haxe.ds.ObjectMap.prototype = {
-	h: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		var id = key.__id__ || (key.__id__ = ++haxe.ds.ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
 	}
 	,get: function(key) {
 		return this.h[key.__id__];
-	}
-	,exists: function(key) {
-		return this.h.__keys__[key.__id__] != null;
 	}
 	,keys: function() {
 		var a = [];
@@ -5660,8 +5540,7 @@ haxe.io.BytesBuffer = function() {
 $hxClasses["haxe.io.BytesBuffer"] = haxe.io.BytesBuffer;
 haxe.io.BytesBuffer.__name__ = ["haxe","io","BytesBuffer"];
 haxe.io.BytesBuffer.prototype = {
-	b: null
-	,getBytes: function() {
+	getBytes: function() {
 		var bytes = new haxe.io.Bytes(this.b.length,this.b);
 		this.b = null;
 		return bytes;
@@ -5672,8 +5551,7 @@ haxe.io.Input = function() { };
 $hxClasses["haxe.io.Input"] = haxe.io.Input;
 haxe.io.Input.__name__ = ["haxe","io","Input"];
 haxe.io.Input.prototype = {
-	bigEndian: null
-	,readByte: function() {
+	readByte: function() {
 		throw "Not implemented";
 	}
 	,readInt32: function() {
@@ -5698,11 +5576,7 @@ $hxClasses["haxe.io.BytesInput"] = haxe.io.BytesInput;
 haxe.io.BytesInput.__name__ = ["haxe","io","BytesInput"];
 haxe.io.BytesInput.__super__ = haxe.io.Input;
 haxe.io.BytesInput.prototype = $extend(haxe.io.Input.prototype,{
-	b: null
-	,pos: null
-	,len: null
-	,totlen: null
-	,readByte: function() {
+	readByte: function() {
 		if(this.len == 0) throw new haxe.io.Eof();
 		this.len--;
 		return this.b[this.pos++];
@@ -5713,8 +5587,7 @@ haxe.io.Output = function() { };
 $hxClasses["haxe.io.Output"] = haxe.io.Output;
 haxe.io.Output.__name__ = ["haxe","io","Output"];
 haxe.io.Output.prototype = {
-	bigEndian: null
-	,writeByte: function(c) {
+	writeByte: function(c) {
 		throw "Not implemented";
 	}
 	,writeInt32: function(x) {
@@ -5739,8 +5612,7 @@ $hxClasses["haxe.io.BytesOutput"] = haxe.io.BytesOutput;
 haxe.io.BytesOutput.__name__ = ["haxe","io","BytesOutput"];
 haxe.io.BytesOutput.__super__ = haxe.io.Output;
 haxe.io.BytesOutput.prototype = $extend(haxe.io.Output.prototype,{
-	b: null
-	,writeByte: function(c) {
+	writeByte: function(c) {
 		this.b.b.push(c);
 	}
 	,getBytes: function() {
@@ -5816,11 +5688,7 @@ haxe.io.Path.addTrailingSlash = function(path) {
 	} else if(c1 != path.length - 1) return path + "/"; else return path;
 };
 haxe.io.Path.prototype = {
-	dir: null
-	,file: null
-	,ext: null
-	,backslash: null
-	,toString: function() {
+	toString: function() {
 		return (this.dir == null?"":this.dir + (this.backslash?"\\":"/")) + this.file + (this.ext == null?"":"." + this.ext);
 	}
 	,__class__: haxe.io.Path
@@ -5970,8 +5838,7 @@ haxe.remoting.Context = function() {
 $hxClasses["haxe.remoting.Context"] = haxe.remoting.Context;
 haxe.remoting.Context.__name__ = ["haxe","remoting","Context"];
 haxe.remoting.Context.prototype = {
-	objects: null
-	,addObject: function(name,obj,recursive) {
+	addObject: function(name,obj,recursive) {
 		this.objects.set(name,{ obj : obj, rec : recursive});
 	}
 	,call: function(path,params) {
@@ -6165,12 +6032,7 @@ haxe.web.Dispatch = function(url,params) {
 $hxClasses["haxe.web.Dispatch"] = haxe.web.Dispatch;
 haxe.web.Dispatch.__name__ = ["haxe","web","Dispatch"];
 haxe.web.Dispatch.prototype = {
-	parts: null
-	,params: null
-	,name: null
-	,cfg: null
-	,subDispatch: null
-	,onMeta: function(v,args) {
+	onMeta: function(v,args) {
 	}
 	,match: function(v,r,opt) {
 		switch(r[1]) {
@@ -6670,6 +6532,26 @@ js.Boot.__instanceof = function(o,cl) {
 		return o.__enum__ == cl;
 	}
 };
+js.Cookie = function() { };
+$hxClasses["js.Cookie"] = js.Cookie;
+js.Cookie.__name__ = ["js","Cookie"];
+js.Cookie.all = function() {
+	var h = new haxe.ds.StringMap();
+	var a = window.document.cookie.split(";");
+	var _g = 0;
+	while(_g < a.length) {
+		var e = a[_g];
+		++_g;
+		e = StringTools.ltrim(e);
+		var t = e.split("=");
+		if(t.length < 2) continue;
+		h.set(t[0],decodeURIComponent(t[1].split("+").join(" ")));
+	}
+	return h;
+};
+js.Cookie.get = function(name) {
+	return js.Cookie.all().get(name);
+};
 js.Lib = function() { };
 $hxClasses["js.Lib"] = js.Lib;
 js.Lib.__name__ = ["js","Lib"];
@@ -6684,8 +6566,7 @@ $hxClasses["minject.ClassMap"] = minject.ClassMap;
 minject.ClassMap.__name__ = ["minject","ClassMap"];
 minject.ClassMap.__interfaces__ = [IMap];
 minject.ClassMap.prototype = {
-	map: null
-	,get: function(k) {
+	get: function(k) {
 		var key = Type.getClassName(k);
 		return this.map.get(key);
 	}
@@ -6730,11 +6611,7 @@ minject.InjectionConfig = function(request,injectionName) {
 $hxClasses["minject.InjectionConfig"] = minject.InjectionConfig;
 minject.InjectionConfig.__name__ = ["minject","InjectionConfig"];
 minject.InjectionConfig.prototype = {
-	request: null
-	,injectionName: null
-	,injector: null
-	,result: null
-	,getResponse: function(injector) {
+	getResponse: function(injector) {
 		if(this.injector != null) injector = this.injector;
 		if(this.result != null) return this.result.getResponse(injector);
 		var parentConfig = injector.getAncestorMapping(this.request,this.injectionName);
@@ -6769,12 +6646,7 @@ minject.Injector = function() {
 $hxClasses["minject.Injector"] = minject.Injector;
 minject.Injector.__name__ = ["minject","Injector"];
 minject.Injector.prototype = {
-	attendedToInjectees: null
-	,parentInjector: null
-	,children: null
-	,injectionConfigs: null
-	,injecteeDescriptions: null
-	,mapValue: function(whenAskedFor,useValue,named) {
+	mapValue: function(whenAskedFor,useValue,named) {
 		if(named == null) named = "";
 		var config = this.getMapping(whenAskedFor,named);
 		config.setResult(new minject.result.InjectValueResult(useValue));
@@ -7000,9 +6872,7 @@ minject.InjecteeDescription = function(ctor,injectionPoints) {
 $hxClasses["minject.InjecteeDescription"] = minject.InjecteeDescription;
 minject.InjecteeDescription.__name__ = ["minject","InjecteeDescription"];
 minject.InjecteeDescription.prototype = {
-	ctor: null
-	,injectionPoints: null
-	,__class__: minject.InjecteeDescription
+	__class__: minject.InjecteeDescription
 };
 minject.RequestHasher = function() { };
 $hxClasses["minject.RequestHasher"] = minject.RequestHasher;
@@ -7019,8 +6889,7 @@ minject.point.InjectionPoint = function() { };
 $hxClasses["minject.point.InjectionPoint"] = minject.point.InjectionPoint;
 minject.point.InjectionPoint.__name__ = ["minject","point","InjectionPoint"];
 minject.point.InjectionPoint.prototype = {
-	applyInjection: null
-	,__class__: minject.point.InjectionPoint
+	__class__: minject.point.InjectionPoint
 };
 minject.point.MethodInjectionPoint = function(name,args) {
 	this.name = name;
@@ -7031,10 +6900,7 @@ $hxClasses["minject.point.MethodInjectionPoint"] = minject.point.MethodInjection
 minject.point.MethodInjectionPoint.__name__ = ["minject","point","MethodInjectionPoint"];
 minject.point.MethodInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.MethodInjectionPoint.prototype = {
-	name: null
-	,args: null
-	,requestNames: null
-	,makeRequestNames: function() {
+	makeRequestNames: function() {
 		this.requestNames = [];
 		var _g1 = 0;
 		var _g = this.args.length;
@@ -7102,9 +6968,7 @@ $hxClasses["minject.point.PostConstructInjectionPoint"] = minject.point.PostCons
 minject.point.PostConstructInjectionPoint.__name__ = ["minject","point","PostConstructInjectionPoint"];
 minject.point.PostConstructInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.PostConstructInjectionPoint.prototype = {
-	name: null
-	,order: null
-	,applyInjection: function(target,injector) {
+	applyInjection: function(target,injector) {
 		Reflect.callMethod(target,Reflect.field(target,this.name),[]);
 		return target;
 	}
@@ -7120,11 +6984,7 @@ $hxClasses["minject.point.PropertyInjectionPoint"] = minject.point.PropertyInjec
 minject.point.PropertyInjectionPoint.__name__ = ["minject","point","PropertyInjectionPoint"];
 minject.point.PropertyInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.PropertyInjectionPoint.prototype = {
-	name: null
-	,type: null
-	,injectionName: null
-	,requestName: null
-	,applyInjection: function(target,injector) {
+	applyInjection: function(target,injector) {
 		var config = injector.getConfig(this.requestName);
 		Reflect.setProperty(target,this.name,config.getResponse(injector));
 		return target;
@@ -7153,8 +7013,7 @@ $hxClasses["minject.result.InjectClassResult"] = minject.result.InjectClassResul
 minject.result.InjectClassResult.__name__ = ["minject","result","InjectClassResult"];
 minject.result.InjectClassResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectClassResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	responseType: null
-	,getResponse: function(injector) {
+	getResponse: function(injector) {
 		return injector.instantiate(this.responseType);
 	}
 	,toString: function() {
@@ -7170,8 +7029,7 @@ $hxClasses["minject.result.InjectOtherRuleResult"] = minject.result.InjectOtherR
 minject.result.InjectOtherRuleResult.__name__ = ["minject","result","InjectOtherRuleResult"];
 minject.result.InjectOtherRuleResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectOtherRuleResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	rule: null
-	,getResponse: function(injector) {
+	getResponse: function(injector) {
 		return this.rule.getResponse(injector);
 	}
 	,toString: function() {
@@ -7187,9 +7045,7 @@ $hxClasses["minject.result.InjectSingletonResult"] = minject.result.InjectSingle
 minject.result.InjectSingletonResult.__name__ = ["minject","result","InjectSingletonResult"];
 minject.result.InjectSingletonResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectSingletonResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	responseType: null
-	,response: null
-	,getResponse: function(injector) {
+	getResponse: function(injector) {
 		if(this.response == null) {
 			this.response = this.createResponse(injector);
 			injector.injectInto(this.response);
@@ -7212,8 +7068,7 @@ $hxClasses["minject.result.InjectValueResult"] = minject.result.InjectValueResul
 minject.result.InjectValueResult.__name__ = ["minject","result","InjectValueResult"];
 minject.result.InjectValueResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectValueResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	value: null
-	,getResponse: function(injector) {
+	getResponse: function(injector) {
 		return this.value;
 	}
 	,toString: function() {
@@ -8500,16 +8355,7 @@ nx3.IBarWidthCalculator = function() { };
 $hxClasses["nx3.IBarWidthCalculator"] = nx3.IBarWidthCalculator;
 nx3.IBarWidthCalculator.__name__ = ["nx3","IBarWidthCalculator"];
 nx3.IBarWidthCalculator.prototype = {
-	getLeftBarlineWidth: null
-	,getClefWidth: null
-	,getKeyWidth: null
-	,getTimeWidth: null
-	,getContentLeftMarginWidth: null
-	,getContentWidth: null
-	,getBarlineWidth: null
-	,getClefsWidth: null
-	,getKeysWidth: null
-	,__class__: nx3.IBarWidthCalculator
+	__class__: nx3.IBarWidthCalculator
 };
 nx3.NBar = function(parts,type,time,timeDisplay,allotment,spacing) {
 	if(spacing == null) spacing = 0;
@@ -8529,14 +8375,7 @@ nx3.NBar = function(parts,type,time,timeDisplay,allotment,spacing) {
 $hxClasses["nx3.NBar"] = nx3.NBar;
 nx3.NBar.__name__ = ["nx3","NBar"];
 nx3.NBar.prototype = {
-	nscore: null
-	,nparts: null
-	,type: null
-	,time: null
-	,timeDisplay: null
-	,allotment: null
-	,spacing: null
-	,getNNote: function(partIdx,voiceIdx,noteIdx) {
+	getNNote: function(partIdx,voiceIdx,noteIdx) {
 		return this.getNPart(partIdx).getNVoice(voiceIdx).getNNote(noteIdx);
 	}
 	,getNPart: function(idx) {
@@ -8545,7 +8384,6 @@ nx3.NBar.prototype = {
 	,iterator: function() {
 		return HxOverrides.iter(this.nparts);
 	}
-	,length: null
 	,get_length: function() {
 		return this.nparts.length;
 	}
@@ -8575,13 +8413,7 @@ nx3.NHead = function(type,level,sign,tie,tieTo) {
 $hxClasses["nx3.NHead"] = nx3.NHead;
 nx3.NHead.__name__ = ["nx3","NHead"];
 nx3.NHead.prototype = {
-	level: null
-	,type: null
-	,sign: null
-	,tie: null
-	,tieTo: null
-	,nnote: null
-	,toString: function() {
+	toString: function() {
 		var str = "" + this.level;
 		if(this.type != nx3.EHeadType.Normal) str += " " + this.type[0]; else str += "";
 		if(this.sign != nx3.ESign.None) str += " " + this.sign[0]; else str += "";
@@ -8615,20 +8447,13 @@ $hxClasses["nx3.NNote"] = nx3.NNote;
 nx3.NNote.__name__ = ["nx3","NNote"];
 nx3.NNote.__interfaces__ = [hxlazy.Lazy];
 nx3.NNote.prototype = {
-	type: null
-	,value: null
-	,direction: null
-	,nheads: null
-	,nvoice: null
-	,iterator: function() {
+	iterator: function() {
 		var _this = this.get_nheads();
 		return HxOverrides.iter(_this);
 	}
-	,length: null
 	,get_length: function() {
 		return this.get_nheads().length;
 	}
-	,nheads_: null
 	,get_nheads: function() {
 		if(this.nheads_ != null) return this.nheads_;
 		{
@@ -8679,24 +8504,20 @@ nx3.NNote.prototype = {
 		var val = nx3.ENoteValTools.toValString(this.value);
 		return "%l" + type + headstags + val;
 	}
-	,__lazyheadLevels: null
 	,get_headLevels: function() {
 		if(this.__lazyheadLevels != null) return this.__lazyheadLevels;
 		return this.__lazyheadLevels = Lambda.array(Lambda.map(this,function(head) {
 			return head.level;
 		}));
 	}
-	,__lazytopLevel: null
 	,get_topLevel: function() {
 		if(this.__lazytopLevel != null) return this.__lazytopLevel;
 		return this.__lazytopLevel = this.get_nheads()[0].level;
 	}
-	,__lazybottomLevel: null
 	,get_bottomLevel: function() {
 		if(this.__lazybottomLevel != null) return this.__lazybottomLevel;
 		return this.__lazybottomLevel = this.get_nheads()[this.get_nheads().length - 1].level;
 	}
-	,__lazyties: null
 	,get_ties: function() {
 		if(this.__lazyties != null) return this.__lazyties;
 		return this.__lazyties = Lambda.array(Lambda.filter(this,function(head) {
@@ -8729,17 +8550,9 @@ nx3.NPart.prototype = {
 	iterator: function() {
 		return HxOverrides.iter(this.nvoices);
 	}
-	,length: null
 	,get_length: function() {
 		return this.nvoices.length;
 	}
-	,nbar: null
-	,type: null
-	,nvoices: null
-	,clef: null
-	,clefDisplay: null
-	,key: null
-	,keyDisplay: null
 	,getNVoice: function(idx) {
 		if(idx < 0 || idx > this.nvoices.length) return null; else return this.nvoices[idx];
 	}
@@ -8769,19 +8582,17 @@ nx3.NScore = function(nbars) {
 	this.configuration.rtempo = 80;
 	this.configuration.rlength = 3;
 	this.configuration.rcountin = 2;
+	this.uuid = thx.core.UUID.create();
 };
 $hxClasses["nx3.NScore"] = nx3.NScore;
 nx3.NScore.__name__ = ["nx3","NScore"];
 nx3.NScore.prototype = {
-	nbars: null
-	,configuration: null
-	,getNBar: function(idx) {
+	getNBar: function(idx) {
 		if(idx < 0 || idx > this.nbars.length) return null; else return this.nbars[idx];
 	}
 	,iterator: function() {
 		return HxOverrides.iter(this.nbars);
 	}
-	,length: null
 	,get_length: function() {
 		return this.nbars.length;
 	}
@@ -8981,14 +8792,9 @@ nx3.NVoice = function(notes,type,direction) {
 $hxClasses["nx3.NVoice"] = nx3.NVoice;
 nx3.NVoice.__name__ = ["nx3","NVoice"];
 nx3.NVoice.prototype = {
-	direction: null
-	,nnotes: null
-	,type: null
-	,npart: null
-	,iterator: function() {
+	iterator: function() {
 		return HxOverrides.iter(this.nnotes);
 	}
-	,length: null
 	,get_length: function() {
 		return this.nnotes.length;
 	}
@@ -9097,9 +8903,7 @@ nx3.PBamegroupFrameTipCalculator.intMax = function(levels) {
 	return result;
 };
 nx3.PBamegroupFrameTipCalculator.prototype = {
-	notelevels: null
-	,direction: null
-	,getTips: function() {
+	getTips: function() {
 		var stemLength = 7;
 		var min = nx3.PBamegroupFrameTipCalculator.intMin(this.notelevels);
 		var leftTip = this.notelevels[0];
@@ -9137,27 +8941,19 @@ nx3.PBar = function(nbar) {
 $hxClasses["nx3.PBar"] = nx3.PBar;
 nx3.PBar.__name__ = ["nx3","PBar"];
 nx3.PBar.prototype = {
-	nbar: null
-	,iterator: function() {
+	iterator: function() {
 		var _this = this.getParts();
 		return HxOverrides.iter(_this);
 	}
-	,length: null
 	,get_length: function() {
 		return this.getParts().length;
 	}
-	,score: null
 	,getScore: function() {
 		return this.score;
 	}
-	,systembar: null
 	,getSystembar: function() {
 		return this.systembar;
 	}
-	,clefs: null
-	,keys: null
-	,time: null
-	,_clefs: null
 	,get_clefs: function() {
 		if(this._clefs != null) return this._clefs;
 		this._clefs = new Array();
@@ -9170,7 +8966,6 @@ nx3.PBar.prototype = {
 		}
 		return this._clefs;
 	}
-	,_keys: null
 	,get_keys: function() {
 		if(this._keys != null) return this._keys;
 		this._keys = new Array();
@@ -9186,9 +8981,6 @@ nx3.PBar.prototype = {
 	,get_time: function() {
 		return this.nbar.time;
 	}
-	,displayClefs: null
-	,displayKeys: null
-	,displayTime: null
 	,get_displayClefs: function() {
 		var result = nx3.EDisplayALN.Never;
 		var _g = 0;
@@ -9226,7 +9018,6 @@ nx3.PBar.prototype = {
 		if(this.nbar.timeDisplay != null) result = this.nbar.timeDisplay; else result = nx3.EDisplayALN.Layout;
 		return this.nbar.timeDisplay;
 	}
-	,parts: null
 	,getParts: function() {
 		if(this.parts != null) return this.parts;
 		this.parts = [];
@@ -9244,7 +9035,6 @@ nx3.PBar.prototype = {
 	,getPart: function(idx) {
 		if(idx < 0 || idx > this.getParts().length) return null; else return this.getParts()[idx];
 	}
-	,columns: null
 	,getColumns: function() {
 		if(this.columns != null) return this.columns;
 		var generator = new nx3.PColumnsGenerator(this);
@@ -9263,7 +9053,6 @@ nx3.PBar.prototype = {
 	,calculateAPositions: function() {
 		new nx3.PColumnsAllotmentCalculator(this).calculate();
 	}
-	,value: null
 	,getValue: function() {
 		if(this.value != 0) return this.value;
 		var _g = 0;
@@ -9275,21 +9064,17 @@ nx3.PBar.prototype = {
 		}
 		return this.value;
 	}
-	,contentwidth: null
 	,getContentwidth: function() {
 		if(this.contentwidth != null) return this.contentwidth;
 		var lastcolumn = cx.ArrayTools.last(this.getColumns());
 		this.contentwidth = lastcolumn.getAPostion() + Math.max(lastcolumn.getADistance(),lastcolumn.getRightX());
 		return this.contentwidth;
 	}
-	,contentx: null
 	,getContentXZero: function() {
 		var firstcolumn = cx.ArrayTools.first(this.getColumns());
 		this.contentx = -firstcolumn.getLeftX();
 		return this.contentx;
 	}
-	,stretchwidth: null
-	,allottedDistanceSum: null
 	,getAllottedDistanceSum: function() {
 		if(this.allottedDistanceSum != null) return this.allottedDistanceSum;
 		this.getContentwidth();
@@ -9298,7 +9083,6 @@ nx3.PBar.prototype = {
 	,getStretchWidth: function() {
 		return this.stretchwidth;
 	}
-	,tieconnections: null
 	,getTieConnections: function() {
 		if(this.tieconnections != null) return this.tieconnections;
 		this.tieconnections = [];
@@ -9369,14 +9153,7 @@ nx3.PBarConfig = function(showClef,showKey,showTime,showCautClef,showCautKey,sho
 $hxClasses["nx3.PBarConfig"] = nx3.PBarConfig;
 nx3.PBarConfig.__name__ = ["nx3","PBarConfig"];
 nx3.PBarConfig.prototype = {
-	showClef: null
-	,showKey: null
-	,showTime: null
-	,showCautClef: null
-	,showCautKey: null
-	,showCautTime: null
-	,calculatedWidth: null
-	,__class__: nx3.PBarConfig
+	__class__: nx3.PBarConfig
 };
 nx3.PBarStretchCalculator = function(systembar) {
 	this.systembar = systembar;
@@ -9384,8 +9161,7 @@ nx3.PBarStretchCalculator = function(systembar) {
 $hxClasses["nx3.PBarStretchCalculator"] = nx3.PBarStretchCalculator;
 nx3.PBarStretchCalculator.__name__ = ["nx3","PBarStretchCalculator"];
 nx3.PBarStretchCalculator.prototype = {
-	systembar: null
-	,stretch: function(amount) {
+	stretch: function(amount) {
 		this.systembar.getBarMeasurements().setContentWidth(this.systembar.getBarMeasurements().getContentWidth() + amount);
 		if(this.systembar.bar.getColumns().length < 2) return;
 		var columns = this.systembar.bar.getColumns();
@@ -9502,8 +9278,7 @@ nx3.PBaseRectCalculator = function(note) {
 $hxClasses["nx3.PBaseRectCalculator"] = nx3.PBaseRectCalculator;
 nx3.PBaseRectCalculator.__name__ = ["nx3","PBaseRectCalculator"];
 nx3.PBaseRectCalculator.prototype = {
-	note: null
-	,getBaseRect: function() {
+	getBaseRect: function() {
 		{
 			var _g = this.note.nnote.type;
 			switch(_g[1]) {
@@ -9539,8 +9314,7 @@ nx3.PBeamflagCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamflagCalculator"] = nx3.PBeamflagCalculator;
 nx3.PBeamflagCalculator.__name__ = ["nx3","PBeamflagCalculator"];
 nx3.PBeamflagCalculator.prototype = {
-	beamgroup: null
-	,getBeamflags: function() {
+	getBeamflags: function() {
 		var firstpass = [];
 		var noteIdx = 0;
 		var holder = [];
@@ -9594,9 +9368,7 @@ nx3.PBeamgroup = function(pnotes) {
 $hxClasses["nx3.PBeamgroup"] = nx3.PBeamgroup;
 nx3.PBeamgroup.__name__ = ["nx3","PBeamgroup"];
 nx3.PBeamgroup.prototype = {
-	pnotes: null
-	,value: null
-	,getValue: function() {
+	getValue: function() {
 		if(this.value != null) return this.value;
 		this.value = 0;
 		var _g = 0;
@@ -9608,7 +9380,6 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.value;
 	}
-	,direction: null
 	,setDirection: function(direction) {
 		this.direction = direction;
 	}
@@ -9619,11 +9390,9 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.direction;
 	}
-	,voice: null
 	,getPVoice: function() {
 		return this.voice;
 	}
-	,stavexpositions: null
 	,getNotesStemXPositions: function() {
 		if(this.stavexpositions != null) return this.stavexpositions;
 		this.stavexpositions = [];
@@ -9636,7 +9405,6 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.stavexpositions;
 	}
-	,frame: null
 	,getFrame: function() {
 		if(this.frame != null) return this.frame;
 		var firstnote = this.pnotes[0].nnote;
@@ -9660,14 +9428,12 @@ nx3.PBeamgroupDirectionCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamgroupDirectionCalculator"] = nx3.PBeamgroupDirectionCalculator;
 nx3.PBeamgroupDirectionCalculator.__name__ = ["nx3","PBeamgroupDirectionCalculator"];
 nx3.PBeamgroupDirectionCalculator.prototype = {
-	beamgroup: null
-	,getDirection: function() {
+	getDirection: function() {
 		this.topLevel = this.findTopLevel();
 		this.bottomLevel = this.findBottomLevel();
 		if(this.topLevel + this.bottomLevel <= 0) return nx3.EDirectionUD.Down;
 		return nx3.EDirectionUD.Up;
 	}
-	,topLevel: null
 	,findTopLevel: function() {
 		var topLevel = this.beamgroup.pnotes[0].nnote.get_topLevel();
 		if(this.beamgroup.pnotes.length == 1) return topLevel;
@@ -9680,7 +9446,6 @@ nx3.PBeamgroupDirectionCalculator.prototype = {
 		}
 		return topLevel;
 	}
-	,bottomLevel: null
 	,findBottomLevel: function() {
 		var bottomLevel = this.beamgroup.pnotes[0].nnote.get_bottomLevel();
 		if(this.beamgroup.pnotes.length == 1) return bottomLevel;
@@ -9701,10 +9466,7 @@ nx3.PBeamgroupFrameCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamgroupFrameCalculator"] = nx3.PBeamgroupFrameCalculator;
 nx3.PBeamgroupFrameCalculator.__name__ = ["nx3","PBeamgroupFrameCalculator"];
 nx3.PBeamgroupFrameCalculator.prototype = {
-	beamgroup: null
-	,outerLevels: null
-	,innerLevels: null
-	,getFrame: function() {
+	getFrame: function() {
 		this.calcLevelArrays();
 		var frame = this.calcFramePrototype();
 		return frame;
@@ -9773,65 +9535,51 @@ nx3.PColumn = function(bar,complexes,valueposition,value) {
 $hxClasses["nx3.PColumn"] = nx3.PColumn;
 nx3.PColumn.__name__ = ["nx3","PColumn"];
 nx3.PColumn.prototype = {
-	bar: null
-	,complexes: null
-	,valueposition: null
-	,getComplexes: function() {
+	getComplexes: function() {
 		return this.complexes;
 	}
 	,getValueposition: function() {
 		return this.valueposition;
 	}
-	,value: null
 	,getValue: function() {
 		if(this.value == null) throw "value shouldnt be null";
 		return this.value;
 	}
-	,mdistance: null
 	,getMDistance: function() {
 		if(this.mdistance == null) throw "mdistance shouldnt be null";
 		return this.mdistance;
 	}
-	,mdistanceBenefit: null
 	,getMDistanceBenefit: function() {
 		if(this.mdistanceBenefit != null) return this.mdistanceBenefit;
 		this.mdistanceBenefit = Math.max(0,this.getMDistance() - 3.2);
 		return this.mdistanceBenefit;
 	}
-	,allottedDistance: null
-	,distancedelta: null
 	,getDistanceDelta: function() {
 		if(this.distancedelta != null) return this.distancedelta;
 		this.bar.getContentwidth();
 		this.distancedelta = this.allottedDistance / this.bar.getAllottedDistanceSum();
 		return this.distancedelta;
 	}
-	,mposition: null
 	,getMPosition: function() {
 		return this.mposition;
 	}
-	,adistance: null
 	,getADistance: function() {
 		if(this.adistance != null) return this.adistance;
 		this.bar.calculateAPositions();
 		return this.adistance;
 	}
-	,adistanceBenefit: null
 	,getADistanceBenefit: function() {
 		return this.adistanceBenefit;
 	}
-	,aposition: null
 	,getAPostion: function() {
 		if(this.aposition != null) return this.aposition;
 		this.bar.calculateAPositions();
 		return this.aposition;
 	}
-	,sposition: null
 	,getSPosition: function() {
 		if(this.sposition != null) return this.sposition;
 		return this.getAPostion();
 	}
-	,rightX: null
 	,getRightX: function() {
 		if(this.rightX != null) return this.rightX;
 		this.rightX = 0;
@@ -9844,7 +9592,6 @@ nx3.PColumn.prototype = {
 		}
 		return this.rightX;
 	}
-	,leftX: null
 	,getLeftX: function() {
 		if(this.leftX != null) return this.leftX;
 		this.leftX = 0;
@@ -9891,9 +9638,7 @@ nx3.PColumnsAllotmentCalculator = function(bar) {
 $hxClasses["nx3.PColumnsAllotmentCalculator"] = nx3.PColumnsAllotmentCalculator;
 nx3.PColumnsAllotmentCalculator.__name__ = ["nx3","PColumnsAllotmentCalculator"];
 nx3.PColumnsAllotmentCalculator.prototype = {
-	bar: null
-	,spacing: null
-	,calculate: function(stretch) {
+	calculate: function(stretch) {
 		if(stretch == null) stretch = 0;
 		var aposition = this.bar.getContentXZero();
 		var _g = 0;
@@ -9934,8 +9679,7 @@ nx3.PColumnsDistancesCalculator = function(bar) {
 $hxClasses["nx3.PColumnsDistancesCalculator"] = nx3.PColumnsDistancesCalculator;
 nx3.PColumnsDistancesCalculator.__name__ = ["nx3","PColumnsDistancesCalculator"];
 nx3.PColumnsDistancesCalculator.prototype = {
-	bar: null
-	,calculate: function() {
+	calculate: function() {
 		var leftColumn = null;
 		var xposition = 0.0;
 		var _g1 = 0;
@@ -9980,7 +9724,6 @@ nx3.PColumnsDistancesCalculator.prototype = {
 			leftColumn = rightColumn;
 		}
 	}
-	,prevLeftComplex: null
 	,getComplexDistances: function(columnIdx,complexIdx,leftComplex,rightComplex) {
 		if(rightComplex == null) {
 			if(leftComplex != null) {
@@ -10014,12 +9757,7 @@ nx3.PColumnsGenerator = function(bar) {
 $hxClasses["nx3.PColumnsGenerator"] = nx3.PColumnsGenerator;
 nx3.PColumnsGenerator.__name__ = ["nx3","PColumnsGenerator"];
 nx3.PColumnsGenerator.prototype = {
-	vparts: null
-	,positions: null
-	,columns: null
-	,positionsColumns: null
-	,bar: null
-	,getColumns: function() {
+	getColumns: function() {
 		if(this.columns != null) return this.columns;
 		this.positions = this.calcPositions(this.vparts);
 		this.calcColumns(this.positions,this.vparts);
@@ -10100,10 +9838,7 @@ nx3.PComplex = function(part,notes,valueposition) {
 $hxClasses["nx3.PComplex"] = nx3.PComplex;
 nx3.PComplex.__name__ = ["nx3","PComplex"];
 nx3.PComplex.prototype = {
-	part: null
-	,valueposition: null
-	,notes: null
-	,getNotes: function() {
+	getNotes: function() {
 		return this.notes;
 	}
 	,getValueposition: function() {
@@ -10112,14 +9847,12 @@ nx3.PComplex.prototype = {
 	,getPart: function() {
 		return this.part;
 	}
-	,column: null
 	,getColumn: function() {
 		if(this.column != null) return this.column;
 		this.part.getBar().getColumns();
 		if(this.column == null) throw "this shouldn't happen";
 		return this.column;
 	}
-	,headsrects: null
 	,getHeadsRects: function() {
 		if(this.headsrects != null) return this.headsrects;
 		var firstrects = this.notes[0].getHeadsRects();
@@ -10132,33 +9865,28 @@ nx3.PComplex.prototype = {
 		this.headsrects = firstrects.concat(secondrects);
 		return this.headsrects;
 	}
-	,signsrects: null
 	,getSignsRects: function() {
 		if(this.signsrects != null) return this.signsrects;
 		if(this.getVisibleSigns().length == 0) return [];
 		this.signsrects = new nx3.PSignsRectsCalculator(this.getVisibleSigns()).getSignRects(this.getHeadsRects());
 		return this.signsrects;
 	}
-	,secondoffset: null
 	,getNoteXOffset: function(note) {
 		if(note == cx.ArrayTools.first(this.getNotes())) return 0;
 		if(this.secondoffset != null) return this.secondoffset;
 		this.secondoffset = new nx3.PNoteOffsetCalculator(this).getNoteOffset(cx.ArrayTools.second(this.getNotes()));
 		return this.secondoffset;
 	}
-	,signs: null
 	,getSigns: function() {
 		if(this.signs != null) return this.signs;
 		this.signs = new nx3.PSignsCalculator(this.getNotes()).getSigns();
 		return this.signs;
 	}
-	,visiblesigns: null
 	,getVisibleSigns: function() {
 		if(this.visiblesigns != null) return this.visiblesigns;
 		this.visiblesigns = new nx3.PSignsCalculator(this.getNotes()).getVisibleSigns();
 		return this.visiblesigns;
 	}
-	,stavesrects: null
 	,getStavesRects: function() {
 		if(this.stavesrects != null) return this.stavesrects;
 		this.stavesrects = [];
@@ -10183,19 +9911,16 @@ nx3.PComplex.prototype = {
 	,getStaveRect: function(note) {
 		return new nx3.PStaveRectCalculator(note).getStaveRect();
 	}
-	,tierects: null
 	,getTieRects: function() {
 		if(this.tierects != null) return this.tierects;
 		this.tierects = new nx3.PComplexTierectsCalculator(this).getTieRects();
 		return this.tierects;
 	}
-	,dotrects: null
 	,getDotRects: function() {
 		if(this.dotrects != null) return this.dotrects;
 		this.dotrects = new nx3.PComplexDotsrectsCalculator(this).getDotRects();
 		return this.dotrects;
 	}
-	,baserect: null
 	,getBaseRect: function() {
 		if(this.baserect != null) return this.baserect;
 		this.baserect = new nx3.geom.Rectangle(0,0,0,0);
@@ -10208,7 +9933,6 @@ nx3.PComplex.prototype = {
 		}
 		return this.baserect;
 	}
-	,allrects: null
 	,getAllRects: function() {
 		if(this.allrects != null) return this.allrects;
 		this.allrects = [];
@@ -10219,12 +9943,10 @@ nx3.PComplex.prototype = {
 		this.allrects = nx3.geom.RectanglesTools.concat(this.allrects,this.getDotRects());
 		return this.allrects;
 	}
-	,rect: null
 	,getRect: function() {
 		this.rect = nx3.geom.RectanglesTools.unionAll(this.getAllRects());
 		return this.rect;
 	}
-	,xposition: null
 	,getXPosition: function() {
 		if(this.xposition != null) return this.xposition;
 		this.getHeadsRects();
@@ -10235,25 +9957,21 @@ nx3.PComplex.prototype = {
 		var _this = this.part.getComplexes();
 		return HxOverrides.indexOf(_this,this,0);
 	}
-	,leftX: null
 	,getLeftX: function() {
 		if(this.leftX != null) return this.leftX;
 		this.leftX = this.getRect().x;
 		return this.leftX;
 	}
-	,rightX: null
 	,getRightX: function() {
 		if(this.rightX != null) return this.rightX;
 		this.rightX = this.getRect().x + this.getRect().width;
 		return this.rightX;
 	}
-	,next: null
 	,getNext: function() {
 		if(this.next != null) return this.next;
 		this.next = this.getColumn().getNextComplex(this);
 		return this.next;
 	}
-	,tieinfos: null
 	,setTieinfos: function(val) {
 		this.tieinfos = val;
 	}
@@ -10274,7 +9992,6 @@ nx3.PComplex.prototype = {
 		}
 		return result;
 	}
-	,hasTie: null
 	,getHasTie: function() {
 		if(this.hasTie != null) return this.hasTie;
 		var _g = 0;
@@ -10290,7 +10007,6 @@ nx3.PComplex.prototype = {
 		this.hasTie = false;
 		return this.hasTie;
 	}
-	,headlevels: null
 	,getHeadLevels: function() {
 		if(this.headlevels != null) return this.headlevels;
 		this.headlevels = [];
@@ -10352,8 +10068,7 @@ nx3.PComplexDotsrectsCalculator = function(complex) {
 $hxClasses["nx3.PComplexDotsrectsCalculator"] = nx3.PComplexDotsrectsCalculator;
 nx3.PComplexDotsrectsCalculator.__name__ = ["nx3","PComplexDotsrectsCalculator"];
 nx3.PComplexDotsrectsCalculator.prototype = {
-	complex: null
-	,getDotRects: function() {
+	getDotRects: function() {
 		var nrofnotes = this.complex.getNotes().length;
 		var firstnote = cx.ArrayTools.first(this.complex.getNotes());
 		var rects = this.getRectsForNote(firstnote,false);
@@ -10401,8 +10116,7 @@ nx3.PComplexTieTargetCalculator = function(tieinfos) {
 $hxClasses["nx3.PComplexTieTargetCalculator"] = nx3.PComplexTieTargetCalculator;
 nx3.PComplexTieTargetCalculator.__name__ = ["nx3","PComplexTieTargetCalculator"];
 nx3.PComplexTieTargetCalculator.prototype = {
-	tieinfos: null
-	,findTargetHeads: function() {
+	findTargetHeads: function() {
 		var _g = 0;
 		var _g1 = this.tieinfos;
 		while(_g < _g1.length) {
@@ -10433,8 +10147,7 @@ nx3.PComplexTierectsCalculator = function(complex) {
 $hxClasses["nx3.PComplexTierectsCalculator"] = nx3.PComplexTierectsCalculator;
 nx3.PComplexTierectsCalculator.__name__ = ["nx3","PComplexTierectsCalculator"];
 nx3.PComplexTierectsCalculator.prototype = {
-	complex: null
-	,getTieRects: function() {
+	getTieRects: function() {
 		var nrofnotes = this.complex.getNotes().length;
 		var firstnote = cx.ArrayTools.first(this.complex.getNotes());
 		var firstties = firstnote.getTies();
@@ -10536,9 +10249,7 @@ nx3.PHead = function(nhead) {
 $hxClasses["nx3.PHead"] = nx3.PHead;
 nx3.PHead.__name__ = ["nx3","PHead"];
 nx3.PHead.prototype = {
-	nhead: null
-	,note: null
-	,getNote: function() {
+	getNote: function() {
 		return this.note;
 	}
 	,toString: function() {
@@ -10553,9 +10264,7 @@ nx3.PHeadPlacementsCalculator = function(vheads,direction) {
 $hxClasses["nx3.PHeadPlacementsCalculator"] = nx3.PHeadPlacementsCalculator;
 nx3.PHeadPlacementsCalculator.__name__ = ["nx3","PHeadPlacementsCalculator"];
 nx3.PHeadPlacementsCalculator.prototype = {
-	vheads: null
-	,direction: null
-	,getHeadsPlacements: function() {
+	getHeadsPlacements: function() {
 		if(this.vheads.length == 1) return [{ level : this.vheads[0].nhead.level, pos : nx3.EHeadPosition.Center}];
 		var len = this.vheads.length;
 		var placements = [];
@@ -10614,12 +10323,7 @@ nx3.PHeadsRectsCalculator = function(note,direction) {
 $hxClasses["nx3.PHeadsRectsCalculator"] = nx3.PHeadsRectsCalculator;
 nx3.PHeadsRectsCalculator.__name__ = ["nx3","PHeadsRectsCalculator"];
 nx3.PHeadsRectsCalculator.prototype = {
-	vheads: null
-	,placements: null
-	,notevalue: null
-	,notetype: null
-	,direction: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		var rects = new Array();
 		var i = 0;
 		var _g = 0;
@@ -10695,19 +10399,15 @@ nx3.PNote = function(nnote) {
 $hxClasses["nx3.PNote"] = nx3.PNote;
 nx3.PNote.__name__ = ["nx3","PNote"];
 nx3.PNote.prototype = {
-	nnote: null
-	,iterator: function() {
+	iterator: function() {
 		return HxOverrides.iter(this.heads);
 	}
-	,length: null
 	,get_length: function() {
 		return this.heads.length;
 	}
-	,voice: null
 	,getVoice: function() {
 		return this.voice;
 	}
-	,heads: null
 	,getHeads: function() {
 		if(this.heads != null) return this.heads;
 		this.heads = [];
@@ -10722,7 +10422,6 @@ nx3.PNote.prototype = {
 		}
 		return this.heads;
 	}
-	,beamgroup: null
 	,getBeamgroup: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.beamgroup == null) this.voice.getBeamgroups();
@@ -10732,14 +10431,12 @@ nx3.PNote.prototype = {
 	,getDirection: function() {
 		return this.getBeamgroup().getDirection();
 	}
-	,complex: null
 	,getComplex: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.complex == null) this.voice.getPart().getComplexes();
 		if(this.complex == null) throw "Shouldn't happen";
 		return this.complex;
 	}
-	,headsRects: null
 	,getHeadsRects: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.headsRects != null) return this.headsRects;
@@ -10747,8 +10444,6 @@ nx3.PNote.prototype = {
 		this.headsRects = calculator.getHeadsRects();
 		return this.headsRects;
 	}
-	,staveRect: null
-	,staveRectChecked: null
 	,getStaveRect: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.staveRectChecked) return this.staveRect;
@@ -10756,7 +10451,6 @@ nx3.PNote.prototype = {
 		this.staveRectChecked = true;
 		return this.staveRect;
 	}
-	,staveXPosition: null
 	,getStaveXPosition: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.staveXPosition != null) return this.staveXPosition;
@@ -10765,21 +10459,18 @@ nx3.PNote.prototype = {
 		if(this.getDirection() == nx3.EDirectionUD.Up) this.staveXPosition = staverect.width; else this.staveXPosition = staverect.x;
 		return this.staveXPosition;
 	}
-	,baserect: null
 	,getBaseRect: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.baserect != null) return this.baserect;
 		this.baserect = new nx3.PBaseRectCalculator(this).getBaseRect();
 		return this.baserect;
 	}
-	,xoffset: null
 	,getXOffset: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.xoffset != null) return this.xoffset;
 		this.xoffset = this.getComplex().getNoteXOffset(this);
 		return this.xoffset;
 	}
-	,xposition: null
 	,getXPosition: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.xposition != null) return this.xposition;
@@ -10789,7 +10480,6 @@ nx3.PNote.prototype = {
 	,getTies: function() {
 		return this.nnote.get_ties();
 	}
-	,next: null
 	,getNext: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.next != null) return this.next;
@@ -10837,9 +10527,7 @@ nx3.PNoteHeadsRectTplCalculator = function(note) {
 $hxClasses["nx3.PNoteHeadsRectTplCalculator"] = nx3.PNoteHeadsRectTplCalculator;
 nx3.PNoteHeadsRectTplCalculator.__name__ = ["nx3","PNoteHeadsRectTplCalculator"];
 nx3.PNoteHeadsRectTplCalculator.prototype = {
-	note: null
-	,level: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		return [new nx3.geom.Rectangle(-5.5,-5.3 + this.level,10,8.8)];
 	}
 	,__class__: nx3.PNoteHeadsRectTplCalculator
@@ -10852,10 +10540,7 @@ nx3.PNoteHeadsRectsLyricsCalculator = function(note,text,font) {
 $hxClasses["nx3.PNoteHeadsRectsLyricsCalculator"] = nx3.PNoteHeadsRectsLyricsCalculator;
 nx3.PNoteHeadsRectsLyricsCalculator.__name__ = ["nx3","PNoteHeadsRectsLyricsCalculator"];
 nx3.PNoteHeadsRectsLyricsCalculator.prototype = {
-	note: null
-	,text: null
-	,font: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		var target = new nx3.render.TargetSvg();
 		if(this.font != null) target.setFont(this.font);
 		var width = target.textwidth(this.text);
@@ -10871,8 +10556,7 @@ nx3.PNoteHeadsRectsPausesCalculator = function(vnote) {
 $hxClasses["nx3.PNoteHeadsRectsPausesCalculator"] = nx3.PNoteHeadsRectsPausesCalculator;
 nx3.PNoteHeadsRectsPausesCalculator.__name__ = ["nx3","PNoteHeadsRectsPausesCalculator"];
 nx3.PNoteHeadsRectsPausesCalculator.prototype = {
-	vnote: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		var rects;
 		var _g = nx3.ENoteValTools.beaminglevel(this.vnote.nnote.value);
 		switch(_g) {
@@ -10942,12 +10626,7 @@ nx3.PNoteHeadsRectsPitchCalculator = function(note) {
 $hxClasses["nx3.PNoteHeadsRectsPitchCalculator"] = nx3.PNoteHeadsRectsPitchCalculator;
 nx3.PNoteHeadsRectsPitchCalculator.__name__ = ["nx3","PNoteHeadsRectsPitchCalculator"];
 nx3.PNoteHeadsRectsPitchCalculator.prototype = {
-	note: null
-	,partlevel: null
-	,level: null
-	,midinote: null
-	,chain: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		if(!this.chain) return [new nx3.geom.Rectangle(-2,-2,1,4)];
 		var rlevel = this.level + this.midinote;
 		return [new nx3.geom.Rectangle(-2,-2 + rlevel,1,4)];
@@ -10960,8 +10639,7 @@ nx3.PNoteOffsetCalculator = function(complex) {
 $hxClasses["nx3.PNoteOffsetCalculator"] = nx3.PNoteOffsetCalculator;
 nx3.PNoteOffsetCalculator.__name__ = ["nx3","PNoteOffsetCalculator"];
 nx3.PNoteOffsetCalculator.prototype = {
-	complex: null
-	,getNoteOffset: function(note) {
+	getNoteOffset: function(note) {
 		if(note == cx.ArrayTools.first(this.complex.getNotes())) return 0;
 		var firstrects = this.complex.notes[0].getHeadsRects();
 		var secondrects;
@@ -10984,10 +10662,7 @@ nx3.PNoteheadsRectsCalculator = function(note) {
 $hxClasses["nx3.PNoteheadsRectsCalculator"] = nx3.PNoteheadsRectsCalculator;
 nx3.PNoteheadsRectsCalculator.__name__ = ["nx3","PNoteheadsRectsCalculator"];
 nx3.PNoteheadsRectsCalculator.prototype = {
-	note: null
-	,heads: null
-	,placements: null
-	,getHeadsRects: function() {
+	getHeadsRects: function() {
 		{
 			var _g = this.note.nnote.type;
 			switch(_g[1]) {
@@ -11029,20 +10704,16 @@ nx3.PPart = function(npart) {
 $hxClasses["nx3.PPart"] = nx3.PPart;
 nx3.PPart.__name__ = ["nx3","PPart"];
 nx3.PPart.prototype = {
-	npart: null
-	,iterator: function() {
+	iterator: function() {
 		var _this = this.getVoices();
 		return HxOverrides.iter(_this);
 	}
-	,length: null
 	,get_length: function() {
 		return this.getVoices().length;
 	}
-	,bar: null
 	,getBar: function() {
 		return this.bar;
 	}
-	,voices: null
 	,getVoices: function() {
 		if(this.voices != null) return this.voices;
 		this.voices = [];
@@ -11060,14 +10731,12 @@ nx3.PPart.prototype = {
 	,getVoice: function(idx) {
 		if(idx < 0 || idx > this.getVoices().length) return null; else return this.getVoices()[idx];
 	}
-	,complexes: null
 	,getComplexes: function() {
 		if(this.complexes != null) return this.complexes;
 		var generator = new nx3.PPartComplexesGenerator(this);
 		this.complexes = generator.getComplexes();
 		return this.complexes;
 	}
-	,positionsComplexes: null
 	,getPositionsComplexes: function() {
 		if(this.positionsComplexes != null) return this.positionsComplexes;
 		this.positionsComplexes = new haxe.ds.IntMap();
@@ -11084,7 +10753,6 @@ nx3.PPart.prototype = {
 		var _this = this.bar.getParts();
 		return HxOverrides.indexOf(_this,this,0);
 	}
-	,value: null
 	,getValue: function() {
 		if(this.value != 0) return this.value;
 		var _g = 0;
@@ -11096,7 +10764,6 @@ nx3.PPart.prototype = {
 		}
 		return this.value;
 	}
-	,rect: null
 	,getRect: function() {
 		if(this.rect != null) return this.rect;
 		var result;
@@ -11161,10 +10828,7 @@ nx3.PPartComplexesGenerator = function(part) {
 $hxClasses["nx3.PPartComplexesGenerator"] = nx3.PPartComplexesGenerator;
 nx3.PPartComplexesGenerator.__name__ = ["nx3","PPartComplexesGenerator"];
 nx3.PPartComplexesGenerator.prototype = {
-	part: null
-	,vvoices: null
-	,complexes: null
-	,getComplexes: function() {
+	getComplexes: function() {
 		if(this.complexes != null) return this.complexes;
 		this.positionsMap = this.calcPositionsMap();
 		this.calcComplexes(this.positionsMap);
@@ -11183,7 +10847,6 @@ nx3.PPartComplexesGenerator.prototype = {
 			this.complexes.push(vcomplex);
 		}
 	}
-	,positionsMap: null
 	,calcPositionsMap: function() {
 		var positionsMap = new haxe.ds.IntMap();
 		var _g = 0;
@@ -11213,8 +10876,7 @@ nx3.PPartbeamgroupsDirectionCalculator = function(ppart) {
 $hxClasses["nx3.PPartbeamgroupsDirectionCalculator"] = nx3.PPartbeamgroupsDirectionCalculator;
 nx3.PPartbeamgroupsDirectionCalculator.__name__ = ["nx3","PPartbeamgroupsDirectionCalculator"];
 nx3.PPartbeamgroupsDirectionCalculator.prototype = {
-	ppart: null
-	,calculateBeamgroupsDirections: function() {
+	calculateBeamgroupsDirections: function() {
 		var partbeamgroups = [];
 		var _g = 0;
 		var _g1 = this.ppart.getVoices();
@@ -11305,9 +10967,7 @@ nx3.PScore = function(nscore) {
 $hxClasses["nx3.PScore"] = nx3.PScore;
 nx3.PScore.__name__ = ["nx3","PScore"];
 nx3.PScore.prototype = {
-	nscore: null
-	,bars: null
-	,getBars: function() {
+	getBars: function() {
 		if(this.bars != null) return this.bars;
 		this.bars = [];
 		var _g = 0;
@@ -11332,8 +10992,6 @@ nx3.PScore.prototype = {
 		}
 		return result;
 	}
-	,systems: null
-	,prevSystemwidth: null
 	,getSystems: function(systemwidth) {
 		if(systemwidth != this.prevSystemwidth) this.systems = null;
 		if(this.systems != null) return this.systems;
@@ -11395,8 +11053,7 @@ nx3.PScoreSystemStretcher = function(system) {
 $hxClasses["nx3.PScoreSystemStretcher"] = nx3.PScoreSystemStretcher;
 nx3.PScoreSystemStretcher.__name__ = ["nx3","PScoreSystemStretcher"];
 nx3.PScoreSystemStretcher.prototype = {
-	system: null
-	,stretchTo: function(stretchSystemToWidth,ifMoreThan) {
+	stretchTo: function(stretchSystemToWidth,ifMoreThan) {
 		if(ifMoreThan == null) ifMoreThan = 0;
 		if(ifMoreThan > 0) {
 			if(this.system.getWidth() <= ifMoreThan) return true;
@@ -11423,9 +11080,7 @@ nx3.PScoreSystemsGenerator = function(score,bars) {
 $hxClasses["nx3.PScoreSystemsGenerator"] = nx3.PScoreSystemsGenerator;
 nx3.PScoreSystemsGenerator.__name__ = ["nx3","PScoreSystemsGenerator"];
 nx3.PScoreSystemsGenerator.prototype = {
-	bars: null
-	,score: null
-	,getsSystems: function(systemwidths) {
+	getsSystems: function(systemwidths) {
 		var tempbars = this.bars.slice();
 		var result = new Array();
 		var sysidx = 0;
@@ -11450,14 +11105,12 @@ nx3.PSignsCalculator = function(notes) {
 $hxClasses["nx3.PSignsCalculator"] = nx3.PSignsCalculator;
 nx3.PSignsCalculator.__name__ = ["nx3","PSignsCalculator"];
 nx3.PSignsCalculator.prototype = {
-	notes: null
-	,getSigns: function() {
+	getSigns: function() {
 		var signs;
 		signs = this.calcUnsortedSigns(this.notes);
 		signs = this.calcSortSigns(signs);
 		return signs;
 	}
-	,visibleSigns: null
 	,getVisibleSigns: function() {
 		return this.calcVisibleSigns(this.getSigns());
 	}
@@ -11503,8 +11156,7 @@ nx3.PSignsRectsCalculator = function(signs) {
 $hxClasses["nx3.PSignsRectsCalculator"] = nx3.PSignsRectsCalculator;
 nx3.PSignsRectsCalculator.__name__ = ["nx3","PSignsRectsCalculator"];
 nx3.PSignsRectsCalculator.prototype = {
-	signs: null
-	,getSignRects: function(headsRects) {
+	getSignRects: function(headsRects) {
 		var rects = new Array();
 		if(headsRects == null) headsRects = [];
 		var _g = 0;
@@ -11565,8 +11217,7 @@ nx3.PStaveRectCalculator = function(note) {
 $hxClasses["nx3.PStaveRectCalculator"] = nx3.PStaveRectCalculator;
 nx3.PStaveRectCalculator.__name__ = ["nx3","PStaveRectCalculator"];
 nx3.PStaveRectCalculator.prototype = {
-	note: null
-	,getStaveRect: function() {
+	getStaveRect: function() {
 		if(this.note.nnote.type[0] != "Note") return null;
 		if(nx3.ENoteValTools.stavinglevel(this.note.nnote.value) < 1) return null;
 		var headw;
@@ -11617,16 +11268,12 @@ nx3.PSystem = function(score) {
 $hxClasses["nx3.PSystem"] = nx3.PSystem;
 nx3.PSystem.__name__ = ["nx3","PSystem"];
 nx3.PSystem.prototype = {
-	score: null
-	,status: null
-	,getStatus: function() {
+	getStatus: function() {
 		return this.status;
 	}
-	,width: null
 	,getWidth: function() {
 		return this.width;
 	}
-	,systembars: null
 	,getSystembars: function() {
 		return this.systembars;
 	}
@@ -11634,11 +11281,9 @@ nx3.PSystem.prototype = {
 		if(this.systembars.length == 0) return null;
 		return cx.ArrayTools.last(this.systembars).actAttributes;
 	}
-	,systemBreakWidth: null
 	,getSystemBreakWidth: function() {
 		return this.systemBreakWidth;
 	}
-	,value: null
 	,getValue: function() {
 		if(this.value != null) return this.value;
 		this.value = 0;
@@ -11697,6 +11342,13 @@ nx3.PSystem.prototype = {
 		}
 		return party;
 	}
+	,getTopPartY: function() {
+		return this.getPartY(0);
+	}
+	,getBottomPartY: function() {
+		var partcount = this.getSystembars()[0].bar.getParts().length - 1;
+		return this.getPartY(partcount);
+	}
 	,getHeight: function() {
 		var partcount = this.getSystembars()[0].bar.getParts().length - 1;
 		var partbottom;
@@ -11752,24 +11404,16 @@ nx3.PSystemBar = function(system,bar,barConfig,barMeasurements,actAttributes,caA
 $hxClasses["nx3.PSystemBar"] = nx3.PSystemBar;
 nx3.PSystemBar.__name__ = ["nx3","PSystemBar"];
 nx3.PSystemBar.prototype = {
-	system: null
-	,bar: null
-	,barConfig: null
-	,actAttributes: null
-	,caAttributes: null
-	,stretchamount: null
-	,setBarStretch: function(amount) {
+	setBarStretch: function(amount) {
 		if(amount == this.stretchamount) return;
 		var calculator = new nx3.PBarStretchCalculator(this);
 		if(amount == 0) calculator.resetStretch(); else calculator.stretch(amount);
 	}
-	,barMeasurements: null
 	,getBarMeasurements: function() {
 		if(this.barMeasurements != null) return this.barMeasurements;
 		this.barMeasurements = new nx3.PSystembarMeasurements(this.bar).init(this.actAttributes,this.barConfig,this.caAttributes);
 		return this.barMeasurements;
 	}
-	,xposition: null
 	,getXPosition: function() {
 		return this.xposition;
 	}
@@ -11791,14 +11435,7 @@ nx3.PSystemBarsGenerator = function(score,bars,systemConfig,prevBarAttributes,br
 $hxClasses["nx3.PSystemBarsGenerator"] = nx3.PSystemBarsGenerator;
 nx3.PSystemBarsGenerator.__name__ = ["nx3","PSystemBarsGenerator"];
 nx3.PSystemBarsGenerator.prototype = {
-	bars: null
-	,systemConfig: null
-	,prevBarAttributes: null
-	,breakSystemwidth: null
-	,system: null
-	,barWidthCalculator: null
-	,score: null
-	,getSystem: function() {
+	getSystem: function() {
 		this.system.systemBreakWidth = this.breakSystemwidth;
 		var tryAnotherBar = true;
 		while(tryAnotherBar) {
@@ -12046,32 +11683,24 @@ nx3.PSystembarMeasurements = function(bar) {
 $hxClasses["nx3.PSystembarMeasurements"] = nx3.PSystembarMeasurements;
 nx3.PSystembarMeasurements.__name__ = ["nx3","PSystembarMeasurements"];
 nx3.PSystembarMeasurements.prototype = {
-	bar: null
-	,ackoladeWidth: null
-	,getAckoladeXPosition: function() {
+	getAckoladeXPosition: function() {
 		return 0;
 	}
-	,clefWidth: null
 	,getClefXPosition: function() {
 		return this.getAckoladeXPosition() + this.ackoladeWidth;
 	}
-	,keyWidth: null
 	,getKeyXPosition: function() {
 		return this.getClefXPosition() + this.clefWidth;
 	}
-	,timeWidth: null
 	,getTimeXPosition: function() {
 		return this.getKeyXPosition() + this.keyWidth;
 	}
-	,leftContentMarginWidth: null
 	,getLeftContentMarginXPosition: function() {
 		return this.getTimeXPosition() + this.timeWidth;
 	}
-	,contentXZero: null
 	,getContentXZero: function() {
 		return this.contentXZero;
 	}
-	,contentWidth: null
 	,getContentXPosition: function() {
 		return this.getLeftContentMarginXPosition() + this.leftContentMarginWidth;
 	}
@@ -12081,19 +11710,15 @@ nx3.PSystembarMeasurements.prototype = {
 	,setContentWidth: function(val) {
 		this.contentWidth = val;
 	}
-	,cautClefWidth: null
 	,getCautClefXPosition: function() {
 		return this.getContentXPosition() + this.contentWidth;
 	}
-	,cautKeyWidth: null
 	,getCautKeyXPosition: function() {
 		return this.getCautClefXPosition() + this.cautClefWidth;
 	}
-	,cautTimeWidth: null
 	,getCautTimeXPosition: function() {
 		return this.getCautKeyXPosition() + this.cautKeyWidth;
 	}
-	,barlineWidth: null
 	,getBarlineXPosition: function() {
 		return this.getCautTimeXPosition() + this.cautTimeWidth;
 	}
@@ -12123,20 +11748,16 @@ nx3.PVoice = function(nvoice) {
 $hxClasses["nx3.PVoice"] = nx3.PVoice;
 nx3.PVoice.__name__ = ["nx3","PVoice"];
 nx3.PVoice.prototype = {
-	nvoice: null
-	,iterator: function() {
+	iterator: function() {
 		var _this = this.getNotes();
 		return HxOverrides.iter(_this);
 	}
-	,length: null
 	,get_length: function() {
 		return this.getNotes().length;
 	}
-	,part: null
 	,getPart: function() {
 		return this.part;
 	}
-	,notes: null
 	,getNotes: function() {
 		if(this.notes != null) return this.notes;
 		this.notes = [];
@@ -12154,7 +11775,6 @@ nx3.PVoice.prototype = {
 	,getNote: function(idx) {
 		if(idx < 0 || idx > this.getNotes().length) return null; else return this.getNotes()[idx];
 	}
-	,value: null
 	,getValue: function() {
 		if(this.value != null) return this.value;
 		if(this.notes == null) this.getNotes();
@@ -12168,8 +11788,6 @@ nx3.PVoice.prototype = {
 		}
 		return this.value;
 	}
-	,beamgroups: null
-	,beampattern: null
 	,getBeamgroups: function(pattern) {
 		if(pattern != null && pattern != this.beampattern) {
 			this.beampattern = pattern;
@@ -12179,7 +11797,6 @@ nx3.PVoice.prototype = {
 		this.beamgroups = new nx3.PVoiceBeamgroupsGenerator(this.getNotes(),pattern).getBeamgroups();
 		return this.beamgroups;
 	}
-	,pnotePositions: null
 	,getNotePositions: function() {
 		if(this.pnotePositions != null) return this.pnotePositions;
 		if(this.notes == null) this.getNotes();
@@ -12208,10 +11825,7 @@ nx3.PVoiceBeamgroupsGenerator = function(pnotes,pattern) {
 $hxClasses["nx3.PVoiceBeamgroupsGenerator"] = nx3.PVoiceBeamgroupsGenerator;
 nx3.PVoiceBeamgroupsGenerator.__name__ = ["nx3","PVoiceBeamgroupsGenerator"];
 nx3.PVoiceBeamgroupsGenerator.prototype = {
-	notes: null
-	,pattern: null
-	,voice: null
-	,getBeamgroups: function() {
+	getBeamgroups: function() {
 		var patternPositions = this.getPatternPositions();
 		var notesPositions = this.getNotesPositions();
 		var notesBeamgroupPosIndexes = this.getNotesBeamgroupPosIndexes(patternPositions,notesPositions);
@@ -12386,8 +12000,7 @@ nx3.action.IInteractivity = function() { };
 $hxClasses["nx3.action.IInteractivity"] = nx3.action.IInteractivity;
 nx3.action.IInteractivity.__name__ = ["nx3","action","IInteractivity"];
 nx3.action.IInteractivity.prototype = {
-	handleAction: null
-	,__class__: nx3.action.IInteractivity
+	__class__: nx3.action.IInteractivity
 };
 nx3.geom = {};
 nx3.geom.BezieerTool = function() { };
@@ -12432,10 +12045,7 @@ nx3.geom.Point.polar = function(len,angle) {
 	return new nx3.geom.Point(len * Math.cos(angle),len * Math.sin(angle));
 };
 nx3.geom.Point.prototype = {
-	length: null
-	,x: null
-	,y: null
-	,add: function(v) {
+	add: function(v) {
 		return new nx3.geom.Point(v.x + this.x,v.y + this.y);
 	}
 	,clone: function() {
@@ -12488,11 +12098,7 @@ nx3.geom.Rectangle = function(x,y,width,height) {
 $hxClasses["nx3.geom.Rectangle"] = nx3.geom.Rectangle;
 nx3.geom.Rectangle.__name__ = ["nx3","geom","Rectangle"];
 nx3.geom.Rectangle.prototype = {
-	height: null
-	,width: null
-	,x: null
-	,y: null
-	,clone: function() {
+	clone: function() {
 		return new nx3.geom.Rectangle(this.x,this.y,this.width,this.height);
 	}
 	,contains: function(x,y) {
@@ -12735,30 +12341,7 @@ nx3.render.ITarget = function() { };
 $hxClasses["nx3.render.ITarget"] = nx3.render.ITarget;
 nx3.render.ITarget.__name__ = ["nx3","render","ITarget"];
 nx3.render.ITarget.prototype = {
-	getScaling: null
-	,clear: null
-	,testLines: null
-	,rect: null
-	,rectangle: null
-	,rectangles: null
-	,filledrectangle: null
-	,filledellipse: null
-	,line: null
-	,shape: null
-	,text: null
-	,textwidth: null
-	,textheight: null
-	,setFont: null
-	,parallellogram: null
-	,polyline: null
-	,polyfill: null
-	,interactiveEllipse: null
-	,scaleRect: null
-	,tooltipShow: null
-	,tooltipHide: null
-	,totalWidth: null
-	,totalHeight: null
-	,__class__: nx3.render.ITarget
+	__class__: nx3.render.ITarget
 };
 nx3.render.Renderer = function(target,targetX,targetY,interactions) {
 	if(targetY == null) targetY = 0;
@@ -12772,12 +12355,7 @@ nx3.render.Renderer = function(target,targetX,targetY,interactions) {
 $hxClasses["nx3.render.Renderer"] = nx3.render.Renderer;
 nx3.render.Renderer.__name__ = ["nx3","render","Renderer"];
 nx3.render.Renderer.prototype = {
-	target: null
-	,targetY: null
-	,targetX: null
-	,scaling: null
-	,interactions: null
-	,xToUnitX: function(x) {
+	xToUnitX: function(x) {
 		return x * (1 / this.scaling.unitX);
 	}
 	,yToUnitY: function(y) {
@@ -12799,6 +12377,7 @@ nx3.render.Renderer.prototype = {
 		this.drawSystems(score.getSystems(systemwidth));
 		this.target.totalWidth = score.getWidth() * this.scaling.unitX;
 		this.target.totalHeight = score.getHeight() * this.scaling.unitY;
+		return { width : score.getWidth() * this.scaling.unitX, height : score.getHeight() * this.scaling.unitY};
 	}
 	,testText: function() {
 		this.target.setFont(nx3.Constants.FONT_TEXT_DEFAULTFORMAT);
@@ -13684,13 +13263,7 @@ nx3.render.TargetSvg.hex = function($int) {
 	if($int == 0) return "#000"; else return "#" + StringTools.hex($int);
 };
 nx3.render.TargetSvg.prototype = {
-	svgId: null
-	,jsFileName: null
-	,scaling: null
-	,snap: null
-	,totalHeight: null
-	,totalWidth: null
-	,testLines: function(x,y,width) {
+	testLines: function(x,y,width) {
 		var _g = -2;
 		while(_g < 3) {
 			var i = _g++;
@@ -13755,7 +13328,6 @@ nx3.render.TargetSvg.prototype = {
 		y = y + -13 * this.scaling.fontScaling;
 		var etext = this.snap.text(x,y,text).attr({ fontSize : "" + fontsize + "px ", fontFamily : this.font.name});
 	}
-	,context: null
 	,textwidth: function(text) {
 		if(this.context == null) {
 			var canvas = window.document.getElementById("CanvasTextMeasurement");
@@ -13771,7 +13343,6 @@ nx3.render.TargetSvg.prototype = {
 	,textheight: function(text) {
 		return this.font.size / 3.8;
 	}
-	,font: null
 	,setFont: function(font) {
 		this.font = font;
 	}
@@ -13849,8 +13420,6 @@ nx3.render.TargetSvg.prototype = {
 	,tooltipHide: function() {
 		if(this.tooltip != null) this.tooltip.attr({ visibility : "hidden"});
 	}
-	,tooltip: null
-	,toolText: null
 	,createTooltip: function(rect,text) {
 		this.tooltip = this.snap.el("svg",{ x : rect.x, y : rect.y});
 		var toolBackground = this.snap.rect(0,0,rect.width,rect.height);
@@ -13893,12 +13462,7 @@ nx3.render.TargetSvgXml.hex = function($int) {
 	if($int == 0) return "#000"; else return "#" + StringTools.hex($int);
 };
 nx3.render.TargetSvgXml.prototype = {
-	svg: null
-	,scaling: null
-	,svgId: null
-	,totalHeight: null
-	,totalWidth: null
-	,getXml: function() {
+	getXml: function() {
 		this.svg.set("width",Std.string(this.totalWidth));
 		this.svg.set("height",Std.string(this.totalHeight));
 		return this.svg;
@@ -14019,7 +13583,6 @@ nx3.render.TargetSvgXml.prototype = {
 	}
 	,tooltipHide: function() {
 	}
-	,font: null
 	,setFont: function(font) {
 		this.font = font;
 	}
@@ -14036,7 +13599,6 @@ nx3.render.TargetSvgXml.prototype = {
 		txt.addChild(str);
 		this.svg.addChild(txt);
 	}
-	,context: null
 	,textwidth: function(text) {
 		if(this.context == null) {
 			var canvas = window.document.getElementById("CanvasTextMeasurement");
@@ -14875,11 +14437,6 @@ thx.core.Arrays.pushIf = function(array,condition,value) {
 thx.core.Arrays.reduce = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
-thx.core.Arrays.resize = function(array,length,fill) {
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
-};
 thx.core.Arrays.reducei = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
@@ -14926,23 +14483,6 @@ thx.core.Arrays.take = function(arr,n) {
 };
 thx.core.Arrays.takeLast = function(arr,n) {
 	return arr.slice(arr.length - n);
-};
-thx.core.Arrays.rotate = function(arr) {
-	var result = [];
-	var _g1 = 0;
-	var _g = arr[0].length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var row = [];
-		result.push(row);
-		var _g3 = 0;
-		var _g2 = arr.length;
-		while(_g3 < _g2) {
-			var j = _g3++;
-			row.push(arr[j][i]);
-		}
-	}
-	return result;
 };
 thx.core.Arrays.zip = function(array1,array2) {
 	var length = thx.core.Ints.min(array1.length,array2.length);
@@ -15053,12 +14593,6 @@ thx.core.ArrayFloats.min = function(arr) {
 		if(v < min) return v; else return min;
 	},arr[0]);
 };
-thx.core.ArrayFloats.resize = function(array,length,fill) {
-	if(fill == null) fill = 0.0;
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
-};
 thx.core.ArrayFloats.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
 		return tot + v;
@@ -15079,12 +14613,6 @@ thx.core.ArrayInts.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
-};
-thx.core.ArrayInts.resize = function(array,length,fill) {
-	if(fill == null) fill = 0;
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
 };
 thx.core.ArrayInts.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
@@ -15108,174 +14636,6 @@ thx.core.ArrayStrings.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
-};
-thx.core.Dynamics = function() { };
-$hxClasses["thx.core.Dynamics"] = thx.core.Dynamics;
-thx.core.Dynamics.__name__ = ["thx","core","Dynamics"];
-thx.core.Dynamics.equals = function(a,b) {
-	if(!thx.core.Types.sameType(a,b)) return false;
-	if(a == b) return true;
-	{
-		var _g = Type["typeof"](a);
-		switch(_g[1]) {
-		case 2:case 0:case 1:case 3:
-			return false;
-		case 5:
-			return Reflect.compareMethods(a,b);
-		case 6:
-			var c = _g[2];
-			var ca = Type.getClassName(c);
-			var cb = Type.getClassName(Type.getClass(b));
-			if(ca != cb) return false;
-			if(typeof(a) == "string") return false;
-			if((a instanceof Array) && a.__enum__ == null) {
-				var aa = a;
-				var ab = b;
-				if(aa.length != ab.length) return false;
-				var _g2 = 0;
-				var _g1 = aa.length;
-				while(_g2 < _g1) {
-					var i = _g2++;
-					if(!thx.core.Dynamics.equals(aa[i],ab[i])) return false;
-				}
-				return true;
-			}
-			if(js.Boot.__instanceof(a,Date)) return a.getTime() == b.getTime();
-			if(js.Boot.__instanceof(a,IMap)) {
-				var ha = a;
-				var hb = b;
-				var ka = thx.core.Iterators.toArray(ha.keys());
-				var kb = thx.core.Iterators.toArray(hb.keys());
-				if(ka.length != kb.length) return false;
-				var _g11 = 0;
-				while(_g11 < ka.length) {
-					var key = ka[_g11];
-					++_g11;
-					if(!hb.exists(key) || !thx.core.Dynamics.equals(ha.get(key),hb.get(key))) return false;
-				}
-				return true;
-			}
-			var t = false;
-			if((t = thx.core.Iterators.isIterator(a)) || thx.core.Iterables.isIterable(a)) {
-				var va;
-				if(t) va = thx.core.Iterators.toArray(a); else va = thx.core.Iterators.toArray($iterator(a)());
-				var vb;
-				if(t) vb = thx.core.Iterators.toArray(b); else vb = thx.core.Iterators.toArray($iterator(b)());
-				if(va.length != vb.length) return false;
-				var _g21 = 0;
-				var _g12 = va.length;
-				while(_g21 < _g12) {
-					var i1 = _g21++;
-					if(!thx.core.Dynamics.equals(va[i1],vb[i1])) return false;
-				}
-				return true;
-			}
-			var f = null;
-			if(Object.prototype.hasOwnProperty.call(a,"equals") && Reflect.isFunction(f = Reflect.field(a,"equals"))) return f.apply(a,[b]);
-			var fields = Type.getInstanceFields(Type.getClass(a));
-			var _g13 = 0;
-			while(_g13 < fields.length) {
-				var field = fields[_g13];
-				++_g13;
-				var va1 = Reflect.field(a,field);
-				if(Reflect.isFunction(va1)) continue;
-				var vb1 = Reflect.field(b,field);
-				if(!thx.core.Dynamics.equals(va1,vb1)) return false;
-			}
-			return true;
-		case 7:
-			var e = _g[2];
-			var ea = Type.getEnumName(e);
-			var teb = Type.getEnum(b);
-			var eb = Type.getEnumName(teb);
-			if(ea != eb) return false;
-			if(a[1] != b[1]) return false;
-			var pa = a.slice(2);
-			var pb = b.slice(2);
-			var _g22 = 0;
-			var _g14 = pa.length;
-			while(_g22 < _g14) {
-				var i2 = _g22++;
-				if(!thx.core.Dynamics.equals(pa[i2],pb[i2])) return false;
-			}
-			return true;
-		case 4:
-			var fa = Reflect.fields(a);
-			var fb = Reflect.fields(b);
-			var _g15 = 0;
-			while(_g15 < fa.length) {
-				var field1 = fa[_g15];
-				++_g15;
-				HxOverrides.remove(fb,field1);
-				if(!Object.prototype.hasOwnProperty.call(b,field1)) return false;
-				var va2 = Reflect.field(a,field1);
-				if(Reflect.isFunction(va2)) continue;
-				var vb2 = Reflect.field(b,field1);
-				if(!thx.core.Dynamics.equals(va2,vb2)) return false;
-			}
-			if(fb.length > 0) return false;
-			var t1 = false;
-			if((t1 = thx.core.Iterators.isIterator(a)) || thx.core.Iterables.isIterable(a)) {
-				if(t1 && !thx.core.Iterators.isIterator(b)) return false;
-				if(!t1 && !thx.core.Iterables.isIterable(b)) return false;
-				var aa1;
-				if(t1) aa1 = thx.core.Iterators.toArray(a); else aa1 = thx.core.Iterators.toArray($iterator(a)());
-				var ab1;
-				if(t1) ab1 = thx.core.Iterators.toArray(b); else ab1 = thx.core.Iterators.toArray($iterator(b)());
-				if(aa1.length != ab1.length) return false;
-				var _g23 = 0;
-				var _g16 = aa1.length;
-				while(_g23 < _g16) {
-					var i3 = _g23++;
-					if(!thx.core.Dynamics.equals(aa1[i3],ab1[i3])) return false;
-				}
-				return true;
-			}
-			return true;
-		case 8:
-			throw "Unable to compare two unknown types";
-			break;
-		}
-	}
-	throw new thx.core.Error("Unable to compare values: " + Std.string(a) + " and " + Std.string(b),null,{ fileName : "Dynamics.hx", lineNumber : 151, className : "thx.core.Dynamics", methodName : "equals"});
-};
-thx.core.Dynamics.clone = function(v,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	{
-		var _g = Type["typeof"](v);
-		switch(_g[1]) {
-		case 0:
-			return null;
-		case 1:case 2:case 3:case 7:case 8:case 5:
-			return v;
-		case 4:
-			return thx.core.Objects.copyTo(v,{ });
-		case 6:
-			var c = _g[2];
-			var name = Type.getClassName(c);
-			switch(name) {
-			case "Array":
-				return v.map(function(v1) {
-					return thx.core.Dynamics.clone(v1,cloneInstances);
-				});
-			case "String":case "Date":
-				return v;
-			default:
-				if(cloneInstances) {
-					var o = Type.createEmptyInstance(c);
-					var _g1 = 0;
-					var _g2 = Type.getInstanceFields(c);
-					while(_g1 < _g2.length) {
-						var field = _g2[_g1];
-						++_g1;
-						Reflect.setField(o,field,thx.core.Dynamics.clone(Reflect.field(v,field),cloneInstances));
-					}
-					return o;
-				} else return v;
-			}
-			break;
-		}
-	}
 };
 thx.core.Error = function(message,stack,pos) {
 	Error.call(this,message);
@@ -15303,9 +14663,7 @@ thx.core.Error.fromDynamic = function(err,pos) {
 };
 thx.core.Error.__super__ = Error;
 thx.core.Error.prototype = $extend(Error.prototype,{
-	pos: null
-	,stackItems: null
-	,toString: function() {
+	toString: function() {
 		return this.message + "\nfrom: " + this.pos.className + "." + this.pos.methodName + "() at " + this.pos.lineNumber + "\n\n" + haxe.CallStack.toString(this.stackItems);
 	}
 	,__class__: thx.core.Error
@@ -15526,167 +14884,6 @@ thx.core.Ints.wrapCircular = function(v,max) {
 	if(v < 0) v += max;
 	return v;
 };
-thx.core.Iterables = function() { };
-$hxClasses["thx.core.Iterables"] = thx.core.Iterables;
-thx.core.Iterables.__name__ = ["thx","core","Iterables"];
-thx.core.Iterables.all = function(it,predicate) {
-	return thx.core.Iterators.all($iterator(it)(),predicate);
-};
-thx.core.Iterables.any = function(it,predicate) {
-	return thx.core.Iterators.any($iterator(it)(),predicate);
-};
-thx.core.Iterables.eachPair = function(it,handler) {
-	return thx.core.Iterators.eachPair($iterator(it)(),handler);
-};
-thx.core.Iterables.filter = function(it,predicate) {
-	return thx.core.Iterators.filter($iterator(it)(),predicate);
-};
-thx.core.Iterables.find = function(it,predicate) {
-	return thx.core.Iterators.find($iterator(it)(),predicate);
-};
-thx.core.Iterables.first = function(it) {
-	return thx.core.Iterators.first($iterator(it)());
-};
-thx.core.Iterables.last = function(it) {
-	return thx.core.Iterators.last($iterator(it)());
-};
-thx.core.Iterables.isEmpty = function(it) {
-	return thx.core.Iterators.isEmpty($iterator(it)());
-};
-thx.core.Iterables.isIterable = function(v) {
-	var fields;
-	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
-	if(!Lambda.has(fields,"iterator")) return false;
-	return Reflect.isFunction(Reflect.field(v,"iterator"));
-};
-thx.core.Iterables.map = function(it,f) {
-	return thx.core.Iterators.map($iterator(it)(),f);
-};
-thx.core.Iterables.mapi = function(it,f) {
-	return thx.core.Iterators.mapi($iterator(it)(),f);
-};
-thx.core.Iterables.order = function(it,sort) {
-	return thx.core.Iterators.order($iterator(it)(),sort);
-};
-thx.core.Iterables.reduce = function(it,callback,initial) {
-	return thx.core.Iterators.reduce($iterator(it)(),callback,initial);
-};
-thx.core.Iterables.reducei = function(it,callback,initial) {
-	return thx.core.Iterators.reducei($iterator(it)(),callback,initial);
-};
-thx.core.Iterables.toArray = function(it) {
-	return thx.core.Iterators.toArray($iterator(it)());
-};
-thx.core.Iterators = function() { };
-$hxClasses["thx.core.Iterators"] = thx.core.Iterators;
-thx.core.Iterators.__name__ = ["thx","core","Iterators"];
-thx.core.Iterators.all = function(it,predicate) {
-	while( it.hasNext() ) {
-		var item = it.next();
-		if(!predicate(item)) return false;
-	}
-	return true;
-};
-thx.core.Iterators.any = function(it,predicate) {
-	while( it.hasNext() ) {
-		var item = it.next();
-		if(predicate(item)) return true;
-	}
-	return false;
-};
-thx.core.Iterators.eachPair = function(it,handler) {
-	thx.core.Arrays.eachPair(thx.core.Iterators.toArray(it),handler);
-};
-thx.core.Iterators.filter = function(it,predicate) {
-	return thx.core.Iterators.reduce(it,function(acc,item) {
-		if(predicate(item)) acc.push(item);
-		return acc;
-	},[]);
-};
-thx.core.Iterators.find = function(it,f) {
-	while( it.hasNext() ) {
-		var item = it.next();
-		if(f(item)) return item;
-	}
-	return null;
-};
-thx.core.Iterators.first = function(it) {
-	if(it.hasNext()) return it.next(); else return null;
-};
-thx.core.Iterators.isEmpty = function(it) {
-	return !it.hasNext();
-};
-thx.core.Iterators.isIterator = function(v) {
-	var fields;
-	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
-	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
-	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
-};
-thx.core.Iterators.last = function(it) {
-	var buf = null;
-	while(it.hasNext()) buf = it.next();
-	return buf;
-};
-thx.core.Iterators.map = function(it,f) {
-	var acc = [];
-	while( it.hasNext() ) {
-		var v = it.next();
-		acc.push(f(v));
-	}
-	return acc;
-};
-thx.core.Iterators.mapi = function(it,f) {
-	var acc = [];
-	var i = 0;
-	while( it.hasNext() ) {
-		var v = it.next();
-		acc.push(f(v,i++));
-	}
-	return acc;
-};
-thx.core.Iterators.order = function(it,sort) {
-	var n = thx.core.Iterators.toArray(it);
-	n.sort(sort);
-	return n;
-};
-thx.core.Iterators.reduce = function(it,callback,initial) {
-	thx.core.Iterators.map(it,function(v) {
-		initial = callback(initial,v);
-	});
-	return initial;
-};
-thx.core.Iterators.reducei = function(it,callback,initial) {
-	thx.core.Iterators.mapi(it,function(v,i) {
-		initial = callback(initial,v,i);
-	});
-	return initial;
-};
-thx.core.Iterators.toArray = function(it) {
-	var items = [];
-	while( it.hasNext() ) {
-		var item = it.next();
-		items.push(item);
-	}
-	return items;
-};
-thx.core.Maps = function() { };
-$hxClasses["thx.core.Maps"] = thx.core.Maps;
-thx.core.Maps.__name__ = ["thx","core","Maps"];
-thx.core.Maps.tuples = function(map) {
-	return thx.core.Iterators.map(map.keys(),function(key) {
-		var _1 = map.get(key);
-		return { _0 : key, _1 : _1};
-	});
-};
-thx.core.Maps.mapToObject = function(map) {
-	return thx.core.Arrays.reduce(thx.core.Maps.tuples(map),function(o,t) {
-		o[t._0] = t._1;
-		return o;
-	},{ });
-};
-thx.core.Maps.isMap = function(v) {
-	return js.Boot.__instanceof(v,IMap);
-};
 thx.core.Nil = $hxClasses["thx.core.Nil"] = { __ename__ : ["thx","core","Nil"], __constructs__ : ["nil"] };
 thx.core.Nil.nil = ["nil",0];
 thx.core.Nil.nil.toString = $estr;
@@ -15703,37 +14900,6 @@ thx.core.Objects.exists = function(o,name) {
 };
 thx.core.Objects.fields = function(o) {
 	return Reflect.fields(o);
-};
-thx.core.Objects.merge = function(to,from,replacef) {
-	if(null == replacef) replacef = function(field,oldv,newv) {
-		return newv;
-	};
-	var _g = 0;
-	var _g1 = Reflect.fields(from);
-	while(_g < _g1.length) {
-		var field1 = _g1[_g];
-		++_g;
-		var newv1 = Reflect.field(from,field1);
-		if(Object.prototype.hasOwnProperty.call(to,field1)) Reflect.setField(to,field1,replacef(field1,Reflect.field(to,field1),newv1)); else to[field1] = newv1;
-	}
-	return to;
-};
-thx.core.Objects.copyTo = function(src,dst,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	var _g = 0;
-	var _g1 = Reflect.fields(src);
-	while(_g < _g1.length) {
-		var field = _g1[_g];
-		++_g;
-		var sv = thx.core.Dynamics.clone(Reflect.field(src,field),cloneInstances);
-		var dv = Reflect.field(dst,field);
-		if(Reflect.isObject(sv) && null == Type.getClass(sv) && (Reflect.isObject(dv) && null == Type.getClass(dv))) thx.core.Objects.copyTo(sv,dv); else dst[field] = sv;
-	}
-	return dst;
-};
-thx.core.Objects.clone = function(src,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	return thx.core.Dynamics.clone(src,cloneInstances);
 };
 thx.core.Objects.objectToMap = function(o) {
 	return thx.core.Arrays.reduce(thx.core.Objects.tuples(o),function(map,t) {
@@ -15805,12 +14971,6 @@ thx.core.Strings.humanize = function(s) {
 thx.core.Strings.isAlphaNum = function(value) {
 	return thx.core.Strings.ALPHANUM.match(value);
 };
-thx.core.Strings.isLowerCase = function(value) {
-	return value.toLowerCase() == value;
-};
-thx.core.Strings.isUpperCase = function(value) {
-	return value.toUpperCase() == value;
-};
 thx.core.Strings.ifEmpty = function(value,alt) {
 	if(null != value && "" != value) return value; else return alt;
 };
@@ -15851,11 +15011,6 @@ thx.core.Strings.repeat = function(s,times) {
 		return $r;
 	}(this))).join("");
 };
-thx.core.Strings.reverse = function(s) {
-	var arr = s.split("");
-	arr.reverse();
-	return arr.join("");
-};
 thx.core.Strings.stripTags = function(s) {
 	return thx.core.Strings.STRIPTAGS.replace(s,"");
 };
@@ -15878,10 +15033,10 @@ thx.core.Strings.toChunks = function(s,len) {
 	}
 	return chunks;
 };
-thx.core.Strings.trimChars = function(value,charlist) {
-	return thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(value,charlist),charlist);
+thx.core.Strings.trim = function(value,charlist) {
+	return thx.core.Strings.trimRight(thx.core.Strings.trimLeft(value,charlist),charlist);
 };
-thx.core.Strings.trimCharsLeft = function(value,charlist) {
+thx.core.Strings.trimLeft = function(value,charlist) {
 	var pos = 0;
 	var _g1 = 0;
 	var _g = value.length;
@@ -15891,7 +15046,7 @@ thx.core.Strings.trimCharsLeft = function(value,charlist) {
 	}
 	return value.substring(pos);
 };
-thx.core.Strings.trimCharsRight = function(value,charlist) {
+thx.core.Strings.trimRight = function(value,charlist) {
 	var len = value.length;
 	var pos = len;
 	var i;
@@ -16100,27 +15255,6 @@ thx.core.Types.__name__ = ["thx","core","Types"];
 thx.core.Types.isAnonymousObject = function(v) {
 	return Reflect.isObject(v) && null == Type.getClass(v);
 };
-thx.core.Types.isPrimitive = function(v) {
-	{
-		var _g = Type["typeof"](v);
-		switch(_g[1]) {
-		case 1:case 2:case 3:
-			return true;
-		case 0:case 5:case 7:case 4:case 8:
-			return false;
-		case 6:
-			var c = _g[2];
-			return Type.getClassName(c) == "String";
-		}
-	}
-};
-thx.core.Types.hasSuperClass = function(cls,sup) {
-	while(null != cls) {
-		if(cls == sup) return true;
-		cls = Type.getSuperClass(cls);
-	}
-	return false;
-};
 thx.core.Types.sameType = function(a,b) {
 	return thx.core.Types.typeToString(Type["typeof"](a)) == thx.core.Types.typeToString(Type["typeof"](b));
 };
@@ -16178,6 +15312,50 @@ thx.core.Types.valueTypeInheritance = function(value) {
 };
 thx.core.Types.valueTypeToString = function(value) {
 	return thx.core.Types.typeToString(Type["typeof"](value));
+};
+thx.core.UUID = function() { };
+$hxClasses["thx.core.UUID"] = thx.core.UUID;
+thx.core.UUID.__name__ = ["thx","core","UUID"];
+thx.core.UUID.random = function() {
+	return Math.floor(Math.random() * 16);
+};
+thx.core.UUID.srandom = function() {
+	return "" + Math.floor(Math.random() * 16);
+};
+thx.core.UUID.create = function() {
+	var s = [];
+	var _g = 0;
+	while(_g < 8) {
+		var i = _g++;
+		s[i] = "" + Math.floor(Math.random() * 16);
+	}
+	s[8] = "-";
+	var _g1 = 9;
+	while(_g1 < 13) {
+		var i1 = _g1++;
+		s[i1] = "" + Math.floor(Math.random() * 16);
+	}
+	s[13] = "-";
+	s[14] = "4";
+	var _g2 = 15;
+	while(_g2 < 18) {
+		var i2 = _g2++;
+		s[i2] = "" + Math.floor(Math.random() * 16);
+	}
+	s[18] = "-";
+	s[19] = "" + (Math.floor(Math.random() * 16) & 3 | 8);
+	var _g3 = 20;
+	while(_g3 < 23) {
+		var i3 = _g3++;
+		s[i3] = "" + Math.floor(Math.random() * 16);
+	}
+	s[23] = "-";
+	var _g4 = 24;
+	while(_g4 < 36) {
+		var i4 = _g4++;
+		s[i4] = "" + Math.floor(Math.random() * 16);
+	}
+	return s.join("");
 };
 thx.core.error = {};
 thx.core.error.AbstractMethod = function(posInfo) {
@@ -16270,8 +15448,7 @@ tink.core._Callback.Cell.get = function() {
 	if(tink.core._Callback.Cell.pool.length > 0) return tink.core._Callback.Cell.pool.pop(); else return new tink.core._Callback.Cell();
 };
 tink.core._Callback.Cell.prototype = {
-	cb: null
-	,free: function() {
+	free: function() {
 		this.cb = null;
 		tink.core._Callback.Cell.pool.push(this);
 	}
@@ -16342,11 +15519,7 @@ tink.core.TypedError.withData = function(code,message,data,pos) {
 	return ret;
 };
 tink.core.TypedError.prototype = {
-	message: null
-	,code: null
-	,data: null
-	,pos: null
-	,printPos: function() {
+	printPos: function() {
 		return this.pos.className + "." + this.pos.methodName + ":" + this.pos.lineNumber;
 	}
 	,toString: function() {
@@ -16537,10 +15710,7 @@ tink.core.FutureTrigger = function() {
 $hxClasses["tink.core.FutureTrigger"] = tink.core.FutureTrigger;
 tink.core.FutureTrigger.__name__ = ["tink","core","FutureTrigger"];
 tink.core.FutureTrigger.prototype = {
-	result: null
-	,list: null
-	,future: null
-	,asFuture: function() {
+	asFuture: function() {
 		return this.future;
 	}
 	,trigger: function(result) {
@@ -16913,9 +16083,7 @@ ufront.api.UFApi = function() {
 $hxClasses["ufront.api.UFApi"] = ufront.api.UFApi;
 ufront.api.UFApi.__name__ = ["ufront","api","UFApi"];
 ufront.api.UFApi.prototype = {
-	auth: null
-	,messages: null
-	,ufTrace: function(msg,pos) {
+	ufTrace: function(msg,pos) {
 		this.messages.push({ msg : msg, pos : pos, type : ufront.log.MessageType.Trace});
 	}
 	,ufLog: function(msg,pos) {
@@ -16936,9 +16104,9 @@ ufront.api.UFAsyncApi = function() { };
 $hxClasses["ufront.api.UFAsyncApi"] = ufront.api.UFAsyncApi;
 ufront.api.UFAsyncApi.__name__ = ["ufront","api","UFAsyncApi"];
 ufront.api.UFAsyncApi.prototype = {
-	className: null
-	,_makeApiCall: function(method,args,flags) {
+	_makeApiCall: function(method,args,flags) {
 		var remotingCallString = "" + this.className + "." + method + "(" + args.join(",") + ")";
+		throw "Neither -Dclient nor -Dserver is set";
 		return null;
 	}
 	,__class__: ufront.api.UFAsyncApi
@@ -16948,8 +16116,7 @@ ufront.api.UFApiContext = function() {
 $hxClasses["ufront.api.UFApiContext"] = ufront.api.UFApiContext;
 ufront.api.UFApiContext.__name__ = ["ufront","api","UFApiContext"];
 ufront.api.UFApiContext.prototype = {
-	injector: null
-	,__class__: ufront.api.UFApiContext
+	__class__: ufront.api.UFApiContext
 };
 ufront.app = {};
 ufront.app.HttpApplication = function() {
@@ -16971,18 +16138,7 @@ ufront.app.HttpApplication = function() {
 $hxClasses["ufront.app.HttpApplication"] = ufront.app.HttpApplication;
 ufront.app.HttpApplication.__name__ = ["ufront","app","HttpApplication"];
 ufront.app.HttpApplication.prototype = {
-	injector: null
-	,requestMiddleware: null
-	,requestHandlers: null
-	,responseMiddleware: null
-	,logHandlers: null
-	,errorHandlers: null
-	,urlFilters: null
-	,messages: null
-	,modulesReady: null
-	,currentModule: null
-	,pathToContentDir: null
-	,inject: function(cl,val,cl2,singleton,named) {
+	inject: function(cl,val,cl2,singleton,named) {
 		if(singleton == null) singleton = false;
 		ufront.core.InjectionTools.inject(this.injector,cl,val,cl2,singleton,named);
 		return this;
@@ -17128,7 +16284,7 @@ ufront.app.HttpApplication.prototype = {
 					return f3(a13,a21);
 				};
 			})($bind(m3,m3.log),_g.messages);
-			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 			return { a : a4, b : b3};
 		});
 		var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(this.init(),function(n) {
@@ -17195,7 +16351,7 @@ ufront.app.HttpApplication.prototype = {
 						return f(a1,a2);
 					};
 				})($bind(m,m.handleError),err);
-				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
+				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
 				return { a : a, b : b};
 			});
 			var resMidModules = this.responseMiddleware.map(function(m1) {
@@ -17213,7 +16369,7 @@ ufront.app.HttpApplication.prototype = {
 						return f2(a12,a21);
 					};
 				})($bind(m2,m2.log),_g.messages);
-				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 				return { a : a4, b : b2};
 			});
 			var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(tink.core._Future.Future_Impl_._tryFailingFlatMap(this.executeModules(errHandlerModules,ctx,ufront.web.context.RequestCompletion.CErrorHandlersComplete),function(n) {
@@ -17280,37 +16436,31 @@ ufront.app.UFErrorHandler = function() { };
 $hxClasses["ufront.app.UFErrorHandler"] = ufront.app.UFErrorHandler;
 ufront.app.UFErrorHandler.__name__ = ["ufront","app","UFErrorHandler"];
 ufront.app.UFErrorHandler.prototype = {
-	handleError: null
-	,__class__: ufront.app.UFErrorHandler
+	__class__: ufront.app.UFErrorHandler
 };
 ufront.app.UFInitRequired = function() { };
 $hxClasses["ufront.app.UFInitRequired"] = ufront.app.UFInitRequired;
 ufront.app.UFInitRequired.__name__ = ["ufront","app","UFInitRequired"];
 ufront.app.UFInitRequired.prototype = {
-	init: null
-	,dispose: null
-	,__class__: ufront.app.UFInitRequired
+	__class__: ufront.app.UFInitRequired
 };
 ufront.app.UFLogHandler = function() { };
 $hxClasses["ufront.app.UFLogHandler"] = ufront.app.UFLogHandler;
 ufront.app.UFLogHandler.__name__ = ["ufront","app","UFLogHandler"];
 ufront.app.UFLogHandler.prototype = {
-	log: null
-	,__class__: ufront.app.UFLogHandler
+	__class__: ufront.app.UFLogHandler
 };
 ufront.app.UFResponseMiddleware = function() { };
 $hxClasses["ufront.app.UFResponseMiddleware"] = ufront.app.UFResponseMiddleware;
 ufront.app.UFResponseMiddleware.__name__ = ["ufront","app","UFResponseMiddleware"];
 ufront.app.UFResponseMiddleware.prototype = {
-	responseOut: null
-	,__class__: ufront.app.UFResponseMiddleware
+	__class__: ufront.app.UFResponseMiddleware
 };
 ufront.app.UFRequestMiddleware = function() { };
 $hxClasses["ufront.app.UFRequestMiddleware"] = ufront.app.UFRequestMiddleware;
 ufront.app.UFRequestMiddleware.__name__ = ["ufront","app","UFRequestMiddleware"];
 ufront.app.UFRequestMiddleware.prototype = {
-	requestIn: null
-	,__class__: ufront.app.UFRequestMiddleware
+	__class__: ufront.app.UFRequestMiddleware
 };
 ufront.app.UFMiddleware = function() { };
 $hxClasses["ufront.app.UFMiddleware"] = ufront.app.UFMiddleware;
@@ -17320,9 +16470,7 @@ ufront.app.UFRequestHandler = function() { };
 $hxClasses["ufront.app.UFRequestHandler"] = ufront.app.UFRequestHandler;
 ufront.app.UFRequestHandler.__name__ = ["ufront","app","UFRequestHandler"];
 ufront.app.UFRequestHandler.prototype = {
-	handleRequest: null
-	,toString: null
-	,__class__: ufront.app.UFRequestHandler
+	__class__: ufront.app.UFRequestHandler
 };
 ufront.app.UfrontApplication = function(optionsIn) {
 	this.appTemplatingEngines = new List();
@@ -17359,7 +16507,7 @@ ufront.app.UfrontApplication = function(optionsIn) {
 		this.addLogHandler(new ufront.log.RemotingLogger(),null,null);
 	}
 	if(null != this.configuration.logFile) this.addLogHandler(new ufront.log.FileLogger(this.configuration.logFile),null,null);
-	var path = thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(this.configuration.basePath,"/"),"/");
+	var path = thx.core.Strings.trimRight(thx.core.Strings.trimLeft(this.configuration.basePath,"/"),"/");
 	if(path.length > 0) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.DirectoryUrlFilter(path));
 	if(this.configuration.urlRewrite != true) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.PathInfoUrlFilter());
 	if(this.configuration.sessionImplementation != null) this.inject(ufront.web.session.UFHttpSession,null,this.configuration.sessionImplementation);
@@ -17382,16 +16530,11 @@ $hxClasses["ufront.app.UfrontApplication"] = ufront.app.UfrontApplication;
 ufront.app.UfrontApplication.__name__ = ["ufront","app","UfrontApplication"];
 ufront.app.UfrontApplication.__super__ = ufront.app.HttpApplication;
 ufront.app.UfrontApplication.prototype = $extend(ufront.app.HttpApplication.prototype,{
-	configuration: null
-	,mvcHandler: null
-	,remotingHandler: null
-	,viewEngine: null
-	,execute: function(httpContext) {
+	execute: function(httpContext) {
 		if(null == httpContext) throw new thx.core.error.NullArgument("argument \"httpContext\" cannot be null",{ fileName : "NullArgument.hx", lineNumber : 32, className : "ufront.app.UfrontApplication", methodName : "execute"});
 		if(this.firstRun) this.initOnFirstExecute(httpContext);
 		return ufront.app.HttpApplication.prototype.execute.call(this,httpContext);
 	}
-	,firstRun: null
 	,initOnFirstExecute: function(httpContext) {
 		this.firstRun = false;
 		this.inject(String,httpContext.request.get_scriptDirectory(),null,null,"scriptDirectory");
@@ -17412,7 +16555,6 @@ ufront.app.UfrontApplication.prototype = $extend(ufront.app.HttpApplication.prot
 		this.remotingHandler.apiContexts.push(apiContext);
 		return this;
 	}
-	,appTemplatingEngines: null
 	,addTemplatingEngine: function(engine) {
 		this.appTemplatingEngines.add(engine);
 		if(this.viewEngine != null) this.viewEngine.engines.push(engine);
@@ -17527,8 +16669,7 @@ $hxClasses["ufront.auth.BossUser"] = ufront.auth.BossUser;
 ufront.auth.BossUser.__name__ = ["ufront","auth","BossUser"];
 ufront.auth.BossUser.__interfaces__ = [ufront.auth.UFAuthUser];
 ufront.auth.BossUser.prototype = {
-	userID: null
-	,can: function(p,ps) {
+	can: function(p,ps) {
 		return true;
 	}
 	,get_userID: function() {
@@ -17551,8 +16692,7 @@ ufront.core.InjectionRef.of = function(v) {
 	} else return new ufront.core.InjectionRef(v);
 };
 ufront.core.InjectionRef.prototype = {
-	value: null
-	,get: function() {
+	get: function() {
 		var v = this.value;
 		this.value = null;
 		ufront.core.InjectionRef.pool.push(this);
@@ -17738,8 +16878,7 @@ ufront.core.OrderedStringMap = function() {
 $hxClasses["ufront.core.OrderedStringMap"] = ufront.core.OrderedStringMap;
 ufront.core.OrderedStringMap.__name__ = ["ufront","core","OrderedStringMap"];
 ufront.core.OrderedStringMap.prototype = {
-	length: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		if(!this.__hash.exists(key)) {
 			this.__keys.push(key);
 			this.length++;
@@ -17828,8 +16967,6 @@ ufront.core.OrderedStringMap.prototype = {
 		s.b += "}";
 		return s.b;
 	}
-	,__keys: null
-	,__hash: null
 	,__class__: ufront.core.OrderedStringMap
 };
 ufront.core.Sync = function() { };
@@ -17858,8 +16995,7 @@ ufront.handler.ErrorPageHandler.errorStackItems = function(stack) {
 	return arr1;
 };
 ufront.handler.ErrorPageHandler.prototype = {
-	catchErrors: null
-	,handleError: function(httpError,ctx) {
+	handleError: function(httpError,ctx) {
 		var callStack = "";
 		var inner;
 		if(httpError != null && httpError.data != null) inner = " (" + Std.string(httpError.data) + ")"; else inner = "";
@@ -17902,8 +17038,7 @@ $hxClasses["ufront.handler.MVCHandler"] = ufront.handler.MVCHandler;
 ufront.handler.MVCHandler.__name__ = ["ufront","handler","MVCHandler"];
 ufront.handler.MVCHandler.__interfaces__ = [ufront.app.UFInitRequired,ufront.app.UFRequestHandler];
 ufront.handler.MVCHandler.prototype = {
-	indexController: null
-	,init: function(application) {
+	init: function(application) {
 		var ufApp;
 		if((application instanceof ufront.app.UfrontApplication)) ufApp = application; else ufApp = null;
 		if(ufApp != null) this.indexController = ufApp.configuration.indexController;
@@ -17953,10 +17088,7 @@ $hxClasses["ufront.handler.RemotingHandler"] = ufront.handler.RemotingHandler;
 ufront.handler.RemotingHandler.__name__ = ["ufront","handler","RemotingHandler"];
 ufront.handler.RemotingHandler.__interfaces__ = [ufront.app.UFInitRequired,ufront.app.UFRequestHandler];
 ufront.handler.RemotingHandler.prototype = {
-	apiContexts: null
-	,apis: null
-	,context: null
-	,loadApi: function(api) {
+	loadApi: function(api) {
 		this.apis.push(api);
 	}
 	,loadApis: function(newAPIs) {
@@ -18134,8 +17266,7 @@ ufront.log.FileLogger.format = function(msg) {
 	return "[" + type + "] " + pos.className + "." + pos.methodName + "(" + pos.lineNumber + "): " + text;
 };
 ufront.log.FileLogger.prototype = {
-	path: null
-	,init: function(app) {
+	init: function(app) {
 		return ufront.core.Sync.success();
 	}
 	,dispose: function(app) {
@@ -18190,9 +17321,7 @@ ufront.log.MessageList = function(messages,onMessage) {
 $hxClasses["ufront.log.MessageList"] = ufront.log.MessageList;
 ufront.log.MessageList.__name__ = ["ufront","log","MessageList"];
 ufront.log.MessageList.prototype = {
-	messages: null
-	,onMessage: null
-	,push: function(m) {
+	push: function(m) {
 		if(this.messages != null) this.messages.push(m);
 		if(this.onMessage != null) this.onMessage(m);
 	}
@@ -18329,9 +17458,7 @@ ufront.view.UFViewEngine = function(cachingEnabled) {
 $hxClasses["ufront.view.UFViewEngine"] = ufront.view.UFViewEngine;
 ufront.view.UFViewEngine.__name__ = ["ufront","view","UFViewEngine"];
 ufront.view.UFViewEngine.prototype = {
-	engines: null
-	,cache: null
-	,getTemplate: function(path,templatingEngine) {
+	getTemplate: function(path,templatingEngine) {
 		var _g = this;
 		if(this.cache != null && this.cache.exists(path)) {
 			var cached = this.cache.get(path);
@@ -18501,11 +17628,7 @@ $hxClasses["ufront.view.FileViewEngine"] = ufront.view.FileViewEngine;
 ufront.view.FileViewEngine.__name__ = ["ufront","view","FileViewEngine"];
 ufront.view.FileViewEngine.__super__ = ufront.view.UFViewEngine;
 ufront.view.FileViewEngine.prototype = $extend(ufront.view.UFViewEngine.prototype,{
-	scriptDir: null
-	,path: null
-	,isPathAbsolute: null
-	,viewDirectory: null
-	,get_viewDirectory: function() {
+	get_viewDirectory: function() {
 		if(this.get_isPathAbsolute()) return haxe.io.Path.addTrailingSlash(this.path); else return this.scriptDir + haxe.io.Path.addTrailingSlash(this.path);
 	}
 	,getTemplateString: function(viewRelativePath) {
@@ -18657,13 +17780,7 @@ $hxClasses["ufront.web.Dispatch"] = ufront.web.Dispatch;
 ufront.web.Dispatch.__name__ = ["ufront","web","Dispatch"];
 ufront.web.Dispatch.__super__ = haxe.web.Dispatch;
 ufront.web.Dispatch.prototype = $extend(haxe.web.Dispatch.prototype,{
-	method: null
-	,controller: null
-	,action: null
-	,'arguments': null
-	,onProcessDispatchRequest: null
-	,onProcessDispatchRequestTrigger: null
-	,resolveNames: function(name) {
+	resolveNames: function(name) {
 		var arr = [];
 		if(this.method != null) arr.push(this.method + "_" + name);
 		arr.push(name);
@@ -18758,14 +17875,7 @@ ufront.web.HttpCookie.addPair = function(buf,name,value,allowNullValue) {
 	if(value == null) buf.b += "null"; else buf.b += "" + value;
 };
 ufront.web.HttpCookie.prototype = {
-	domain: null
-	,expires: null
-	,name: null
-	,path: null
-	,secure: null
-	,httpOnly: null
-	,value: null
-	,expireNow: function() {
+	expireNow: function() {
 		var d = new Date();
 		d.setTime(0);
 		this.expires = d;
@@ -18924,12 +18034,7 @@ ufront.web.UserAgent.searchString = function(data,s) {
 	return null;
 };
 ufront.web.UserAgent.prototype = {
-	browser: null
-	,version: null
-	,majorVersion: null
-	,minorVersion: null
-	,platform: null
-	,toString: function() {
+	toString: function() {
 		return this.browser + " v." + this.majorVersion + "." + this.minorVersion + " (" + this.version + ") on " + this.platform;
 	}
 	,__class__: ufront.web.UserAgent
@@ -18941,14 +18046,7 @@ ufront.web.context.ActionContext = function(httpContext) {
 $hxClasses["ufront.web.context.ActionContext"] = ufront.web.context.ActionContext;
 ufront.web.context.ActionContext.__name__ = ["ufront","web","context","ActionContext"];
 ufront.web.context.ActionContext.prototype = {
-	httpContext: null
-	,handler: null
-	,controller: null
-	,action: null
-	,args: null
-	,actionResult: null
-	,uriParts: null
-	,get_uriParts: function() {
+	get_uriParts: function() {
 		if(this.uriParts == null) {
 			this.uriParts = this.httpContext.getRequestUri().split("/");
 			if(this.uriParts.length > 0 && this.uriParts[0] == "") this.uriParts.shift();
@@ -18999,19 +18097,7 @@ ufront.web.context.HttpContext = function(request,response,appInjector,session,a
 $hxClasses["ufront.web.context.HttpContext"] = ufront.web.context.HttpContext;
 ufront.web.context.HttpContext.__name__ = ["ufront","web","context","HttpContext"];
 ufront.web.context.HttpContext.prototype = {
-	injector: null
-	,request: null
-	,response: null
-	,session: null
-	,sessionID: null
-	,auth: null
-	,currentUser: null
-	,currentUserID: null
-	,actionContext: null
-	,completion: null
-	,urlFilters: null
-	,_requestUri: null
-	,getRequestUri: function() {
+	getRequestUri: function() {
 		if(null == this._requestUri) {
 			var url = ufront.web.url.PartialUrl.parse(this.request.get_uri());
 			var $it0 = $iterator(this.urlFilters)();
@@ -19034,9 +18120,6 @@ ufront.web.context.HttpContext.prototype = {
 		if(filters != null) this.urlFilters = filters; else this.urlFilters = [];
 		this._requestUri = null;
 	}
-	,contentDirectory: null
-	,relativeContentDir: null
-	,_contentDir: null
 	,get_contentDirectory: function() {
 		if(this._contentDir == null) {
 			if(this.request.get_scriptDirectory() != null) this._contentDir = haxe.io.Path.addTrailingSlash(this.request.get_scriptDirectory()) + haxe.io.Path.addTrailingSlash(this.relativeContentDir); else this._contentDir = haxe.io.Path.addTrailingSlash(this.relativeContentDir);
@@ -19058,7 +18141,6 @@ ufront.web.context.HttpContext.prototype = {
 	,ufError: function(msg,pos) {
 		this.messages.push({ msg : msg, pos : pos, type : ufront.log.MessageType.Error});
 	}
-	,messages: null
 	,get_sessionID: function() {
 		if(null != this.session) return this.session.get_id(); else return null;
 	}
@@ -19099,9 +18181,7 @@ $hxClasses["ufront.web.result.ContentResult"] = ufront.web.result.ContentResult;
 ufront.web.result.ContentResult.__name__ = ["ufront","web","result","ContentResult"];
 ufront.web.result.ContentResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.ContentResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	content: null
-	,contentType: null
-	,executeResult: function(actionContext) {
+	executeResult: function(actionContext) {
 		if(null != this.contentType) actionContext.httpContext.response.set_contentType(this.contentType);
 		actionContext.httpContext.response.write(this.content);
 		return ufront.core.Sync.success();
@@ -19116,8 +18196,7 @@ $hxClasses["ufront.web.result.EmptyResult"] = ufront.web.result.EmptyResult;
 ufront.web.result.EmptyResult.__name__ = ["ufront","web","result","EmptyResult"];
 ufront.web.result.EmptyResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.EmptyResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	preventFlush: null
-	,executeResult: function(actionContext) {
+	executeResult: function(actionContext) {
 		if(this.preventFlush) actionContext.httpContext.response.preventFlush();
 		return ufront.core.Sync.success();
 	}
@@ -19133,9 +18212,7 @@ $hxClasses["ufront.web.result.RedirectResult"] = ufront.web.result.RedirectResul
 ufront.web.result.RedirectResult.__name__ = ["ufront","web","result","RedirectResult"];
 ufront.web.result.RedirectResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.RedirectResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	url: null
-	,permanentRedirect: null
-	,executeResult: function(actionContext) {
+	executeResult: function(actionContext) {
 		actionContext.httpContext.response.clearContent();
 		actionContext.httpContext.response.clearHeaders();
 		if(this.permanentRedirect) actionContext.httpContext.response.permanentRedirect(this.url); else actionContext.httpContext.response.redirect(this.url);
@@ -19162,25 +18239,13 @@ ufront.web.session.FileSession.testValidId = function(id) {
 	}
 };
 ufront.web.session.FileSession.prototype = {
-	started: null
-	,commitFlag: null
-	,closeFlag: null
-	,regenerateFlag: null
-	,expiryFlag: null
-	,sessionID: null
-	,oldSessionID: null
-	,sessionData: null
-	,context: null
-	,injectConfig: function() {
+	injectConfig: function() {
 		if(this.context.injector.hasMapping(String,"sessionName")) this.sessionName = this.context.injector.getInstance(String,"sessionName"); else this.sessionName = ufront.web.session.FileSession.defaultSessionName;
 		if(this.context.injector.hasMapping(ufront.core.InjectionRef,"sessionExpiry")) this.expiry = this.context.injector.getInstance(ufront.core.InjectionRef,"sessionExpiry").get(); else this.expiry = ufront.web.session.FileSession.defaultExpiry;
 		if(this.context.injector.hasMapping(String,"sessionSavePath")) this.savePath = this.context.injector.getInstance(String,"sessionSavePath"); else this.savePath = ufront.web.session.FileSession.defaultSavePath;
 		this.savePath = haxe.io.Path.addTrailingSlash(this.savePath);
 		if(!StringTools.startsWith(this.savePath,"/")) this.savePath = this.context.get_contentDirectory() + this.savePath;
 	}
-	,sessionName: null
-	,expiry: null
-	,savePath: null
 	,setExpiry: function(e) {
 		this.expiry = e;
 	}
@@ -19277,8 +18342,7 @@ $hxClasses["ufront.web.session.VoidSession"] = ufront.web.session.VoidSession;
 ufront.web.session.VoidSession.__name__ = ["ufront","web","session","VoidSession"];
 ufront.web.session.VoidSession.__interfaces__ = [ufront.web.session.UFHttpSession];
 ufront.web.session.VoidSession.prototype = {
-	id: null
-	,setExpiry: function(e) {
+	setExpiry: function(e) {
 	}
 	,init: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Success(tink.core.Noise.Noise));
@@ -19322,14 +18386,7 @@ ufront.web.upload.FileUpload = function() { };
 $hxClasses["ufront.web.upload.FileUpload"] = ufront.web.upload.FileUpload;
 ufront.web.upload.FileUpload.__name__ = ["ufront","web","upload","FileUpload"];
 ufront.web.upload.FileUpload.prototype = {
-	postName: null
-	,originalFileName: null
-	,size: null
-	,getBytes: null
-	,getString: null
-	,writeToFile: null
-	,process: null
-	,__class__: ufront.web.upload.FileUpload
+	__class__: ufront.web.upload.FileUpload
 };
 ufront.web.upload.TmpFileUploadMiddleware = function() {
 	this.files = [];
@@ -19338,8 +18395,7 @@ $hxClasses["ufront.web.upload.TmpFileUploadMiddleware"] = ufront.web.upload.TmpF
 ufront.web.upload.TmpFileUploadMiddleware.__name__ = ["ufront","web","upload","TmpFileUploadMiddleware"];
 ufront.web.upload.TmpFileUploadMiddleware.__interfaces__ = [ufront.app.UFMiddleware];
 ufront.web.upload.TmpFileUploadMiddleware.prototype = {
-	files: null
-	,requestIn: function(ctx) {
+	requestIn: function(ctx) {
 		if(ctx.request.get_httpMethod().toLowerCase() == "post" && ctx.request.isMultipart()) throw "Not implemented"; else return ufront.core.Sync.success();
 	}
 	,responseOut: function(ctx) {
@@ -19377,11 +18433,7 @@ $hxClasses["ufront.web.upload.TmpFileUploadSync"] = ufront.web.upload.TmpFileUpl
 ufront.web.upload.TmpFileUploadSync.__name__ = ["ufront","web","upload","TmpFileUploadSync"];
 ufront.web.upload.TmpFileUploadSync.__interfaces__ = [ufront.web.upload.FileUpload];
 ufront.web.upload.TmpFileUploadSync.prototype = {
-	postName: null
-	,originalFileName: null
-	,size: null
-	,tmpFileName: null
-	,getBytes: function() {
+	getBytes: function() {
 		throw "Not implemented";
 	}
 	,getString: function() {
@@ -19431,10 +18483,7 @@ ufront.web.url.PartialUrl.feed = function(u,url) {
 	u.segments = segments;
 };
 ufront.web.url.PartialUrl.prototype = {
-	segments: null
-	,query: null
-	,fragment: null
-	,queryString: function() {
+	queryString: function() {
 		var params = [];
 		var $it0 = this.query.keys();
 		while( $it0.hasNext() ) {
@@ -19482,17 +18531,14 @@ ufront.web.url.VirtualUrl.feed = function(u,url) {
 };
 ufront.web.url.VirtualUrl.__super__ = ufront.web.url.PartialUrl;
 ufront.web.url.VirtualUrl.prototype = $extend(ufront.web.url.PartialUrl.prototype,{
-	isPhysical: null
-	,__class__: ufront.web.url.VirtualUrl
+	__class__: ufront.web.url.VirtualUrl
 });
 ufront.web.url.filter = {};
 ufront.web.url.filter.UFUrlFilter = function() { };
 $hxClasses["ufront.web.url.filter.UFUrlFilter"] = ufront.web.url.filter.UFUrlFilter;
 ufront.web.url.filter.UFUrlFilter.__name__ = ["ufront","web","url","filter","UFUrlFilter"];
 ufront.web.url.filter.UFUrlFilter.prototype = {
-	filterIn: null
-	,filterOut: null
-	,__class__: ufront.web.url.filter.UFUrlFilter
+	__class__: ufront.web.url.filter.UFUrlFilter
 };
 ufront.web.url.filter.DirectoryUrlFilter = function(directory) {
 	if(StringTools.endsWith(directory,"/")) directory = HxOverrides.substr(directory,0,directory.length - 1);
@@ -19503,9 +18549,7 @@ $hxClasses["ufront.web.url.filter.DirectoryUrlFilter"] = ufront.web.url.filter.D
 ufront.web.url.filter.DirectoryUrlFilter.__name__ = ["ufront","web","url","filter","DirectoryUrlFilter"];
 ufront.web.url.filter.DirectoryUrlFilter.__interfaces__ = [ufront.web.url.filter.UFUrlFilter];
 ufront.web.url.filter.DirectoryUrlFilter.prototype = {
-	directory: null
-	,segments: null
-	,filterIn: function(url,request) {
+	filterIn: function(url,request) {
 		var pos = 0;
 		while(url.segments.length > 0 && url.segments[0] == this.segments[pos++]) url.segments.shift();
 	}
@@ -19524,9 +18568,7 @@ $hxClasses["ufront.web.url.filter.PathInfoUrlFilter"] = ufront.web.url.filter.Pa
 ufront.web.url.filter.PathInfoUrlFilter.__name__ = ["ufront","web","url","filter","PathInfoUrlFilter"];
 ufront.web.url.filter.PathInfoUrlFilter.__interfaces__ = [ufront.web.url.filter.UFUrlFilter];
 ufront.web.url.filter.PathInfoUrlFilter.prototype = {
-	frontScript: null
-	,useCleanRoot: null
-	,filterIn: function(url,request) {
+	filterIn: function(url,request) {
 		if(url.segments[0] == this.frontScript) url.segments.shift();
 	}
 	,filterOut: function(url,request) {
@@ -19648,6 +18690,7 @@ ufront.web.session.UFHttpSession.__meta__ = { obj : { 'interface' : null}};
 app.Iso.REQUEST_TYPE = "UF_ISO_TYPE";
 app.Iso.AJAX = "AJAX";
 app.Iso.REQ_TYPE_SERVER = "SERVER";
+app.Iso.UF_CLIENT_SESSION = "UFrontClientSession";
 app.Iso.stateChangeCount = 0;
 app.Iso.contentCache = new haxe.ds.StringMap();
 ufront.web.Controller.__meta__ = { fields : { context : { type : ["ufront.web.context.HttpContext"], inject : null}}};

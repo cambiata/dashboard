@@ -3,6 +3,7 @@ import cx.CryptTools;
 import haxe.ds.StringMap;
 import haxe.Unserializer;
 import js.Browser;
+import js.Cookie;
 import js.Lib;
 import ufront.web.context.HttpContext;
 import ufront.web.HttpCookie;
@@ -21,9 +22,13 @@ class ClientSession  implements UFHttpSession
 	
 	public function new(sessionElementID:String = 'session') {
 		//Lib.alert('client session');
-		var sessionElement = js.Browser.document.getElementById(sessionElementID);		
-		var dataStr = sessionElement.innerHTML;
-		if (dataStr != null) this.sessionData = Unserializer.run(cx.CryptTools.decrypt(dataStr));
+		var cookieStr = Cookie.get(Iso.UF_CLIENT_SESSION);
+		this.sessionData = Unserializer.run(cx.CryptTools.decrypt(cookieStr));
+		
+		
+		//var sessionElement = js.Browser.document.getElementById(sessionElementID);		
+		//var dataStr = sessionElement.innerHTML;
+		//if (dataStr != null) this.sessionData = Unserializer.run(cx.CryptTools.decrypt(dataStr));
 		//Lib.alert(this.sessionData);
 	}
 

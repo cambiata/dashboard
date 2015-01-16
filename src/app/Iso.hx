@@ -11,6 +11,7 @@ class Iso
 	public static var AJAX:String = 'AJAX';
 	public static var REQ_TYPE_SERVER:String = 'SERVER';
 
+	public static var UF_CLIENT_SESSION:String = 'UFrontClientSession';
 	// Using Detox, this could be run on both server and client
 	public static  function setUI(uri:String) {		
 		// Update main menu

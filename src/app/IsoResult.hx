@@ -5,6 +5,7 @@ import haxe.Serializer;
 import haxe.Template;
 import ufront.web.context.ActionContext;
 import ufront.web.context.HttpContext;
+import ufront.web.HttpCookie;
 import ufront.web.HttpError;
 import Main;
 
@@ -93,6 +94,8 @@ class AppLayout {
 		//
 		//var user = this.context.auth.currentUser;
 		
+		
+		
 		var testApi = new TestApi();
 		
 		var user = testApi.getUserFromSession(this.context.session);
@@ -100,7 +103,9 @@ class AppLayout {
 		
 		var sessionData = testApi.getSessiondata(this.context.session);
 		
-		return  template.execute( { content: content, session: CryptTools.crypt(Serializer.run(sessionData)), user:user } );					
+		this.context.response.setCookie(new HttpCookie(Iso.UF_CLIENT_SESSION, CryptTools.crypt(Serializer.run(sessionData))));
+		
+		return  template.execute( { content: content, user:user } );					
 	}
 }
 #end
