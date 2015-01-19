@@ -43,16 +43,15 @@ class Iso
 		 contentCache.set(id, content);		 
 	 }
 	 
-	 static public function contentCacheGet(id:String):String {
+	 static public function contentCacheGet(id:String):String {		 
+		//  js.Lib.alert('GET : ' +  id );
 		 return contentCache.get(id);
 	 }
 	 
 	 static public function contentCacheExists(id:String) return contentCache.exists(id);
 	 
-	 
-	 
-	 
 	public static function addFirstRequestToCache() {
+				
 				var contentEl = js.Browser.document.getElementById('content');
 				if (contentEl == null) {
 					throw('Could not init contentCache on first request');

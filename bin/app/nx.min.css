@@ -1,4 +1,4 @@
-.nx-parent{margin-top:8px;border:3px solid #eeeeee;border-radius:5px;margin-bottom:8px;padding:4px;box-sizing:content-box;}
+.nx-parent{margin-top:8px;border:3px solid #dddddd;border-radius:5px;margin-bottom:8px;padding:4px;box-sizing:content-box;}
 .nx-active{border:3px solid #348fe2;border-radius:5px;}
 .nx-activating{border:3px solid #ff5b57;border-radius:5px;}
 .nx-button{border:none;cursor:pointer;display:inline-block;border-radius:3px;font-weight:300;line-height:1.42857;margin-bottom:0;padding-top:1px;padding-bottom:2px;padding-left:8px;padding-right:8px;margin-right:3px;text-align:center;vertical-align:middle;white-space:nowrap;}
@@ -8,3 +8,7 @@
 .nx-red:hover{background:none repeat scroll 0 0 #cc4946;border-color:#008a8a;}
 .nx-blue{background:none repeat scroll 0 0 #348fe2;border-color:#348fe2;color:#fff;}
 .nx-blue:hover{background:none repeat scroll 0 0 #2a72b5;border-color:#2a72b5;}
+.nx-gray{background:none repeat scroll 0 0 #b6c2c9;border-color:#b6c2c9;color:#fff;}
+.nx-gray:hover{background:none repeat scroll 0 0 #929ba1;border-color:#929ba1;}
+.nx-jumbo{background:none repeat scroll 0 0 #348fe2;color:white;}
+

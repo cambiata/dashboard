@@ -1,0 +1,30 @@
+<h1>Intervall 1</h1>
+
+
+
+<div>
+	<script class="nx-score" id="test1" type="text/xml" data-tempo="100" data-sounds="piano,guitar,bass" data-scaling="mid">
+		<score>
+			<config test="12345"/>
+			<bar time="C">
+			
+			<part clef="ClefG" key="Flat3"><voice>
+				<note><headx level="4"/></note>
+				<note><headx level="3"/></note>
+				<note><headx level="2"/></note>
+				<note><headx level="1"/></note>
+				<note><headx level="0"/></note>
+				<note><headx level="-1"/></note>
+				<note><headx level="-2"/></note>				
+				<note><headx level="-3"/></note>				
+			</voice></part>
+			
+			<part clef="ClefG" key="Flat3" type="pitchchain"><voice>
+				<tpl><headx level="4"/></tpl>
+			</voice></part>
+			
+			
+			</bar>
+		</score>
+	</script>
+</div>

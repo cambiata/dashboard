@@ -59,6 +59,11 @@ class MainController extends  ufront.web.Controller {
 	}
 	@:route( '/info' ) public function info() return  loadContent(this.context.request.uri);
 	
+	@:route( '/file/$filename' ) public function file(filename:String) {		
+		return  loadContent('/file/$filename');
+	}
+	
+	
 	@:route( '/slask' ) public function slask() {				
 		//var userID = this.context.auth.currentUser.userID;
 		
@@ -81,6 +86,9 @@ class MainController extends  ufront.web.Controller {
 		var content = 'slask';		
 		return new IsoResult(content);
 	}
+	
+	
+	
 	
 	
 	@:route( '/contact/', GET ) public function contact() return new IsoResult("<div class='page-header'><h1>Contact</h1></div><p>The form submit is handled just as a normal server request - no pushstate or isometric stuff.</p><form method='POST' action='/contact/'><div class='col-xs-3'><p>Name:<br/><input name='name' class='form-control'/></p><p>Age:<br/><input name='age' class='form-control' /></p><input type='submit'/></div></form>");

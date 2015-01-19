@@ -7,6 +7,6 @@ package app;
 class AppConstants 
 {
 	static public var siteinfo = {
-		name: 'Musikteori',
+		name: 'primavista.nu',
 	}
 }

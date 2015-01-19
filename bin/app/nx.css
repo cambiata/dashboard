@@ -1,6 +1,6 @@
 .nx-parent {
 	margin-top: 8px;
-	border: 3px solid #eeeeee;
+	border: 3px solid #dddddd;
 	border-radius: 5px;
 	margin-bottom: 8px;
 	padding: 4px;
@@ -63,4 +63,21 @@
 .nx-blue:hover {
     background: none repeat scroll 0 0 #2a72b5;
     border-color: #2a72b5;  
+}
+
+.nx-gray {
+    background: none repeat scroll 0 0 #b6c2c9;
+    border-color: #b6c2c9;
+    color: #fff;
+}		
+.nx-gray:hover {
+    background: none repeat scroll 0 0 #929ba1;
+    border-color: #929ba1;  
+}
+
+
+
+.nx-jumbo {
+	background: none repeat scroll 0 0 #348fe2;
+	color: white;	
 }

@@ -36,7 +36,7 @@ to{transform:rotate(359deg)}}
 .navbar.navbar-inverse{background:#2d353c}
 .navbar.navbar-inverse .navbar-brand,.navbar.navbar-inverse .navbar-nav>li>a{color:#a8acb1}
 .navbar.navbar-inverse .navbar-form .form-control{background:url(../img/transparent/black-0.2.png);background:rgba(0,0,0,.2);border-color:#1F2429;border-color:rgba(0,0,0,.2);color:#a8acb1}
-.navbar-brand{margin-right:10px;padding:12px 20px;height:54px;width:300px;font-weight:100;font-size:18px;line-height:30px}
+.navbar-brand{margin-right:10px;padding:12px 20px;height:54px;width:220px;font-weight:100;font-size:18px;line-height:30px}
 .navbar-default .navbar-brand{color:#333}
 .navbar-logo{float:left;margin-right:10px;margin-top:5px;border:10px solid transparent;border-color:#4DCACA #31A3A3 #1D8888;opacity:.9;filter:alpha(opacity=90)}
 .navbar-toggle{margin-top:10px;margin-bottom:10px;padding:10px;border:none}

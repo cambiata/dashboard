@@ -22,7 +22,7 @@ class ClientUI
 		
 		 js.Browser.window.setTimeout(function() {			 
 			 ScriptScoresX.getInstance().invokeBodyScores();
-		 }, 1000);
+		 }, 0);
 		//ScriptScores.getInstanceX().init();
 		//ScriptScores.getInstance().render();			
 		
