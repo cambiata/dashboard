@@ -361,7 +361,7 @@
 			<!-- begin row -->
 			<div class="row">
 				<!-- begin col-8 -->
-				<div class="col-md-9">
+				<div class="col-md-8">
 					<div class="panel panel-inverse">
 						<div class="panel-heading">
 							<div class="panel-heading-btn">
@@ -396,7 +396,7 @@
 				
 				<!-- end col-8 -->
 				<!-- begin col-4 -->
-				<div class="col-md-3">
+				<div class="col-md-4">
 					
 					
 					<div class="panel panel-inverse">
@@ -412,7 +412,8 @@
 								<div class="form-group">
 									<input type="text" placeholder="Sök" class="form-control">	
 								</div>
-							</form>							
+							</form>
+							<p>Du kan söka efter...</p>
 						</div>
 						
 						<!--div class="panel-body p-t-0">
@@ -440,25 +441,97 @@
 							<div class="panel-heading-btn">
 								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 							</div>
-							<h4 class="panel-title">Test score</h4>
+							<h4 class="panel-title">Score</h4>
 						</div>
 						
-						<div class="panel-toolbar">
-							<div>
-								<button id="btnPitch" class="nx-button nx-blue">Pitch</button>
-								<button id="btnPitchStart" class="nx-button nx-green">Start</button>
-								<button id="btnPitchStop" class="nx-button nx-red">Stop</button>
-								<span id="lblPitch">0</span>
-							</div>
+						<div>
 							<div>
 								<script class="nx-score" id="nisselina" type="text/xml" data-tempo="100" data-sounds="piano,guitar,bass" data-scaling="small">
 									<score><config test="12345"/><bar time="4/4"><part clef="ClefF" key="Flat2"><voice><note><headx level="6"/></note><note><headx level="5"/></note><note><headx level="4"/></note><note><headx level="3"/></note></voice></part></bar><bar><part><voice><note val="8"><headx level="2"/></note><note val="8"><headx level="3"/></note><note val="8"><headx level="4"/></note><note val="8"><headx level="5"/></note><note val="2"><headx level="6"/></note></voice></part></bar></score>
 								</script>
-							</div>	
+							</div>						
 						</div>						
 						
 
 					</div>						
+					
+					
+					
+					
+					
+					<div class="panel panel-inverse">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">Information</h4>
+						</div>
+						<div class="panel-body p-t-0">
+							
+
+							
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" href="#default-tab-1">Körakademin</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-2">Ansökan</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-3">Kontakt</a></li>
+								<li class=""><a data-toggle="tab" href="#default-tab-user">User</a></li>
+							</ul>
+							
+							
+							<div class="tab-content">
+								<div id="default-tab-1" class="tab-pane fade active in">
+									<h3 class="m-t-10">Välkommen till Körakademin!</h3>
+
+									<img width="300" src="/app/img/korakademin.png" />
+									<p class="text-right m-b-0">
+										<a class="btn btn-white m-r-5" href="javascript:;">Default</a>
+										<a class="btn btn-primary" href="javascript:;">Primary</a>
+									</p>
+								</div>
+								<div id="default-tab-2" class="tab-pane fade">
+									<blockquote>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+										<small>Someone famous in <cite title="Source Title">Source Title</cite></small>
+									</blockquote>
+									<h4>Lorem ipsum dolor sit amet</h4>
+									<p>
+										Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit ligula. 
+										In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris convallis, 
+										sit amet scelerisque lectus adipiscing.
+									</p>
+								</div>
+								<div id="default-tab-3" class="tab-pane fade">
+									<p>
+										<span class="fa-stack fa-4x pull-left m-r-10">
+											<i class="fa fa-square-o fa-stack-2x"></i>
+											<i class="fa fa-twitter fa-stack-1x"></i>
+										</span>
+										Praesent tincidunt nulla ut elit vestibulum viverra. Sed placerat magna eget eros accumsan elementum. 
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis lobortis neque. 
+										Maecenas justo odio, bibendum fringilla quam nec, commodo rutrum quam. 
+										Donec cursus erat in lacus congue sodales. Nunc bibendum id augue sit amet placerat. 
+										Quisque et quam id felis tempus volutpat at at diam. Vivamus ac diam turpis.Sed at lacinia augue. 
+										Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
+										Quisque adipiscing dui nec orci fermentum blandit.
+										Sed at lacinia augue. Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
+										Quisque adipiscing dui nec orci fermentum blandit.
+									</p>
+								</div>
+								
+								<div id="default-tab-user" class="tab-pane fade">
+									<p>User:</p>
+									<p>::user::</p>
+									<p>::user._permissions::</p>
+									
+								</div>								
+							</div>					
+						
+						</div>						
+						
+					</div>
+					
+				
+					
 					
 				</div>
 				<!-- end col-4 -->

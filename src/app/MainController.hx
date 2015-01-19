@@ -5,6 +5,7 @@ import Main;
 import Main.TestPermissions;
 import nx3.NScore;
 import nx3.test.TestItemsBach;
+import nx3.utils.ScriptScoresX;
 import ufront.web.Controller;
 import ufront.web.result.ActionResult;
 import ufront.web.result.ContentResult;
@@ -16,14 +17,15 @@ import tink.core.Outcome;
 import ufront.auth.AuthError;
 import ufront.web.HttpError;
 import app.Iso;
-using Detox;
-using StringTools;
 
 import nx3.NScore;
 import nx3.PScore;
 import nx3.render.Renderer;
 import nx3.render.scaling.Scaling;
 import nx3.render.TargetSvgXml;
+
+using Detox;
+using StringTools;
 
 /**
  * IsoController
@@ -36,10 +38,7 @@ import nx3.render.TargetSvgXml;
  }
   
 class MainController extends  ufront.web.Controller {	
-	
-	//var testApi:TestApi;
-	
-	
+
 	
 	public function new() {
 		super();						
@@ -140,17 +139,17 @@ class MainController extends  ufront.web.Controller {
 	
 			// First, check if the content has been cached:			
 			
-			if (Iso.contentCache.exists(uri)) {
-				ufTrace('Try get $uri from cache');
+			if (Iso.contentCacheExists(uri)) {
+				//ufTrace('Try get $uri from cache');
 				// Get content from client cache
-				var cachedContent = Iso.contentCache.get(uri);
+				var cachedContent = Iso.contentCacheGet(uri);
 				var content = cachedContent;
 				f.trigger(Success( new IsoResult( content)));
 				Iso.setLoadinfoLabel('PushState - Loaded from cache', 'label label-warning');
 				
 			} else {	 // If not in the cache, load it by ajax 
 				
-				this.ufTrace('Load from ' + uri);
+				//this.ufTrace('Load from ' + uri);
 				var request = new js.html.XMLHttpRequest(); 
 				request.open('GET', uri);
 				
@@ -159,7 +158,7 @@ class MainController extends  ufront.web.Controller {
 				request.onload = function (e) {
 					var requestResponse = request.response;
 					var content = requestResponse;
-					Iso.contentCache.set(uri, requestResponse);
+					Iso.contentCacheSet(uri, requestResponse);
 					f.trigger(Success(new IsoResult( content) ));
 					Iso.setLoadinfoLabel('PushState - Loaded using ajax', 'label label-success');
 				};		
@@ -196,6 +195,9 @@ class MainController extends  ufront.web.Controller {
 			// Sys.sleep(1) 
 			
 			var content = sys.io.File.getContent(filename);
+			
+			content = ScriptScoresX.getInstance().resolveScriptScores(content);
+			
 			f.trigger(Success( new IsoResult( content)));
 		}
 		return f.asFuture();
@@ -227,14 +229,14 @@ class MainController extends  ufront.web.Controller {
 		
 		var content = '';
 		#if Client
-		if (Iso.contentCache.exists(uri)) {
-			content = Iso.contentCache.get(uri);
+		if (Iso.contentCacheExists(uri)) {
+			content = Iso.contentCacheGet(uri);
 			Iso.setLoadinfoLabel('PushState - Score from cache', 'label label-warning');
 		} else {
 			var nscore = TestItemsBach.scoreBachSinfonia4();
 			var svgXml = getScoreXml(nscore);
 			content += svgXml;
-			Iso.contentCache.set(uri, content);
+			Iso.contentCacheSet(uri, content);
 			Iso.setLoadinfoLabel('PushState - Build score', 'label label-success');
 		}
 		#end

@@ -105,7 +105,7 @@ class AppLayout {
 		
 		this.context.response.setCookie(new HttpCookie(Iso.UF_CLIENT_SESSION, CryptTools.crypt(Serializer.run(sessionData))));
 		
-		return  template.execute( { content: content, user:user } );					
+		return  template.execute( { content: content, user:user, siteinfo:AppConstants.siteinfo } );					
 	}
 }
 #end

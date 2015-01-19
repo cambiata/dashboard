@@ -17,6 +17,7 @@
   <classpaths>
     <class path="src" />
     <class path="..\nx3\src" />
+    <class path="..\HxAudioTools\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -43,9 +44,9 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxe  -lib ufront-mvc -lib detox -lib jQueryExtern -cp src -cp ../nx3/src -js bin/client.js -D Client -main Main</preBuildCommand>
+  <preBuildCommand>haxe  -lib ufront-mvc -lib detox -lib jQueryExtern -cp src -cp ../nx3/src -cp ../HxAudioTools/src -js bin/client.js -D Client -main Main -lib format</preBuildCommand>
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False">haxe  -lib ufront-mvc -lib detox -lib nme -cp src -cp ../nx3/src -neko bin/index.n -D Server -main Main</postBuildCommand>
+  <postBuildCommand alwaysRun="False">haxe  -lib ufront-mvc -lib detox -lib nme -cp src -cp ../nx3/src   -neko bin/index.n -D Server -main Main</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />

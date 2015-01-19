@@ -1,4 +1,7 @@
-(function () { "use strict";
+(function ($hx_exports) { "use strict";
+$hx_exports.audiotools = $hx_exports.audiotools || {};
+$hx_exports.audiotools.sound = $hx_exports.audiotools.sound || {};
+$hx_exports.audiotools.sound.Wav16SoundJS = $hx_exports.audiotools.sound.Wav16SoundJS || {};
 var $hxClasses = {},$estr = function() { return js.Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
@@ -59,7 +62,8 @@ var EReg = function(r,opt) {
 $hxClasses["EReg"] = EReg;
 EReg.__name__ = ["EReg"];
 EReg.prototype = {
-	match: function(s) {
+	r: null
+	,match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
 		this.r.m = this.r.exec(s);
 		this.r.s = s;
@@ -281,7 +285,10 @@ var List = function() {
 $hxClasses["List"] = List;
 List.__name__ = ["List"];
 List.prototype = {
-	add: function(item) {
+	h: null
+	,q: null
+	,length: null
+	,add: function(item) {
 		var x = [item];
 		if(this.h == null) this.h = x; else this.q[1] = x;
 		this.q = x;
@@ -336,16 +343,17 @@ Main.main = function() {
 	Main.initApplication();
 	pushstate.PushState.init();
 	pushstate.PushState.addEventListener(null,function(url) {
-		if(!app.Iso.isFirstRequest()) Main.app.execute(new ufront.web.context.HttpContext(new ClientRequest(),new ClientResponse(),null,new app.ClientSession(),new TestAuth()));
+		if(!app.Iso.isFirstRequest()) Main.application.execute(new ufront.web.context.HttpContext(new ClientRequest(),new ClientResponse(),null,new app.ClientSession(),new TestAuth()));
 		app.Iso.setUI(window.location.pathname);
 	});
 	app.Iso.addFirstRequestToCache();
 	dashboard.Dashboard.init();
+	app.ClientUI.initScores("first");
 };
 Main.initApplication = function() {
-	if(Main.app == null) {
+	if(Main.application == null) {
 		var config = { indexController : app.MainController, basePath : "/", authImplementation : TestAuth};
-		Main.app = new ufront.app.UfrontApplication(config);
+		Main.application = new ufront.app.UfrontApplication(config);
 	}
 };
 var ufront = {};
@@ -358,51 +366,66 @@ ufront.web.context.HttpRequest.create = function() {
 	throw new thx.core.error.NotImplemented({ fileName : "HttpRequest.hx", lineNumber : 33, className : "ufront.web.context.HttpRequest", methodName : "create"});
 };
 ufront.web.context.HttpRequest.prototype = {
-	get_params: function() {
+	params: null
+	,get_params: function() {
 		if(null == this.params) this.params = ufront.core._MultiValueMap.MultiValueMap_Impl_.combine([this.get_cookies(),this.get_query(),this.get_post()]);
 		return this.params;
 	}
+	,queryString: null
 	,get_queryString: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 64, className : "ufront.web.context.HttpRequest", methodName : "get_queryString"});
 	}
+	,postString: null
 	,get_postString: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 72, className : "ufront.web.context.HttpRequest", methodName : "get_postString"});
 	}
+	,query: null
 	,get_query: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 78, className : "ufront.web.context.HttpRequest", methodName : "get_query"});
 	}
+	,post: null
 	,get_post: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 91, className : "ufront.web.context.HttpRequest", methodName : "get_post"});
 	}
+	,files: null
 	,get_files: function() {
 		if(null == this.files) this.files = new haxe.ds.StringMap();
 		return this.files;
 	}
+	,cookies: null
 	,get_cookies: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 110, className : "ufront.web.context.HttpRequest", methodName : "get_cookies"});
 	}
+	,hostName: null
 	,get_hostName: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 116, className : "ufront.web.context.HttpRequest", methodName : "get_hostName"});
 	}
+	,clientIP: null
 	,get_clientIP: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 122, className : "ufront.web.context.HttpRequest", methodName : "get_clientIP"});
 	}
+	,uri: null
 	,get_uri: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 130, className : "ufront.web.context.HttpRequest", methodName : "get_uri"});
 	}
+	,clientHeaders: null
 	,get_clientHeaders: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 136, className : "ufront.web.context.HttpRequest", methodName : "get_clientHeaders"});
 	}
+	,userAgent: null
 	,get_userAgent: function() {
 		if(this.userAgent == null) this.userAgent = ufront.web.UserAgent.fromString(ufront.core._MultiValueMap.MultiValueMap_Impl_.get(this.get_clientHeaders(),"User-Agent"));
 		return this.userAgent;
 	}
+	,httpMethod: null
 	,get_httpMethod: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 156, className : "ufront.web.context.HttpRequest", methodName : "get_httpMethod"});
 	}
+	,scriptDirectory: null
 	,get_scriptDirectory: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 168, className : "ufront.web.context.HttpRequest", methodName : "get_scriptDirectory"});
 	}
+	,authorization: null
 	,get_authorization: function() {
 		throw new thx.core.error.AbstractMethod({ fileName : "HttpRequest.hx", lineNumber : 180, className : "ufront.web.context.HttpRequest", methodName : "get_authorization"});
 	}
@@ -450,7 +473,6 @@ ClientRequest.prototype = $extend(ufront.web.context.HttpRequest.prototype,{
 	,__class__: ClientRequest
 });
 ufront.web.context.HttpResponse = function() {
-	this.iso = false;
 	this.clear();
 	this._flushed = false;
 };
@@ -460,11 +482,17 @@ ufront.web.context.HttpResponse.create = function() {
 	return new ufront.web.context.HttpResponse();
 };
 ufront.web.context.HttpResponse.prototype = {
-	preventFlush: function() {
+	charset: null
+	,status: null
+	,_buff: null
+	,_headers: null
+	,_cookies: null
+	,_flushed: null
+	,preventFlush: function() {
 		this._flushed = true;
 	}
 	,flush: function() {
-		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 110, className : "ufront.web.context.HttpResponse", methodName : "flush"});
+		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 108, className : "ufront.web.context.HttpResponse", methodName : "flush"});
 	}
 	,clear: function() {
 		this.clearCookies();
@@ -567,6 +595,7 @@ ClientResponse.prototype = $extend(ufront.web.context.HttpResponse.prototype,{
 	flush: function() {
 		var contentHtml = this._buff.b;
 		window.document.getElementById("content").innerHTML = contentHtml;
+		app.ClientUI.initScores();
 	}
 	,__class__: ClientResponse
 });
@@ -575,7 +604,9 @@ ufront.auth.UFAuthUser = function() { };
 $hxClasses["ufront.auth.UFAuthUser"] = ufront.auth.UFAuthUser;
 ufront.auth.UFAuthUser.__name__ = ["ufront","auth","UFAuthUser"];
 ufront.auth.UFAuthUser.prototype = {
-	__class__: ufront.auth.UFAuthUser
+	can: null
+	,userID: null
+	,__class__: ufront.auth.UFAuthUser
 };
 var TestUser = function(userID,password,firstname,lastname,permissions) {
 	this.userID = userID;
@@ -588,7 +619,11 @@ $hxClasses["TestUser"] = TestUser;
 TestUser.__name__ = ["TestUser"];
 TestUser.__interfaces__ = [ufront.auth.UFAuthUser];
 TestUser.prototype = {
-	can: function(permission,permissions) {
+	password: null
+	,firstname: null
+	,lastname: null
+	,_permissions: null
+	,can: function(permission,permissions) {
 		var permissions1;
 		if(permissions != null) permissions1 = Lambda.array(permissions); else permissions1 = new Array();
 		if(permissions1 != null) permissions1.push(permission);
@@ -600,6 +635,7 @@ TestUser.prototype = {
 		}
 		return true;
 	}
+	,userID: null
 	,get_userID: function() {
 		return "TEST_USER";
 	}
@@ -610,7 +646,18 @@ ufront.auth.UFAuthHandler = function() { };
 $hxClasses["ufront.auth.UFAuthHandler"] = ufront.auth.UFAuthHandler;
 ufront.auth.UFAuthHandler.__name__ = ["ufront","auth","UFAuthHandler"];
 ufront.auth.UFAuthHandler.prototype = {
-	__class__: ufront.auth.UFAuthHandler
+	isLoggedIn: null
+	,requireLogin: null
+	,isLoggedInAs: null
+	,requireLoginAs: null
+	,hasPermission: null
+	,hasPermissions: null
+	,requirePermission: null
+	,requirePermissions: null
+	,getUserByID: null
+	,setCurrentUser: null
+	,toString: null
+	,__class__: ufront.auth.UFAuthHandler
 };
 var TestAuth = function() {
 	this.testApi = new TestApi();
@@ -619,7 +666,10 @@ $hxClasses["TestAuth"] = TestAuth;
 TestAuth.__name__ = ["TestAuth"];
 TestAuth.__interfaces__ = [ufront.auth.UFAuthHandler];
 TestAuth.prototype = {
-	isLoggedIn: function() {
+	context: null
+	,testApi: null
+	,currentUser: null
+	,isLoggedIn: function() {
 		return this.get_currentUser() != null;
 	}
 	,requireLogin: function() {
@@ -655,6 +705,8 @@ TestAuth.prototype = {
 		this.testApi.setUserFromSession(session,user);
 		this._currentUser = user;
 	}
+	,_currentUser: null
+	,_hackSession: null
 	,get_currentUser: function() {
 		var session;
 		if(this.context != null) session = this.context.session; else {
@@ -727,7 +779,10 @@ var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
 IMap.prototype = {
-	__class__: IMap
+	get: null
+	,exists: null
+	,keys: null
+	,__class__: IMap
 };
 Math.__name__ = ["Math"];
 var Random = function() { };
@@ -818,6 +873,11 @@ Reflect.isFunction = function(f) {
 Reflect.compare = function(a,b) {
 	if(a == b) return 0; else if(a > b) return 1; else return -1;
 };
+Reflect.compareMethods = function(f1,f2) {
+	if(f1 == f2) return true;
+	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
+	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
+};
 Reflect.isObject = function(v) {
 	if(v == null) return false;
 	var t = typeof(v);
@@ -858,7 +918,8 @@ var StringBuf = function() {
 $hxClasses["StringBuf"] = StringBuf;
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype = {
-	add: function(x) {
+	b: null
+	,add: function(x) {
 		this.b += Std.string(x);
 	}
 	,addSub: function(s,pos,len) {
@@ -951,6 +1012,10 @@ Type.getClass = function(o) {
 	if(o == null) return null;
 	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
 };
+Type.getEnum = function(o) {
+	if(o == null) return null;
+	return o.__enum__;
+};
 Type.getSuperClass = function(c) {
 	return c.__super__;
 };
@@ -1016,6 +1081,13 @@ Type.createEnumIndex = function(e,index,params) {
 	var c = e.__constructs__[index];
 	if(c == null) throw index + " is not a valid enum constructor index";
 	return Type.createEnum(e,c,params);
+};
+Type.getInstanceFields = function(c) {
+	var a = [];
+	for(var i in c.prototype) a.push(i);
+	HxOverrides.remove(a,"__class__");
+	HxOverrides.remove(a,"__properties__");
+	return a;
 };
 Type.getEnumConstructs = function(e) {
 	var a = e.__constructs__;
@@ -1105,7 +1177,13 @@ Xml.createDocument = function() {
 	return r;
 };
 Xml.prototype = {
-	get_nodeName: function() {
+	nodeType: null
+	,_nodeName: null
+	,_nodeValue: null
+	,_attributes: null
+	,_children: null
+	,_parent: null
+	,get_nodeName: function() {
 		if(this.nodeType != Xml.Element) throw "bad nodeType";
 		return this._nodeName;
 	}
@@ -1258,7 +1336,21 @@ ufront.web.session.UFHttpSession = function() { };
 $hxClasses["ufront.web.session.UFHttpSession"] = ufront.web.session.UFHttpSession;
 ufront.web.session.UFHttpSession.__name__ = ["ufront","web","session","UFHttpSession"];
 ufront.web.session.UFHttpSession.prototype = {
-	__class__: ufront.web.session.UFHttpSession
+	id: null
+	,init: null
+	,clear: null
+	,get: null
+	,set: null
+	,exists: null
+	,remove: null
+	,isActive: null
+	,close: null
+	,setExpiry: null
+	,commit: null
+	,triggerCommit: null
+	,regenerateID: null
+	,getSessionData: null
+	,__class__: ufront.web.session.UFHttpSession
 };
 var app = {};
 app.ClientSession = function(sessionElementID) {
@@ -1271,7 +1363,9 @@ $hxClasses["app.ClientSession"] = app.ClientSession;
 app.ClientSession.__name__ = ["app","ClientSession"];
 app.ClientSession.__interfaces__ = [ufront.web.session.UFHttpSession];
 app.ClientSession.prototype = {
-	setExpiry: function(e) {
+	sessionData: null
+	,id: null
+	,setExpiry: function(e) {
 	}
 	,init: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Success(tink.core.Noise.Noise));
@@ -1310,6 +1404,33 @@ app.ClientSession.prototype = {
 	,__class__: app.ClientSession
 	,__properties__: {get_id:"get_id"}
 };
+app.ClientUI = function() { };
+$hxClasses["app.ClientUI"] = app.ClientUI;
+app.ClientUI.__name__ = ["app","ClientUI"];
+app.ClientUI.initScores = function(id) {
+	if(id == null) id = "Leffe";
+	window.setTimeout(function() {
+		(nx3.utils.ScriptScoresX.instance == null?nx3.utils.ScriptScoresX.instance = new nx3.utils.ScriptScoresX():nx3.utils.ScriptScoresX.instance).invokeBodyScores();
+	},1000);
+	try {
+		window.document.getElementById("btnPitch").onmousedown = function(e) {
+			if(audiotools.webaudio.pitch.PitchRecognizer.instance == null) audiotools.webaudio.pitch.PitchRecognizer.instance = new audiotools.webaudio.pitch.PitchRecognizer(null); else audiotools.webaudio.pitch.PitchRecognizer.instance;
+			(audiotools.webaudio.pitch.PitchRecognizer.instance == null?audiotools.webaudio.pitch.PitchRecognizer.instance = new audiotools.webaudio.pitch.PitchRecognizer(null):audiotools.webaudio.pitch.PitchRecognizer.instance).onPitch = function(currentFreq,closestIndex,maxVolume) {
+				var semitone;
+				if(currentFreq > 0) semitone = audiotools.webaudio.pitch.PitchRecognizer.getSemitoneDiff(currentFreq); else semitone = 0;
+				var roundSemitone = Math.round(semitone);
+				window.document.getElementById("lblPitch").textContent = "" + currentFreq + " : " + roundSemitone + " / " + semitone;
+			};
+		};
+		window.document.getElementById("btnPitchStart").onmousedown = function(e1) {
+			(audiotools.webaudio.pitch.PitchRecognizer.instance == null?audiotools.webaudio.pitch.PitchRecognizer.instance = new audiotools.webaudio.pitch.PitchRecognizer(null):audiotools.webaudio.pitch.PitchRecognizer.instance).startAnalyzing();
+		};
+		window.document.getElementById("btnPitchStop").onmousedown = function(e2) {
+			(audiotools.webaudio.pitch.PitchRecognizer.instance == null?audiotools.webaudio.pitch.PitchRecognizer.instance = new audiotools.webaudio.pitch.PitchRecognizer(null):audiotools.webaudio.pitch.PitchRecognizer.instance).stopAnalyzing();
+		};
+	} catch( e3 ) {
+	}
+};
 var haxe = {};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
@@ -1319,7 +1440,8 @@ $hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
 haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
 haxe.ds.StringMap.__interfaces__ = [IMap];
 haxe.ds.StringMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,set: function(key,value) {
 		this.h["$" + key] = value;
 	}
 	,get: function(key) {
@@ -1386,6 +1508,15 @@ app.Iso.setLoadinfoLabel = function(text,clss) {
 app.Iso.isFirstRequest = function() {
 	return ++app.Iso.stateChangeCount <= 1;
 };
+app.Iso.contentCacheSet = function(id,content) {
+	app.Iso.contentCache.set(id,content);
+};
+app.Iso.contentCacheGet = function(id) {
+	return app.Iso.contentCache.get(id);
+};
+app.Iso.contentCacheExists = function(id) {
+	return app.Iso.contentCache.exists(id);
+};
 app.Iso.addFirstRequestToCache = function() {
 	var contentEl = window.document.getElementById("content");
 	if(contentEl == null) {
@@ -1403,7 +1534,9 @@ app.ClientUser = function(firstname,lastname) {
 $hxClasses["app.ClientUser"] = app.ClientUser;
 app.ClientUser.__name__ = ["app","ClientUser"];
 app.ClientUser.prototype = {
-	__class__: app.ClientUser
+	firstname: null
+	,lastname: null
+	,__class__: app.ClientUser
 };
 ufront.web.result = {};
 ufront.web.result.ActionResult = function() { };
@@ -1429,7 +1562,8 @@ $hxClasses["app.IsoResult"] = app.IsoResult;
 app.IsoResult.__name__ = ["app","IsoResult"];
 app.IsoResult.__super__ = ufront.web.result.ActionResult;
 app.IsoResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	executeResult: function(actionContext) {
+	content: null
+	,executeResult: function(actionContext) {
 		var content = this.getContent(actionContext,this.content);
 		actionContext.httpContext.response.write(content);
 		return ufront.core.Sync.success();
@@ -1456,7 +1590,9 @@ ufront.web.Controller = function() {
 $hxClasses["ufront.web.Controller"] = ufront.web.Controller;
 ufront.web.Controller.__name__ = ["ufront","web","Controller"];
 ufront.web.Controller.prototype = {
-	execute: function() {
+	context: null
+	,baseUri: null
+	,execute: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Failure(ufront.web.HttpError.internalServerError("Field execute() in ufront.web.Controller is an abstract method, please override it in " + this.toString() + " ",null,{ fileName : "Controller.hx", lineNumber : 134, className : "ufront.web.Controller", methodName : "execute"})));
 	}
 	,executeSubController: function(controller) {
@@ -1552,12 +1688,12 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 		return this.loadContent(this.context.request.get_uri());
 	}
 	,slask: function() {
-		this.context.ufTrace(this.context.auth.get_currentUser(),{ fileName : "MainController.hx", lineNumber : 68, className : "app.MainController", methodName : "slask"});
-		this.ufTrace(this.context.get_contentDirectory(),{ fileName : "MainController.hx", lineNumber : 72, className : "app.MainController", methodName : "slask"});
-		this.ufTrace(this.context.auth.isLoggedIn(),{ fileName : "MainController.hx", lineNumber : 74, className : "app.MainController", methodName : "slask"});
-		this.context.messages.push({ msg : "Hello", pos : { fileName : "MainController.hx", lineNumber : 75, className : "app.MainController", methodName : "slask"}, type : ufront.log.MessageType.Trace});
+		this.context.ufTrace(this.context.auth.get_currentUser(),{ fileName : "MainController.hx", lineNumber : 67, className : "app.MainController", methodName : "slask"});
+		this.ufTrace(this.context.get_contentDirectory(),{ fileName : "MainController.hx", lineNumber : 71, className : "app.MainController", methodName : "slask"});
+		this.ufTrace(this.context.auth.isLoggedIn(),{ fileName : "MainController.hx", lineNumber : 73, className : "app.MainController", methodName : "slask"});
+		this.context.messages.push({ msg : "Hello", pos : { fileName : "MainController.hx", lineNumber : 74, className : "app.MainController", methodName : "slask"}, type : ufront.log.MessageType.Trace});
 		var testUser = this.context.auth.get_currentUser();
-		this.ufTrace(testUser,{ fileName : "MainController.hx", lineNumber : 77, className : "app.MainController", methodName : "slask"});
+		this.ufTrace(testUser,{ fileName : "MainController.hx", lineNumber : 76, className : "app.MainController", methodName : "slask"});
 		this.context.auth.requireLogin();
 		this.context.auth.requirePermission(TestPermissions.Super);
 		var content = "slask";
@@ -1583,30 +1719,31 @@ app.MainController.prototype = $extend(ufront.web.Controller.prototype,{
 		testApi.logout(this.context.session);
 		return new ufront.web.result.RedirectResult("/");
 	}
+	,subController: null
+	,seqController: null
+	,scoreController: null
 	,loadContent: function(uri,tag) {
 		if(tag == null) tag = "";
-		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 137, className : "app.MainController", methodName : "loadContent"});
+		this.ufTrace(uri,{ fileName : "MainController.hx", lineNumber : 136, className : "app.MainController", methodName : "loadContent"});
 		var f = new tink.core.FutureTrigger();
-		if(app.Iso.contentCache.exists(uri)) {
-			this.ufTrace("Try get " + uri + " from cache",{ fileName : "MainController.hx", lineNumber : 144, className : "app.MainController", methodName : "loadContent"});
-			var cachedContent = app.Iso.contentCache.get(uri);
+		if(app.Iso.contentCacheExists(uri)) {
+			var cachedContent = app.Iso.contentCacheGet(uri);
 			var content = cachedContent;
 			f.trigger(tink.core.Outcome.Success(new app.IsoResult(content)));
 			app.Iso.setLoadinfoLabel("PushState - Loaded from cache","label label-warning");
 		} else {
-			this.ufTrace("Load from " + uri,{ fileName : "MainController.hx", lineNumber : 153, className : "app.MainController", methodName : "loadContent"});
 			var request = new XMLHttpRequest();
 			request.open("GET",uri);
 			request.setRequestHeader(app.Iso.REQUEST_TYPE,app.Iso.AJAX);
 			request.onload = function(e) {
 				var requestResponse = request.response;
 				var content1 = requestResponse;
-				app.Iso.contentCache.set(uri,requestResponse);
+				app.Iso.contentCacheSet(uri,requestResponse);
 				f.trigger(tink.core.Outcome.Success(new app.IsoResult(content1)));
 				app.Iso.setLoadinfoLabel("PushState - Loaded using ajax","label label-success");
 			};
 			request.onerror = function(e1) {
-				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 167, className : "app.MainController", methodName : "loadContent"})));
+				f.trigger(tink.core.Outcome.Failure(new tink.core.TypedError(null,"Can' load from " + uri,{ fileName : "MainController.hx", lineNumber : 166, className : "app.MainController", methodName : "loadContent"})));
 			};
 			request.send(null);
 		}
@@ -1879,14 +2016,14 @@ app.ScoreController.prototype = $extend(ufront.web.Controller.prototype,{
 	,scoreFile: function(filename) {
 		var uri = this.context.request.get_uri();
 		var content = "";
-		if(app.Iso.contentCache.exists(uri)) {
-			content = app.Iso.contentCache.get(uri);
+		if(app.Iso.contentCacheExists(uri)) {
+			content = app.Iso.contentCacheGet(uri);
 			app.Iso.setLoadinfoLabel("PushState - Score from cache","label label-warning");
 		} else {
 			var nscore = nx3.test.TestItemsBach.scoreBachSinfonia4();
 			var svgXml = this.getScoreXml(nscore);
 			content += Std.string(svgXml);
-			app.Iso.contentCache.set(uri,content);
+			app.Iso.contentCacheSet(uri,content);
 			app.Iso.setLoadinfoLabel("PushState - Build score","label label-success");
 		}
 		return new app.ScoreResult(content);
@@ -1960,7 +2097,9 @@ $hxClasses["app.SeqResult"] = app.SeqResult;
 app.SeqResult.__name__ = ["app","SeqResult"];
 app.SeqResult.__super__ = app.IsoResult;
 app.SeqResult.prototype = $extend(app.IsoResult.prototype,{
-	wrapContent: function(actionContext,content) {
+	max: null
+	,nr: null
+	,wrapContent: function(actionContext,content) {
 		var uriSegments = actionContext.httpContext.request.get_uri().split("/");
 		var pagination = "<ul class=\"pagination pagination-lg m-t-0 m-b-10\">";
 		var url = "/" + uriSegments[1] + "/" + uriSegments[2];
@@ -1977,6 +2116,1300 @@ app.SeqResult.prototype = $extend(app.IsoResult.prototype,{
 	}
 	,__class__: app.SeqResult
 });
+var audio = {};
+audio.LinearAccelerator = function(startTempo,endTempo,numBeats) {
+	this.startTempo = startTempo;
+	this.deltaTempo = endTempo - startTempo;
+	this.numBeats = numBeats;
+};
+$hxClasses["audio.LinearAccelerator"] = audio.LinearAccelerator;
+audio.LinearAccelerator.__name__ = ["audio","LinearAccelerator"];
+audio.LinearAccelerator.test = function() {
+	haxe.Log.trace(new audio.LinearAccelerator(1,2,4).acceleratedDuration(0,4),{ fileName : "LinearAccelerator.hx", lineNumber : 54, className : "audio.LinearAccelerator", methodName : "test"});
+	haxe.Log.trace(new audio.LinearAccelerator(1,1,4).acceleratedDuration(0,4),{ fileName : "LinearAccelerator.hx", lineNumber : 55, className : "audio.LinearAccelerator", methodName : "test"});
+};
+audio.LinearAccelerator.prototype = {
+	startTempo: null
+	,deltaTempo: null
+	,numBeats: null
+	,evaluate: function(time) {
+		return this.numBeats * Math.log(this.numBeats + this.deltaTempo) * time;
+	}
+	,acceleratedDuration: function(startTime,dur) {
+		var s = this.evaluate(startTime);
+		var d = this.evaluate(dur);
+		haxe.Log.trace("starttime " + startTime + " " + s + " " + d,{ fileName : "LinearAccelerator.hx", lineNumber : 36, className : "audio.LinearAccelerator", methodName : "acceleratedDuration"});
+		return this.evaluate(startTime + dur) - this.evaluate(startTime);
+	}
+	,__class__: audio.LinearAccelerator
+};
+var audiotools = {};
+audiotools.Wav16 = function(channel1,channel2) {
+	this.stereo = false;
+	this.ch1 = channel1;
+	this.ch2 = channel2;
+	if(this.ch2 != null && this.ch2.length != this.ch1.length) throw "Stereo file channels must have same length";
+	this.stereo = this.ch2 != null;
+};
+$hxClasses["audiotools.Wav16"] = audiotools.Wav16;
+audiotools.Wav16.__name__ = ["audiotools","Wav16"];
+audiotools.Wav16.fromFileBytes = function(wavfileBytes) {
+	var wave = new format.wav.Reader(new haxe.io.BytesInput(wavfileBytes)).read();
+	var stereo = wave.header.channels == 2;
+	var data = wave.data;
+	var w16 = null;
+	if(stereo) {
+		var aInts = audiotools.Wav16Tools.stereoToInts(data,false);
+		w16 = new audiotools.Wav16(aInts[0],aInts[1]);
+	} else {
+		var ints = audiotools.Wav16Tools.monoBytesToInts(data,false);
+		w16 = new audiotools.Wav16(ints);
+	}
+	return w16;
+};
+audiotools.Wav16.create = function(lengthSamples,stereo,prefill) {
+	if(prefill == null) prefill = true;
+	if(stereo == null) stereo = false;
+	var getChannel = function() {
+		var ch;
+		var this1;
+		this1 = new Array(lengthSamples);
+		ch = this1;
+		if(prefill) {
+			var _g = 0;
+			while(_g < lengthSamples) {
+				var i = _g++;
+				ch[i] = 0;
+			}
+		}
+		return ch;
+	};
+	return new audiotools.Wav16(getChannel(),stereo?getChannel():null);
+};
+audiotools.Wav16.createSecs = function(lengthSecs,stereo,prefill) {
+	if(prefill == null) prefill = true;
+	if(stereo == null) stereo = false;
+	return audiotools.Wav16.create(audiotools.Wav16Tools.toSamples(lengthSecs),stereo,prefill);
+};
+audiotools.Wav16.prototype = {
+	ch1: null
+	,ch2: null
+	,stereo: null
+	,length: null
+	,get_length: function() {
+		return this.ch1.length;
+	}
+	,toStereo: function() {
+		if(this.stereo) return;
+		var this1;
+		this1 = new Array(this.ch1.length);
+		this.ch2 = this1;
+		var _g1 = 0;
+		var _g = this.ch1.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this.ch2[i] = this.ch1[i];
+		}
+	}
+	,__class__: audiotools.Wav16
+	,__properties__: {get_length:"get_length"}
+};
+audiotools.Wav16DSP = function() { };
+$hxClasses["audiotools.Wav16DSP"] = audiotools.Wav16DSP;
+audiotools.Wav16DSP.__name__ = ["audiotools","Wav16DSP"];
+audiotools.Wav16DSP.wspMix = function(w1,w2,mixVol,w1vol,w2vol) {
+	if(w2vol == null) w2vol = 1.0;
+	if(w1vol == null) w1vol = 1.0;
+	if(mixVol == null) mixVol = 1.0;
+	var stereo = w1.stereo || w2.stereo;
+	if(stereo && !w1.stereo) w1.toStereo();
+	if(stereo && !w2.stereo) w2.toStereo();
+	var resultCh1 = audiotools.Wav16DSP.dspMix(w1.ch1,w2.ch1,mixVol,w1vol,w2vol);
+	var resultCh2 = null;
+	if(stereo) resultCh2 = audiotools.Wav16DSP.dspMix(w1.ch2,w2.ch2,mixVol,w1vol,w2vol);
+	return new audiotools.Wav16(resultCh1,resultCh2);
+};
+audiotools.Wav16DSP.wspMixInto = function(w1,w2,offset,w2length,w2Vol) {
+	if(w2Vol == null) w2Vol = 1.0;
+	if(w2length == null) w2length = -1;
+	if(offset == null) offset = 0;
+	if(w1.stereo != w2.stereo) {
+		w1.toStereo();
+		w2.toStereo();
+	}
+	audiotools.Wav16DSP.dspMixInto(w1.ch1,w2.ch1,offset,w2length,w2Vol);
+	if(w1.stereo) audiotools.Wav16DSP.dspMixInto(w1.ch2,w2.ch2,offset,w2length,w2Vol);
+};
+audiotools.Wav16DSP.dspMix = function(w1,w2,mixVol,w1vol,w2vol) {
+	if(w2vol == null) w2vol = 1.0;
+	if(w1vol == null) w1vol = 1.0;
+	if(mixVol == null) mixVol = 1.0;
+	var result;
+	var this1;
+	this1 = new Array(w1.length);
+	result = this1;
+	var _g1 = 0;
+	var _g = w1.length;
+	while(_g1 < _g) {
+		var pos = _g1++;
+		var v1 = w1[pos] * w1vol;
+		var v2 = w2[pos] * w2vol;
+		var v3 = Math.floor((v1 + v2) / mixVol);
+		result[pos] = v3;
+	}
+	return result;
+};
+audiotools.Wav16DSP.dspMixInto = function(w1,w2,offset,w2length,w2vol,soften) {
+	if(soften == null) soften = 500;
+	if(w2vol == null) w2vol = 1.0;
+	if(w2length == null) w2length = -1;
+	if(offset == null) offset = 0;
+	var length;
+	if(w2length > 0) length = Std["int"](Math.min(w2.length,w2length)); else length = w2.length;
+	if(w1 == null) throw "Wav16DSP Error: dspMixInto - w1 == null ";
+	if(offset + length > w1.length) {
+		haxe.Log.trace([length,offset + length,w1.length],{ fileName : "Wav16DSP.hx", lineNumber : 54, className : "audiotools.Wav16DSP", methodName : "dspMixInto"});
+		haxe.Log.trace("Wav16DSP Error: dspMixInto - ",{ fileName : "Wav16DSP.hx", lineNumber : 55, className : "audiotools.Wav16DSP", methodName : "dspMixInto"});
+		return;
+	}
+	var softenstart = length - soften;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var val1 = w1[offset + i];
+		var val2 = w2[i] * w2vol | 0;
+		if(i > softenstart) {
+			var delta = (length - i) / soften;
+			val2 = val2 * delta | 0;
+		}
+		var val3 = val1 + val2;
+		w1[offset + i] = val3;
+	}
+};
+audiotools.Wav16DSP.dspFadeIn = function(ints,length,startLevel) {
+	if(startLevel == null) startLevel = 0.0;
+	var result;
+	var this1;
+	this1 = new Array(ints.length);
+	result = this1;
+	var length1 = Std["int"](Math.min(length,ints.length));
+	var _g = 0;
+	while(_g < length1) {
+		var pos = _g++;
+		var $int = ints[pos];
+		var delta = (1 - startLevel) * (pos / length1) + startLevel;
+		var newInt = $int * delta | 0;
+		result[pos] = newInt;
+	}
+	if(length1 < ints.length) {
+		var _g1 = length1 + 1;
+		var _g2 = ints.length;
+		while(_g1 < _g2) {
+			var pos1 = _g1++;
+			result[pos1] = ints[pos1];
+		}
+	}
+	return result;
+};
+audiotools.Wav16DSP.dspFadeOut = function(ints,length,endLevel) {
+	if(endLevel == null) endLevel = 0.0;
+	var result;
+	var this1;
+	this1 = new Array(ints.length);
+	result = this1;
+	var length1 = Std["int"](Math.min(length,ints.length));
+	var startPos = ints.length - length1;
+	if(startPos > 0) {
+		var _g1 = 0;
+		var _g = startPos - 1;
+		while(_g1 < _g) {
+			var pos = _g1++;
+			result[pos] = ints[pos];
+		}
+	}
+	var _g11 = startPos;
+	var _g2 = ints.length;
+	while(_g11 < _g2) {
+		var pos1 = _g11++;
+		var $int = ints[pos1];
+		var delta = (endLevel - 1) * ((pos1 - startPos) / length1) + 1;
+		var newInt = $int * delta | 0;
+		result[pos1] = newInt;
+	}
+	return result;
+};
+audiotools.Wav16DSP.dspReverse = function(ints) {
+	var result;
+	var this1;
+	this1 = new Array(ints.length);
+	result = this1;
+	var len = ints.length - 1;
+	var _g1 = 0;
+	var _g = ints.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		result[i] = ints[len - i];
+	}
+	return result;
+};
+audiotools.Wav16DSP.interpolate = function(f,a,b) {
+	return (b - a) * f + a;
+};
+audiotools.Wav16Tools = function() { };
+$hxClasses["audiotools.Wav16Tools"] = audiotools.Wav16Tools;
+audiotools.Wav16Tools.__name__ = ["audiotools","Wav16Tools"];
+audiotools.Wav16Tools.inRange = function(val,min,max) {
+	return val >= min && val <= max;
+};
+audiotools.Wav16Tools.monoBytesToInts = function(wavData,stripWavfileHeader) {
+	if(stripWavfileHeader == null) stripWavfileHeader = true;
+	var start;
+	if(stripWavfileHeader) start = 44; else start = 0;
+	var length = ((wavData.length - wavData.length % 2) / 2 | 0) - start;
+	var result;
+	var this1;
+	this1 = new Array(length);
+	result = this1;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var pos = i * 2;
+		var left = wavData.b[pos + start];
+		var right = wavData.b[pos + start + 1];
+		var val = audiotools.Wav16Tools.ucharsToShort(right,left);
+		result[i] = val;
+	}
+	return result;
+};
+audiotools.Wav16Tools.stereoToInts = function(wavData,stripWavfileHeader) {
+	if(stripWavfileHeader == null) stripWavfileHeader = true;
+	var start;
+	if(stripWavfileHeader) start = 44; else start = 0;
+	var wavDataLength = wavData.length - start;
+	var length = (wavDataLength - wavDataLength % 2) / 4 | 0;
+	var resultLeft;
+	var this1;
+	this1 = new Array(length);
+	resultLeft = this1;
+	var resultRight;
+	var this2;
+	this2 = new Array(length);
+	resultRight = this2;
+	var setpos = 0;
+	var _g1 = 0;
+	var _g = length * 2;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var pos = i * 2;
+		var left = wavData.b[pos + start];
+		var right = wavData.b[pos + start + 1];
+		var val = audiotools.Wav16Tools.ucharsToShort(right,left);
+		if(i % 2 == 0) resultLeft[setpos] = val; else {
+			resultRight[setpos] = val;
+			setpos++;
+		}
+	}
+	return [resultLeft,resultRight];
+};
+audiotools.Wav16Tools.intsToMono16Bytes = function(ints) {
+	var result = haxe.io.Bytes.alloc(ints.length * 2);
+	var pos = 0;
+	var _g = 0;
+	while(_g < ints.length) {
+		var v = ints[_g];
+		++_g;
+		var a = audiotools.Wav16Tools.shortToUChars(v);
+		result.set(pos++,a[1]);
+		result.set(pos++,a[0]);
+	}
+	return result;
+};
+audiotools.Wav16Tools.intsToStero16Bytes = function(leftInts,rightInts) {
+	if(leftInts.length != rightInts.length) throw "Left and Right ints lengths differ!";
+	var result = haxe.io.Bytes.alloc(leftInts.length * 2 * 2);
+	var pos = 0;
+	var _g1 = 0;
+	var _g = leftInts.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var v = leftInts[i];
+		var a = audiotools.Wav16Tools.shortToUChars(v);
+		result.set(pos++,a[1]);
+		result.set(pos++,a[0]);
+		var v1 = rightInts[i];
+		var a1 = audiotools.Wav16Tools.shortToUChars(v1);
+		result.set(pos++,a1[1]);
+		result.set(pos++,a1[0]);
+	}
+	return result;
+};
+audiotools.Wav16Tools.ucharsToShort = function(ucharLeft,ucharRight) {
+	if(ucharLeft < 0) ucharLeft += 256;
+	if(ucharRight < 0) ucharLeft += 256;
+	if(!(ucharLeft >= 0 && ucharLeft <= 255)) throw "Range error  ucharLeft: " + ucharLeft;
+	if(!(ucharRight >= 0 && ucharRight <= 255)) throw "Range error ucharRight: " + ucharRight;
+	var negative = (ucharLeft & 128) == 128;
+	var result;
+	if(!negative) result = (ucharLeft << 8) + ucharRight; else result = -32768 + ((ucharLeft - 128 << 8) + ucharRight);
+	return result;
+};
+audiotools.Wav16Tools.shortToUChars = function($short) {
+	if(!($short >= -32767 && $short <= 32767)) {
+		haxe.Log.trace("Range error: " + $short,{ fileName : "Wav16Tools.hx", lineNumber : 102, className : "audiotools.Wav16Tools", methodName : "shortToUChars"});
+		return [0,0];
+	}
+	var result = [0,0];
+	if($short >= 0) result = [($short ^ 255) >> 8,$short & 255]; else {
+		var i2 = 32768 + $short;
+		result = [i2 >> 8 | 128,i2 & 255];
+	}
+	return result;
+};
+audiotools.Wav16Tools.createHeader = function(stereo,samplingRate,bitsPerSample) {
+	if(bitsPerSample == null) bitsPerSample = 16;
+	if(samplingRate == null) samplingRate = 44100;
+	if(stereo == null) stereo = false;
+	var channels;
+	if(stereo) channels = 2; else channels = 1;
+	return { format : format.wav.WAVEFormat.WF_PCM, channels : channels, samplingRate : samplingRate, byteRate : samplingRate * channels * bitsPerSample / 8 | 0, blockAlign : channels * bitsPerSample / 8 | 0, bitsPerSample : bitsPerSample};
+};
+audiotools.Wav16Tools.getWaveformSamples = function(ints,nrOfSamples,sampleAcc) {
+	if(sampleAcc == null) sampleAcc = 100;
+	var windowSize = Math.floor(ints.length / nrOfSamples + 1);
+	var result = [];
+	var _g = 0;
+	while(_g < nrOfSamples) {
+		var i = _g++;
+		var start = i * windowSize;
+		var end = Std["int"](Math.min(start + sampleAcc,ints.length - 1));
+		var maxlevel = 0.0;
+		var _g1 = start;
+		while(_g1 < end) {
+			var j = _g1++;
+			var level = Math.abs(ints[j]) / 32767;
+			if(level < 0.0001) level = 0;
+			if(j > ints.length) level = 0;
+			maxlevel = Math.max(level,maxlevel);
+		}
+		var sqr = Math.sqrt(maxlevel);
+		result.push(sqr);
+	}
+	return result;
+};
+audiotools.Wav16Tools.toSecs = function(samples) {
+	return samples / audiotools.Wav16Tools.SAMPLERATE;
+};
+audiotools.Wav16Tools.toSamples = function(secs) {
+	return secs * audiotools.Wav16Tools.SAMPLERATE | 0;
+};
+audiotools.Wav16Tools.copyChannel = function(ints) {
+	var result;
+	var this1;
+	this1 = new Array(ints.length);
+	result = this1;
+	var _g1 = 0;
+	var _g = ints.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		result[i] = ints[i];
+	}
+	return result;
+};
+audiotools.Wav16Tools.testplay = function(wav16) {
+	audiotools.webaudio.WATools.testplay(wav16);
+	return;
+};
+audiotools.sound = {};
+audiotools.sound.Wav16Sound = function() { };
+$hxClasses["audiotools.sound.Wav16Sound"] = audiotools.sound.Wav16Sound;
+audiotools.sound.Wav16Sound.__name__ = ["audiotools","sound","Wav16Sound"];
+audiotools.sound.Wav16Sound.prototype = {
+	start: null
+	,stop: null
+	,__class__: audiotools.sound.Wav16Sound
+};
+audiotools.sound.Wav16SoundBase = function(wav16,playCallback,key) {
+	this.playing = false;
+	this.key = key;
+	this.playCallback = playCallback;
+	this.playing = false;
+};
+$hxClasses["audiotools.sound.Wav16SoundBase"] = audiotools.sound.Wav16SoundBase;
+audiotools.sound.Wav16SoundBase.__name__ = ["audiotools","sound","Wav16SoundBase"];
+audiotools.sound.Wav16SoundBase.__interfaces__ = [audiotools.sound.Wav16Sound];
+audiotools.sound.Wav16SoundBase.prototype = {
+	key: null
+	,playCallback: null
+	,playing: null
+	,start: function(pos) {
+		haxe.Log.trace("should be overridden",{ fileName : "Wav16SoundBase.hx", lineNumber : 24, className : "audiotools.sound.Wav16SoundBase", methodName : "start"});
+	}
+	,stop: function() {
+		haxe.Log.trace("should be overridden",{ fileName : "Wav16SoundBase.hx", lineNumber : 29, className : "audiotools.sound.Wav16SoundBase", methodName : "stop"});
+	}
+	,__class__: audiotools.sound.Wav16SoundBase
+};
+audiotools.sound.Wav16SoundJS = function(wav16,playCallback,key) {
+	this.delta = .0;
+	this.lastTime = .0;
+	audiotools.sound.Wav16SoundBase.call(this,wav16,playCallback,key);
+	this.context = (audiotools.webaudio.Context.instance == null?audiotools.webaudio.Context.instance = new audiotools.webaudio.Context():audiotools.webaudio.Context.instance).getContext();
+	this.buffer = audiotools.webaudio.WATools.createBufferFromWav16(wav16,this.context,48000);
+	audiotools.sound.Wav16SoundJS.animationCallback = $bind(this,this.onAnimate);
+	
+			window.requestAnimFrame = (function() {
+			    return window.requestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.oRequestAnimationFrame ||
+				window.msRequestAnimationFrame ||
+				function(/* function */ callback, /* DOMElement */ element) {
+				    window.setTimeout(callback, 1000 / 60);
+				};
+			})();		 
+		 ;
+	this.onAnimate();
+};
+$hxClasses["audiotools.sound.Wav16SoundJS"] = audiotools.sound.Wav16SoundJS;
+audiotools.sound.Wav16SoundJS.__name__ = ["audiotools","sound","Wav16SoundJS"];
+audiotools.sound.Wav16SoundJS.__interfaces__ = [audiotools.sound.Wav16Sound];
+audiotools.sound.Wav16SoundJS.animationCallback = $hx_exports.audiotools.sound.Wav16SoundJS.animationCallback = function() {
+};
+audiotools.sound.Wav16SoundJS.__super__ = audiotools.sound.Wav16SoundBase;
+audiotools.sound.Wav16SoundJS.prototype = $extend(audiotools.sound.Wav16SoundBase.prototype,{
+	elapsedTimeSinceStart: null
+	,lastTime: null
+	,delta: null
+	,buffer: null
+	,source: null
+	,context: null
+	,start: function(pos) {
+		this.source = this.context.createBufferSource();
+		this.source.buffer = this.buffer;
+		this.source.connect(this.context.destination,0,0);
+		this.elapsedTimeSinceStart = pos;
+		this.source.start(pos);
+		this.lastTime = this.context.currentTime;
+		this.playing = true;
+	}
+	,stop: function() {
+		if(this.playing == false) return;
+		if(this.source == null) return;
+		this.source.stop(0);
+		this.source == null;
+		this.elapsedTimeSinceStart = 0;
+		this.playing = false;
+	}
+	,onAnimate: function() {
+		if(this.playing) {
+			if(this.elapsedTimeSinceStart > this.buffer.duration) this.stop();
+			var delta = this.context.currentTime - this.lastTime;
+			this.elapsedTimeSinceStart += delta;
+			this.playCallback(this.key,this.elapsedTimeSinceStart);
+			this.lastTime = this.context.currentTime;
+		} else {
+		}
+		requestAnimFrame(  audiotools.sound.Wav16SoundJS.animationCallback);;
+	}
+	,__class__: audiotools.sound.Wav16SoundJS
+});
+audiotools.sound.Wav16SoundLoader = function() {
+	this.cache = new haxe.ds.StringMap();
+};
+$hxClasses["audiotools.sound.Wav16SoundLoader"] = audiotools.sound.Wav16SoundLoader;
+audiotools.sound.Wav16SoundLoader.__name__ = ["audiotools","sound","Wav16SoundLoader"];
+audiotools.sound.Wav16SoundLoader.getInstance = function() {
+	if(audiotools.sound.Wav16SoundLoader.instance == null) return audiotools.sound.Wav16SoundLoader.instance = new audiotools.sound.Wav16SoundLoader(); else return audiotools.sound.Wav16SoundLoader.instance;
+};
+audiotools.sound.Wav16SoundLoader.prototype = {
+	cache: null
+	,getWav16s: function(mp3files,startCallback) {
+		var _g = this;
+		var f = new tink.core.FutureTrigger();
+		var result = new haxe.ds.StringMap();
+		if(mp3files == null || mp3files.length == 0) f.trigger(result);
+		var cacheKeys = cx.ArrayTools.fromIterator(this.cache.keys());
+		var loadKeys = cx.ArrayTools.hasNot(cacheKeys,mp3files);
+		if(startCallback != null) startCallback(loadKeys.length);
+		var _g1 = 0;
+		while(_g1 < cacheKeys.length) {
+			var mp3file = cacheKeys[_g1];
+			++_g1;
+			var value = this.cache.get(mp3file);
+			result.set(mp3file,value);
+		}
+		if(loadKeys.length == 0) f.trigger(result);
+		var this1 = audiotools.utils.Mp3Wav16Decoders.decodeAllMap(loadKeys);
+		this1(function(soundData) {
+			var $it0 = soundData.keys();
+			while( $it0.hasNext() ) {
+				var mp3file1 = $it0.next();
+				var value1 = soundData.get(mp3file1);
+				_g.cache.set(mp3file1,value1);
+				var value2 = soundData.get(mp3file1);
+				result.set(mp3file1,value2);
+			}
+			f.trigger(result);
+		});
+		return f.future;
+	}
+	,__class__: audiotools.sound.Wav16SoundLoader
+};
+audiotools.sound.Wav16SoundManager = function() {
+};
+$hxClasses["audiotools.sound.Wav16SoundManager"] = audiotools.sound.Wav16SoundManager;
+audiotools.sound.Wav16SoundManager.__name__ = ["audiotools","sound","Wav16SoundManager"];
+audiotools.sound.Wav16SoundManager.__interfaces__ = [audiotools.sound.Wav16Sound];
+audiotools.sound.Wav16SoundManager.getInstance = function() {
+	if(audiotools.sound.Wav16SoundManager.instance == null) return audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager(); else return audiotools.sound.Wav16SoundManager.instance;
+};
+audiotools.sound.Wav16SoundManager.prototype = {
+	sound: null
+	,wav16: null
+	,playCallback: null
+	,key: null
+	,initSound: function(wav16,playCallback,key) {
+		if(this.sound != null) this.sound.stop();
+		if(wav16 == this.wav16 && playCallback == this.playCallback && key == this.key) {
+			haxe.Log.trace("no need to re initialize",{ fileName : "Wav16SoundManager.hx", lineNumber : 31, className : "audiotools.sound.Wav16SoundManager", methodName : "initSound"});
+			return;
+		}
+		this.wav16 = wav16;
+		this.playCallback = playCallback;
+		this.key = key;
+		this.sound = new audiotools.sound.Wav16SoundJS(wav16,playCallback,key);
+	}
+	,start: function(pos) {
+		if(this.sound != null) this.sound.start(pos); else haxe.Log.trace("Wav16SoundManager has no sound instance",{ fileName : "Wav16SoundManager.hx", lineNumber : 53, className : "audiotools.sound.Wav16SoundManager", methodName : "start"});
+	}
+	,stop: function() {
+		if(this.sound != null) this.sound.stop(); else haxe.Log.trace("Wav16SoundManager has no sound instance",{ fileName : "Wav16SoundManager.hx", lineNumber : 61, className : "audiotools.sound.Wav16SoundManager", methodName : "stop"});
+	}
+	,__class__: audiotools.sound.Wav16SoundManager
+};
+audiotools.utils = {};
+audiotools.utils.Mp3Wav16Decoder = function() { };
+$hxClasses["audiotools.utils.Mp3Wav16Decoder"] = audiotools.utils.Mp3Wav16Decoder;
+audiotools.utils.Mp3Wav16Decoder.__name__ = ["audiotools","utils","Mp3Wav16Decoder"];
+audiotools.utils.Mp3Wav16Decoder.decode = function(filename) {
+	var f = new tink.core.FutureTrigger();
+	if(audiotools.utils.Mp3Wav16Decoder.context == null) audiotools.utils.Mp3Wav16Decoder.context = audiotools.webaudio.WATools.getAudioContext();
+	new audiotools.webaudio.Mp3ToBuffer(filename,audiotools.utils.Mp3Wav16Decoder.context).setLoadedHandler(function(buffer,filename1) {
+		var wavBytes = null;
+		var left = buffer.getChannelData(0);
+		var leftInts;
+		var this1;
+		this1 = new Array(left.length);
+		leftInts = this1;
+		var pos = 0;
+		var _g = 0;
+		while(_g < left.length) {
+			var n = left[_g];
+			++_g;
+			leftInts[pos] = n * 32767 | 0;
+			pos++;
+		}
+		var w16 = null;
+		if(buffer.numberOfChannels > 1) {
+			var right = buffer.getChannelData(1);
+			var rightInts;
+			var this2;
+			this2 = new Array(right.length);
+			rightInts = this2;
+			var pos1 = 0;
+			var _g1 = 0;
+			while(_g1 < right.length) {
+				var n1 = right[_g1];
+				++_g1;
+				rightInts[pos1] = n1 * 32767 | 0;
+				pos1++;
+			}
+			w16 = new audiotools.Wav16(leftInts,rightInts);
+		} else w16 = new audiotools.Wav16(leftInts);
+		f.trigger(tink.core.Outcome.Success({ filename : filename1, w16 : w16}));
+	}).load();
+	return f.future;
+};
+audiotools.utils.Mp3Wav16Decoders = function() { };
+$hxClasses["audiotools.utils.Mp3Wav16Decoders"] = audiotools.utils.Mp3Wav16Decoders;
+audiotools.utils.Mp3Wav16Decoders.__name__ = ["audiotools","utils","Mp3Wav16Decoders"];
+audiotools.utils.Mp3Wav16Decoders.setContext = function(context) {
+	audiotools.utils.Mp3Wav16Decoder.context = context;
+};
+audiotools.utils.Mp3Wav16Decoders.decodeAll = function(filenames) {
+	return tink.core._Future.Future_Impl_.fromMany((function($this) {
+		var $r;
+		var _g = [];
+		{
+			var _g1 = 0;
+			while(_g1 < filenames.length) {
+				var filename = filenames[_g1];
+				++_g1;
+				_g.push(audiotools.utils.Mp3Wav16Decoder.decode(filename));
+			}
+		}
+		$r = _g;
+		return $r;
+	}(this)));
+};
+audiotools.utils.Mp3Wav16Decoders.decodeAllMap = function(filenames) {
+	var f = new tink.core.FutureTrigger();
+	var result = new haxe.ds.StringMap();
+	var this1 = audiotools.utils.Mp3Wav16Decoders.decodeAll(filenames);
+	this1(function(items) {
+		Lambda.iter(items,function(item) {
+			switch(item[1]) {
+			case 0:
+				var wav16file = item[2];
+				result.set(wav16file.filename,wav16file.w16);
+				break;
+			case 1:
+				var wav16Error = item[2];
+				break;
+			}
+		});
+		f.trigger(result);
+	});
+	return f.future;
+};
+audiotools.utils.Wav16DecoderPool = function() {
+	this.files = new haxe.ds.StringMap();
+};
+$hxClasses["audiotools.utils.Wav16DecoderPool"] = audiotools.utils.Wav16DecoderPool;
+audiotools.utils.Wav16DecoderPool.__name__ = ["audiotools","utils","Wav16DecoderPool"];
+audiotools.utils.Wav16DecoderPool.prototype = {
+	files: null
+	,getFiles: function() {
+		return this.files;
+	}
+	,requestFile: function(sound,midinr,version) {
+		if(version == null) version = "";
+		var _g = this;
+		var f = new tink.core.FutureTrigger();
+		haxe.Log.trace(this.files.toString(),{ fileName : "Wav16DecoderPool.hx", lineNumber : 31, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+		var filetag = "" + sound + "/" + midinr + version + ".mp3";
+		haxe.Log.trace(filetag,{ fileName : "Wav16DecoderPool.hx", lineNumber : 33, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+		if(this.files.exists(filetag)) {
+			haxe.Log.trace("get from cache",{ fileName : "Wav16DecoderPool.hx", lineNumber : 36, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+			f.trigger(tink.core.Outcome.Success(this.files.get(filetag)));
+		} else {
+			var this1 = audiotools.utils.Mp3Wav16Decoder.decode(filetag);
+			this1(function(outcome) {
+				switch(outcome[1]) {
+				case 0:
+					var wav16file = outcome[2];
+					_g.files.set(filetag,wav16file.w16);
+					haxe.Log.trace("set to cache " + filetag,{ fileName : "Wav16DecoderPool.hx", lineNumber : 43, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+					haxe.Log.trace(_g.files.toString(),{ fileName : "Wav16DecoderPool.hx", lineNumber : 44, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+					haxe.Log.trace(wav16file,{ fileName : "Wav16DecoderPool.hx", lineNumber : 45, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+					f.trigger(tink.core.Outcome.Success(wav16file.w16));
+					break;
+				case 1:
+					var wav16error = outcome[2];
+					haxe.Log.trace(wav16error,{ fileName : "Wav16DecoderPool.hx", lineNumber : 49, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+					f.trigger(tink.core.Outcome.Failure(wav16error.message));
+					break;
+				}
+			});
+		}
+		haxe.Log.trace(this.files.toString(),{ fileName : "Wav16DecoderPool.hx", lineNumber : 55, className : "audiotools.utils.Wav16DecoderPool", methodName : "requestFile"});
+		return f.future;
+	}
+	,__class__: audiotools.utils.Wav16DecoderPool
+};
+audiotools.utils.Wav16PartsBuilder = function() {
+	this.initialized = false;
+	this.scorecache = new haxe.ds.StringMap();
+};
+$hxClasses["audiotools.utils.Wav16PartsBuilder"] = audiotools.utils.Wav16PartsBuilder;
+audiotools.utils.Wav16PartsBuilder.__name__ = ["audiotools","utils","Wav16PartsBuilder"];
+audiotools.utils.Wav16PartsBuilder.getInstance = function() {
+	if(audiotools.utils.Wav16PartsBuilder.instance == null) return audiotools.utils.Wav16PartsBuilder.instance = new audiotools.utils.Wav16PartsBuilder(); else return audiotools.utils.Wav16PartsBuilder.instance;
+};
+audiotools.utils.Wav16PartsBuilder.prototype = {
+	mp3files: null
+	,initialized: null
+	,soundmap: null
+	,scorecache: null
+	,initAsync: function(mp3files) {
+		var _g = this;
+		var f = new tink.core.FutureTrigger();
+		var result = new haxe.ds.StringMap();
+		var this1 = (audiotools.sound.Wav16SoundLoader.instance == null?audiotools.sound.Wav16SoundLoader.instance = new audiotools.sound.Wav16SoundLoader():audiotools.sound.Wav16SoundLoader.instance).getWav16s(mp3files,null);
+		this1(function(soundmap) {
+			_g.soundmap = soundmap;
+			_g.initialized = true;
+			_g.finishedDecoding();
+			f.trigger(_g.soundmap);
+		});
+		return f.future;
+	}
+	,startDecoding: function(filesToLoad) {
+	}
+	,finishedDecoding: function() {
+	}
+	,buildSoundmap: function(partsnotes,soundmap) {
+		if(!this.initialized) throw "Wav16PartsBuilder not initialized - sounds not decoded";
+		var length = nx3.audio.NotenrTools.getTotalLength(partsnotes) + 1;
+		var result = audiotools.Wav16.createSecs(length,true);
+		var partidx = 0;
+		var _g = 0;
+		while(_g < partsnotes.length) {
+			var part = partsnotes[_g];
+			++_g;
+			var _g1 = 0;
+			while(_g1 < part.length) {
+				var note = part[_g1];
+				++_g1;
+				if(!note.playable) continue;
+				var key = note.mp3file;
+				var w16 = this.soundmap.get(key);
+				if(w16 != null) {
+					var offset = audiotools.Wav16Tools.toSamples(note.playpos);
+					var length1 = audiotools.Wav16Tools.toSamples(note.soundlength + 0.1);
+					audiotools.Wav16DSP.wspMixInto(result,w16,offset,length1);
+				} else haxe.Log.trace("ERROR : " + key + " == null!",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 154, className : "audiotools.utils.Wav16PartsBuilder", methodName : "buildSoundmap"});
+			}
+			partidx++;
+		}
+		return result;
+	}
+	,getScoreWav16Async: function(nscore,tempo,partsSounds) {
+		if(tempo == null) tempo = 60;
+		var _g = this;
+		var f = new tink.core.FutureTrigger();
+		var key = nscore.uuid + (":" + tempo + ":" + Std.string(partsSounds));
+		if(this.scorecache.exists(key)) {
+			haxe.Log.trace("Get wav16 from cache",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 199, className : "audiotools.utils.Wav16PartsBuilder", methodName : "getScoreWav16Async"});
+			var wav16 = this.scorecache.get(key);
+			f.trigger(wav16);
+		} else {
+			var partsnotes = nx3.audio.NotenrTools.getPartsnotes(nscore.nbars,tempo);
+			var files = nx3.audio.NotenrTools.getPartsnotesMp3files(partsnotes);
+			var this1 = this.initAsync(files);
+			this1(function(soundmap) {
+				var wav161 = _g.buildSoundmap(partsnotes,soundmap);
+				_g.scorecache.set(key,wav161);
+				haxe.Log.trace("Set wav16 to cache",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 208, className : "audiotools.utils.Wav16PartsBuilder", methodName : "getScoreWav16Async"});
+				f.trigger(wav161);
+			});
+		}
+		return f.future;
+	}
+	,removeScoreFromCache: function(nscore,tempo,partsSounds) {
+		if(tempo == null) tempo = 60;
+		var key = nscore.uuid + (":" + tempo + ":" + Std.string(partsSounds));
+		if(this.scorecache.exists(key)) {
+			this.scorecache.remove(key);
+			haxe.Log.trace("remove key " + key,{ fileName : "Wav16PartsBuilder.hx", lineNumber : 220, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
+		} else haxe.Log.trace("can not find key " + key + " to remove",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 222, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
+	}
+	,__class__: audiotools.utils.Wav16PartsBuilder
+};
+audiotools.webaudio = {};
+audiotools.webaudio.Context = function() {
+	this.context = audiotools.webaudio.Context.createAudioContext();
+};
+$hxClasses["audiotools.webaudio.Context"] = audiotools.webaudio.Context;
+audiotools.webaudio.Context.__name__ = ["audiotools","webaudio","Context"];
+audiotools.webaudio.Context.getInstance = function() {
+	if(audiotools.webaudio.Context.instance == null) return audiotools.webaudio.Context.instance = new audiotools.webaudio.Context(); else return audiotools.webaudio.Context.instance;
+};
+audiotools.webaudio.Context.createAudioContext = function() {
+	var context = null;
+	
+			if (typeof AudioContext == "function") {
+				context = new AudioContext();
+				console.log("USING STANDARD WEB AUDIO API");
+			} else if ((typeof webkitAudioContext == "function") || (typeof webkitAudioContext == "object")) {
+				context = new webkitAudioContext();
+				console.log("USING WEBKIT AUDIO API");
+			} else {
+				alert("AudioContext is not supported.");
+				throw new Error("AudioContext is not supported. :(");
+			}
+		;
+	return context;
+};
+audiotools.webaudio.Context.prototype = {
+	context: null
+	,getContext: function() {
+		return this.context;
+	}
+	,__class__: audiotools.webaudio.Context
+};
+audiotools.webaudio.Mp3ToBuffer = function(url,context) {
+	this.url = url;
+	this.context = context;
+};
+$hxClasses["audiotools.webaudio.Mp3ToBuffer"] = audiotools.webaudio.Mp3ToBuffer;
+audiotools.webaudio.Mp3ToBuffer.__name__ = ["audiotools","webaudio","Mp3ToBuffer"];
+audiotools.webaudio.Mp3ToBuffer.prototype = {
+	url: null
+	,context: null
+	,audioBuffer: null
+	,load: function() {
+		var _g = this;
+		var request = new XMLHttpRequest();
+		request.open("GET",this.url,true);
+		request.responseType = "arraybuffer";
+		request.onload = function(_) {
+			_g.context.decodeAudioData(request.response,function(buffer) {
+				haxe.Log.trace("Loaded and decoded track...",{ fileName : "Mp3ToBuffer.hx", lineNumber : 34, className : "audiotools.webaudio.Mp3ToBuffer", methodName : "load"});
+				_g.audioBuffer = buffer;
+				_g.onLoaded(_g.audioBuffer,_g.url);
+				if(buffer == null) {
+					js.Lib.alert("error decoding file data: " + _g.url);
+					return false;
+				}
+				return true;
+			},function(error) {
+				js.Lib.alert("decodeAudioData error " + Std.string(error));
+				return false;
+			});
+		};
+		request.onprogress = function(e) {
+			if(e.total != 0) {
+			}
+		};
+		request.onerror = function(e1) {
+			js.Lib.alert("BufferLoader: XHR error");
+		};
+		request.send();
+	}
+	,onLoaded: function(audioBuffer,filename) {
+		haxe.Log.trace(audioBuffer,{ fileName : "Mp3ToBuffer.hx", lineNumber : 61, className : "audiotools.webaudio.Mp3ToBuffer", methodName : "onLoaded"});
+		haxe.Log.trace(filename,{ fileName : "Mp3ToBuffer.hx", lineNumber : 62, className : "audiotools.webaudio.Mp3ToBuffer", methodName : "onLoaded"});
+	}
+	,setLoadedHandler: function(callbck) {
+		this.onLoaded = callbck;
+		return this;
+	}
+	,__class__: audiotools.webaudio.Mp3ToBuffer
+};
+audiotools.webaudio.WATools = function() { };
+$hxClasses["audiotools.webaudio.WATools"] = audiotools.webaudio.WATools;
+audiotools.webaudio.WATools.__name__ = ["audiotools","webaudio","WATools"];
+audiotools.webaudio.WATools.createBufferFromWav16 = function(wav16,context,samplerate) {
+	if(samplerate == null) samplerate = 44100;
+	var stereo = wav16.stereo;
+	var length = wav16.ch1.length;
+	var left = new Float32Array(length);
+	var pos = 0;
+	var _g = 0;
+	var _g1 = wav16.ch1;
+	while(_g < _g1.length) {
+		var $int = _g1[_g];
+		++_g;
+		left[pos] = $int / 32767;
+		pos++;
+	}
+	var right = null;
+	if(stereo) {
+		right = new Float32Array(length);
+		var pos1 = 0;
+		var _g2 = 0;
+		var _g11 = wav16.ch2;
+		while(_g2 < _g11.length) {
+			var int1 = _g11[_g2];
+			++_g2;
+			right[pos1] = int1 / 32767;
+			pos1++;
+		}
+	}
+	var newbuffer = null;
+	if(stereo) {
+		newbuffer = context.createBuffer(2,left.length,samplerate);
+		newbuffer.getChannelData(0).set(left);
+		newbuffer.getChannelData(1).set(right);
+	} else {
+		newbuffer = context.createBuffer(1,left.length,samplerate);
+		newbuffer.getChannelData(0).set(left);
+	}
+	return newbuffer;
+};
+audiotools.webaudio.WATools.testplay = function(w,context) {
+	if(context == null) context = audiotools.webaudio.WATools.getAudioContext();
+	var source = context.createBufferSource();
+	source.buffer = audiotools.webaudio.WATools.createBufferFromWav16(w,context,48000);
+	source.connect(context.destination,0,0);
+	source.start(0);
+};
+audiotools.webaudio.WATools.getAudioContext = function() {
+	if(audiotools.webaudio.WATools._context == null) audiotools.webaudio.WATools._context = audiotools.webaudio.WATools.createAudioContext();
+	return audiotools.webaudio.WATools._context;
+};
+audiotools.webaudio.WATools.createAudioContext = function() {
+	var context = null;
+	
+			if (typeof AudioContext == "function") {
+				context = new AudioContext();
+				console.log("USING STANDARD WEB AUDIO API");
+				//alert("Standard Web Audio Api");
+			} else if ((typeof webkitAudioContext == "function") || (typeof webkitAudioContext == "object")) {
+				context = new webkitAudioContext();
+				console.log("USING WEBKIT AUDIO API");
+				//alert("Using Webkit Web Audio Api");
+			} else {
+				alert("AudioContext is not supported.");
+				throw new Error("AudioContext is not supported. :(");
+			}
+		;
+	return context;
+};
+audiotools.webaudio.pitch = {};
+audiotools.webaudio.pitch.PitchRecognizer = function(audioContext) {
+	this.initialized = false;
+	this.init($bind(this,this.onPitchHandler),audioContext);
+};
+$hxClasses["audiotools.webaudio.pitch.PitchRecognizer"] = audiotools.webaudio.pitch.PitchRecognizer;
+audiotools.webaudio.pitch.PitchRecognizer.__name__ = ["audiotools","webaudio","pitch","PitchRecognizer"];
+audiotools.webaudio.pitch.PitchRecognizer.getInstance = function(audioContext) {
+	if(audiotools.webaudio.pitch.PitchRecognizer.instance == null) return audiotools.webaudio.pitch.PitchRecognizer.instance = new audiotools.webaudio.pitch.PitchRecognizer(audioContext); else return audiotools.webaudio.pitch.PitchRecognizer.instance;
+};
+audiotools.webaudio.pitch.PitchRecognizer.getSemitoneDiff = function(fCurrent,fRef) {
+	if(fRef == null) fRef = 440;
+	return 12 * Math.log(fCurrent / fRef) / Math.log(2);
+};
+audiotools.webaudio.pitch.PitchRecognizer.prototype = {
+	onPitch: null
+	,onPitchHandler: function(currentFreq,closestIndex,maxVolume) {
+		if(this.onPitch != null) this.onPitch(currentFreq,closestIndex,maxVolume); else haxe.Log.trace([currentFreq,closestIndex,maxVolume],{ fileName : "PitchRecognizer.hx", lineNumber : 36, className : "audiotools.webaudio.pitch.PitchRecognizer", methodName : "onPitchHandler"});
+	}
+	,startAnalyzing: function() {
+		audiotools.webaudio.pitch.PitchRecognizer.analyzePitch = true;
+	}
+	,stopAnalyzing: function() {
+		audiotools.webaudio.pitch.PitchRecognizer.analyzePitch = false;
+	}
+	,initialized: null
+	,init: function(cbk,audioContext) {
+		if(this.initialized) {
+			js.Lib.alert("PitchRecognizer already initialized");
+			return;
+		}
+		this.initialized = true;
+		var audioContext1 = (audiotools.webaudio.Context.instance == null?audiotools.webaudio.Context.instance = new audiotools.webaudio.Context():audiotools.webaudio.Context.instance).getContext();
+		var windowAudioContext =  window.AudioContext;
+		windowAudioContext = audioContext1;
+			
+
+		console.log(window.AudioContext);
+		console.log(audiotools.webaudio.pitch.PitchRecognizer.analyzePitch);
+
+		//==================================================================================================
+		/* Copyright 2014 Alejandro Pérez González de Martos
+
+		   Licensed under the Apache License, Version 2.0 (the "License");
+		   you may not use this file except in compliance with the License.
+		   You may obtain a copy of the License at
+
+			 http://www.apache.org/licenses/LICENSE-2.0
+
+		   Unless required by applicable law or agreed to in writing, software
+		   distributed under the License is distributed on an "AS IS" BASIS,
+		   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		   See the License for the specific language governing permissions and
+		   limitations under the License.
+		*/
+
+
+		/* Internal parameters */
+		var volumeThreshold = 134; // Amplitude threshold for detecting sound/silence [0-255], 128 = silence
+		var nPitchValues = 5; // Number of pitches for pitch averaging logic
+
+		/* Web Audio API variables */
+		//var audioContext = null;
+		var analyserNode = null;
+		var processNode = null;
+		var microphoneNode = null;
+		var gainNode = null;
+		var lowPassFilter1 = null;
+		var lowPassFilter2 = null;
+		var highPassFilter1 = null;
+		var highPassFilter2 = null;
+
+		/* Configurable parameters */
+		var lowestFreq = 30; // Minimum tune = 44100/1024 = 43.07Hz
+		var highestFreq = 4200; // Maximum tune C8 (4186.02 Hz)
+
+		/* Tune variables */
+		var twelfthRootOfTwo = 1.05946309435929526456182529; // 2^(1/12)
+		var otthRootOfTwo = 1.0005777895; // 2^(1/1200)
+		var refNoteLabels = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
+		var refFreq = 440;
+		var refNoteIndex = 0;
+		var noteFrequencies = [];
+		var noteLabels = [];
+		var pitchHistory = [];
+
+		/* GUI variables */
+		var pixelsPerCent = 3;
+		var silenceTimeout = null;
+		var minUpdateDelay = 100; // Pitch/GUI maximum update rate in milliseconds
+
+		window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		//window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
+
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+		if (/*window.requestAnimationFrame && */ window.AudioContext && navigator.getUserMedia) {
+			try {
+				navigator.getUserMedia({audio: true}, gotStream, function(err) {
+				console.log("DEBUG: Error getting microphone input: " + err);
+				});
+			} catch (e) {
+				console.log("DEBUG: Couldnt get microphone input: " + e);
+			}
+		} else {
+			console.log("DEBUG: Web Audio API is not supported");
+		}
+
+		function gotStream(stream) {
+			audioContext = new AudioContext();
+			if (audioContext == null) alert("No AudioContext!");
+
+			microphoneNode = audioContext.createMediaStreamSource(stream);
+			analyserNode = audioContext.createAnalyser();
+			analyserNode.fftSize = 2048;
+			analyserNode.smoothingTimeConstant = 0.8;
+			gainNode = audioContext.createGain();
+			gainNode.gain.value = 1.5; // Set mic volume to 150% by default
+			lowPassFilter1 = audioContext.createBiquadFilter();
+			lowPassFilter2 = audioContext.createBiquadFilter();
+			highPassFilter1 = audioContext.createBiquadFilter();
+			highPassFilter2 = audioContext.createBiquadFilter();
+			lowPassFilter1.Q.value = 0;
+			lowPassFilter1.frequency.value = highestFreq;
+			lowPassFilter1.type = "lowpass";
+			lowPassFilter2.Q.value = 0;
+			lowPassFilter2.frequency.value = highestFreq;
+			lowPassFilter2.type = "lowpass";
+			highPassFilter1.Q.value = 0;
+			highPassFilter1.frequency.value = lowestFreq;
+			highPassFilter1.type = "highpass";
+			highPassFilter2.Q.value = 0;
+			highPassFilter2.frequency.value = lowestFreq;
+			highPassFilter2.type = "highpass";
+			microphoneNode.connect(lowPassFilter1);
+			lowPassFilter1.connect(lowPassFilter2);
+			lowPassFilter2.connect(highPassFilter1);
+			highPassFilter1.connect(highPassFilter2);
+			highPassFilter2.connect(gainNode);
+			gainNode.connect(analyserNode);
+
+			initGui();
+		}
+
+		function initGui() {
+			defineNoteFrequencies();
+			updatePitch();
+		}
+
+		function updatePitch(time) {
+
+			//console.log("updatePitch loop");
+
+			if (audiotools.webaudio.pitch.PitchRecognizer.analyzePitch == false) {
+				window.requestAnimationFrame(updatePitch);
+				return;
+			}
+
+			//console.log("analyze pitch");
+
+
+			var pitchInHz = 0.0;
+			var volumeCheck = false;
+			var maxVolume = 128;
+			var inputBuffer = new Uint8Array(analyserNode.fftSize);
+			//console.log(inputBuffer);
+			analyserNode.getByteTimeDomainData(inputBuffer);
+
+			// Check for volume on the first buffer quarter
+			for (var i=0; i<inputBuffer.length/4; i++) {
+				if (maxVolume < inputBuffer[i]) maxVolume = inputBuffer[i];
+
+				if (!volumeCheck && inputBuffer[i] > volumeThreshold) {
+					volumeCheck = true;
+				}
+			}
+
+
+			if (volumeCheck) {
+				pitchInHz = Yin_pitchEstimation(inputBuffer, audioContext.sampleRate);
+			}
+
+			// Pitch smoothing logic
+			var allowedHzDifference = 5;
+			if (pitchInHz != 0) {
+				clearTimeout(silenceTimeout);
+				silenceTimeout = null;
+				if (pitchHistory.length >= nPitchValues) pitchHistory.shift();
+				
+				// Octave jumping fix: if current pitch is around twice the previous detected pitch, halve its value
+				if (pitchHistory.length && Math.abs((pitchInHz/2.0)-pitchHistory[pitchHistory.length-1]) < allowedHzDifference) pitchInHz = pitchInHz/2.0;
+				pitchInHz = Math.round(pitchInHz*10)/10;
+				pitchHistory.push(pitchInHz);
+				// Take the pitch history median as the current pitch
+				var sortedPitchHistory = pitchHistory.slice(0).sort(function(a,b) {return a-b});
+				pitchInHz = sortedPitchHistory[Math.floor((sortedPitchHistory.length-1)/2)];
+
+				updateGui(pitchInHz, getClosestNoteIndex(pitchInHz), (maxVolume-128) / 128);
+
+				if (pitchHistory.length < nPitchValues) {
+					window.requestAnimationFrame(updatePitch);
+				} else {
+					setTimeout(function() {
+						window.requestAnimationFrame(updatePitch);
+					}, minUpdateDelay);
+				}
+			} else {
+				if (silenceTimeout === null) {
+					silenceTimeout = setTimeout(function() {
+						pitchHistory = [];
+						updateGui(0.0, -1, 0);
+					}, 500);
+				}
+				window.requestAnimationFrame(updatePitch);
+			}
+		}
+
+		function updateGui(currentFreq, closestIndex, maxVolume) {
+
+			if (cbk != null) {
+				cbk(currentFreq, closestIndex, maxVolume);
+			} else {
+				console.log(currentFreq, closestIndex, maxVolume);  
+			}
+		}
+
+		function findRefNoteIndex(noteLabel) {
+			for (var i=0; i<refNoteLabels.length; i++) {
+				if (refNoteLabels[i] == noteLabel) return i;
+			}
+			return false;
+		}
+
+		function getClosestNoteIndex(f) {
+			if (f == 0.0) return false;
+			for (var i=0; i<noteFrequencies.length; i++) {
+				if (f < noteFrequencies[i]) {
+					if (i > 0 && (noteFrequencies[i]-f > f-noteFrequencies[i-1])) 
+						return i-1;
+					else 
+						return i;
+				}
+			}
+			return false;
+		}
+
+		function getCentDiff(fCurrent, fRef) {
+			return 1200*Math.log(fCurrent/fRef)/Math.log(2);
+		}
+
+		function getSemituneDiff(fCurrent, fRef) {
+			return 12*Math.log(fCurrent/fRef)/Math.log(2);
+		}
+
+		function defineNoteFrequencies() {
+
+			var noteFreq = 0.0;
+			var greaterNoteFrequencies = [];
+			var greaterNoteLabels = [];
+			var lowerNoteFrequencies = [];
+			var lowerNoteLabels = [];
+			var octave = 4;
+
+			for (var i=0;;i++) {
+				if ((i+9)%12 == 0) octave++;
+				noteFreq = refFreq*Math.pow(twelfthRootOfTwo, i);
+				// maximum note tune C8 (4186.02 Hz)
+				if (noteFreq > 4187) break;
+				greaterNoteFrequencies.push(noteFreq);
+				greaterNoteLabels.push(octave + refNoteLabels[(refNoteIndex+i)%refNoteLabels.length]);
+			}
+
+			octave = 4;
+			for (var i=-1;;i--) {
+				if ((Math.abs(i)+2)%12 == 0) octave--;
+				noteFreq = refFreq*Math.pow(twelfthRootOfTwo, i);
+				// minimum note tune A0 (28Hz)
+				if (noteFreq < 28) break;
+				lowerNoteFrequencies.push(noteFreq);
+				var relativeIndex = (refNoteIndex+i)%refNoteLabels.length;
+				relativeIndex = (relativeIndex == 0) ? 0 : relativeIndex+(refNoteLabels.length);
+				lowerNoteLabels.push(octave + refNoteLabels[relativeIndex]);
+			}
+
+			lowerNoteFrequencies.reverse();
+			lowerNoteLabels.reverse();
+			noteFrequencies = lowerNoteFrequencies.concat(greaterNoteFrequencies);
+			noteLabels = lowerNoteLabels.concat(greaterNoteLabels);
+
+		}
+
+		//==================================================================================================
+
+		// Yin Pitch Tracking Algorithm implemented by Alejandro PÃ©rez (2014)
+		// (http://recherche.ircam.fr/equipes/pcm/cheveign/ps/2002_JASA_YIN_proof.pdf)			  
+
+		// PARAMETERS
+		var yinThreshold = 0.15; // allowed uncertainty (e.g 0.05 will return a pitch with ~95% probability)
+		var yinProbability = 0.0; // READONLY: contains the certainty of the note found as a decimal (i.e 0.3 is 30%)
+
+		function Yin_pitchEstimation(inputBuffer, sampleRate) {
+			var yinBuffer = new Float32Array(Math.floor(inputBuffer.length/2));
+			yinBuffer[0] = 1;
+			var runningSum = 0;
+			var pitchInHz = 0.0;
+			var foundTau = false;
+			var minTauValue;
+			var minTau = 0;
+
+			for (var tau=1; tau<Math.floor(inputBuffer.length/2); tau++) {
+				// Step 1: Calculates the squared difference of the signal with a shifted version of itself.
+				yinBuffer[tau] = 0;
+				for (var i=0; i<Math.floor(inputBuffer.length/2); i++) {
+					yinBuffer[tau] += Math.pow(((inputBuffer[i]-128)/128)-((inputBuffer[i+tau]-128)/128),2);
+				}
+				// Step 2: Calculate the cumulative mean on the normalised difference calculated in step 1.
+				runningSum += yinBuffer[tau];
+				yinBuffer[tau] = yinBuffer[tau]*(tau/runningSum);
+
+				// Step 3: Check if the current normalised cumulative mean is over the threshold.
+				if (tau > 1) {
+					if (foundTau) {
+						if (yinBuffer[tau] < minTauValue) {
+							minTauValue = yinBuffer[tau];
+							minTau = tau;
+						}
+						else break;
+					}
+					else if (yinBuffer[tau] < yinThreshold) {
+						foundTau = true;
+						minTau = tau;
+						minTauValue = yinBuffer[tau];
+					}
+				}
+			}
+
+			if (minTau == 0) {
+				yinProbability = 0;
+				pitchInHz = 0.0;
+			} else {
+				// Step 4: Interpolate the shift value (tau) to improve the pitch estimate.
+				minTau += (yinBuffer[minTau+1]-yinBuffer[minTau-1])/(2*((2*yinBuffer[minTau])-yinBuffer[minTau-1]-yinBuffer[minTau+1]));
+				pitchInHz = sampleRate/minTau;
+				yinProbability = 1-minTauValue;
+			}
+
+			return pitchInHz;
+		}
+		//==================================================================================================
+		;
+	}
+	,__class__: audiotools.webaudio.pitch.PitchRecognizer
+};
 var cx = {};
 cx.ArrayTools = function() { };
 $hxClasses["cx.ArrayTools"] = cx.ArrayTools;
@@ -2249,11 +3682,17 @@ haxe.io.Bytes.ofString = function(s) {
 	return new haxe.io.Bytes(a.length,a);
 };
 haxe.io.Bytes.prototype = {
-	get: function(pos) {
+	length: null
+	,b: null
+	,get: function(pos) {
 		return this.b[pos];
 	}
 	,set: function(pos,v) {
 		this.b[pos] = v & 255;
+	}
+	,sub: function(pos,len) {
+		if(pos < 0 || len < 0 || pos + len > this.length) throw haxe.io.Error.OutsideBounds;
+		return new haxe.io.Bytes(len,this.b.slice(pos,pos + len));
 	}
 	,getString: function(pos,len) {
 		if(pos < 0 || len < 0 || pos + len > this.length) throw haxe.io.Error.OutsideBounds;
@@ -2814,7 +4253,9 @@ dtx.DOMCollection = function(nodes) {
 $hxClasses["dtx.DOMCollection"] = dtx.DOMCollection;
 dtx.DOMCollection.__name__ = ["dtx","DOMCollection"];
 dtx.DOMCollection.prototype = {
-	iterator: function() {
+	collection: null
+	,length: null
+	,iterator: function() {
 		return HxOverrides.iter(this.collection);
 	}
 	,getNode: function(i) {
@@ -4382,6 +5823,91 @@ dtx.single.Traversing.find = function(node,selector) {
 	}
 	return newDOMCollection;
 };
+var format = {};
+format.wav = {};
+format.wav.WAVEFormat = $hxClasses["format.wav.WAVEFormat"] = { __ename__ : ["format","wav","WAVEFormat"], __constructs__ : ["WF_PCM"] };
+format.wav.WAVEFormat.WF_PCM = ["WF_PCM",0];
+format.wav.WAVEFormat.WF_PCM.toString = $estr;
+format.wav.WAVEFormat.WF_PCM.__enum__ = format.wav.WAVEFormat;
+format.wav.WAVEFormat.__empty_constructs__ = [format.wav.WAVEFormat.WF_PCM];
+format.wav.Reader = function(i) {
+	this.i = i;
+	i.set_bigEndian(false);
+};
+$hxClasses["format.wav.Reader"] = format.wav.Reader;
+format.wav.Reader.__name__ = ["format","wav","Reader"];
+format.wav.Reader.prototype = {
+	i: null
+	,version: null
+	,readInt: function() {
+		return this.i.readInt32();
+	}
+	,read: function() {
+		if(this.i.readString(4) != "RIFF") throw "RIFF header expected";
+		var len = this.i.readInt32();
+		if(this.i.readString(4) != "WAVE") throw "WAVE signature not found";
+		var x = this.i.readString(4);
+		if(x != "fmt ") throw "expected fmt subchunk";
+		var fmtlen = this.i.readInt32();
+		var x1 = this.i.readUInt16();
+		var format1;
+		switch(x1) {
+		case 1:
+			format1 = format.wav.WAVEFormat.WF_PCM;
+			break;
+		default:
+			haxe.Log.trace("only PCM (uncompressed) WAV files are supported",{ fileName : "Reader.hx", lineNumber : 75, className : "format.wav.Reader", methodName : "read"});
+			format1 = format.wav.WAVEFormat.WF_PCM;
+		}
+		var channels = this.i.readUInt16();
+		var samplingRate = this.i.readInt32();
+		var byteRate = this.i.readInt32();
+		var blockAlign = this.i.readUInt16();
+		var bitsPerSample = this.i.readUInt16();
+		if(fmtlen > 16) this.i.read(fmtlen - 16);
+		var nextChunk = this.i.readString(4);
+		while(nextChunk != "data") {
+			this.i.read(this.i.readInt32());
+			nextChunk = this.i.readString(4);
+		}
+		if(nextChunk != "data") throw "expected data subchunk";
+		var datalen = this.i.readInt32();
+		var data = this.i.readAll();
+		if(data.length > datalen) data = data.sub(0,datalen);
+		return { header : { format : format1, channels : channels, samplingRate : samplingRate, byteRate : byteRate, blockAlign : blockAlign, bitsPerSample : bitsPerSample}, data : data};
+	}
+	,__class__: format.wav.Reader
+};
+format.wav.Writer = function(output) {
+	this.o = output;
+	this.o.set_bigEndian(false);
+};
+$hxClasses["format.wav.Writer"] = format.wav.Writer;
+format.wav.Writer.__name__ = ["format","wav","Writer"];
+format.wav.Writer.prototype = {
+	o: null
+	,write: function(wav) {
+		var hdr = wav.header;
+		this.o.writeString("RIFF");
+		this.o.writeInt32(36 + wav.data.length);
+		this.o.writeString("WAVE");
+		this.o.writeString("fmt ");
+		this.o.writeInt32(16);
+		this.o.writeUInt16(1);
+		this.o.writeUInt16(hdr.channels);
+		this.o.writeInt32(hdr.samplingRate);
+		this.o.writeInt32(hdr.byteRate);
+		this.o.writeUInt16(hdr.blockAlign);
+		this.o.writeUInt16(hdr.bitsPerSample);
+		this.o.writeString("data");
+		this.o.writeInt32(wav.data.length);
+		this.o.write(wav.data);
+	}
+	,writeInt: function(v) {
+		this.o.writeInt32(v);
+	}
+	,__class__: format.wav.Writer
+};
 haxe.StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe.StackItem.CFunction = ["CFunction",0];
 haxe.StackItem.CFunction.toString = $estr;
@@ -4507,7 +6033,13 @@ haxe.Serializer.run = function(v) {
 	return s.toString();
 };
 haxe.Serializer.prototype = {
-	toString: function() {
+	buf: null
+	,cache: null
+	,shash: null
+	,scount: null
+	,useCache: null
+	,useEnumIndex: null
+	,toString: function() {
 		return this.buf.b;
 	}
 	,serializeString: function(s) {
@@ -4770,7 +6302,12 @@ haxe.Template = function(str) {
 $hxClasses["haxe.Template"] = haxe.Template;
 haxe.Template.__name__ = ["haxe","Template"];
 haxe.Template.prototype = {
-	execute: function(context,macros) {
+	expr: null
+	,context: null
+	,macros: null
+	,stack: null
+	,buf: null
+	,execute: function(context,macros) {
 		if(macros == null) this.macros = { }; else this.macros = macros;
 		this.context = context;
 		this.stack = new List();
@@ -5155,7 +6692,13 @@ haxe.Unserializer.run = function(v) {
 	return new haxe.Unserializer(v).unserialize();
 };
 haxe.Unserializer.prototype = {
-	setResolver: function(r) {
+	buf: null
+	,pos: null
+	,length: null
+	,cache: null
+	,scache: null
+	,resolver: null
+	,setResolver: function(r) {
 		if(r == null) this.resolver = { resolveClass : function(_) {
 			return null;
 		}, resolveEnum : function(_1) {
@@ -5415,7 +6958,10 @@ haxe.crypto.BaseCode = function(base) {
 $hxClasses["haxe.crypto.BaseCode"] = haxe.crypto.BaseCode;
 haxe.crypto.BaseCode.__name__ = ["haxe","crypto","BaseCode"];
 haxe.crypto.BaseCode.prototype = {
-	encodeBytes: function(b) {
+	base: null
+	,nbits: null
+	,tbl: null
+	,encodeBytes: function(b) {
 		var nbits = this.nbits;
 		var base = this.base;
 		var size = b.length * 8 / nbits | 0;
@@ -5485,7 +7031,8 @@ $hxClasses["haxe.ds.IntMap"] = haxe.ds.IntMap;
 haxe.ds.IntMap.__name__ = ["haxe","ds","IntMap"];
 haxe.ds.IntMap.__interfaces__ = [IMap];
 haxe.ds.IntMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,set: function(key,value) {
 		this.h[key] = value;
 	}
 	,get: function(key) {
@@ -5511,13 +7058,17 @@ $hxClasses["haxe.ds.ObjectMap"] = haxe.ds.ObjectMap;
 haxe.ds.ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
 haxe.ds.ObjectMap.__interfaces__ = [IMap];
 haxe.ds.ObjectMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,set: function(key,value) {
 		var id = key.__id__ || (key.__id__ = ++haxe.ds.ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
 	}
 	,get: function(key) {
 		return this.h[key.__id__];
+	}
+	,exists: function(key) {
+		return this.h.__keys__[key.__id__] != null;
 	}
 	,keys: function() {
 		var a = [];
@@ -5540,7 +7091,19 @@ haxe.io.BytesBuffer = function() {
 $hxClasses["haxe.io.BytesBuffer"] = haxe.io.BytesBuffer;
 haxe.io.BytesBuffer.__name__ = ["haxe","io","BytesBuffer"];
 haxe.io.BytesBuffer.prototype = {
-	getBytes: function() {
+	b: null
+	,addBytes: function(src,pos,len) {
+		if(pos < 0 || len < 0 || pos + len > src.length) throw haxe.io.Error.OutsideBounds;
+		var b1 = this.b;
+		var b2 = src.b;
+		var _g1 = pos;
+		var _g = pos + len;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this.b.push(b2[i]);
+		}
+	}
+	,getBytes: function() {
 		var bytes = new haxe.io.Bytes(this.b.length,this.b);
 		this.b = null;
 		return bytes;
@@ -5551,8 +7114,63 @@ haxe.io.Input = function() { };
 $hxClasses["haxe.io.Input"] = haxe.io.Input;
 haxe.io.Input.__name__ = ["haxe","io","Input"];
 haxe.io.Input.prototype = {
-	readByte: function() {
+	bigEndian: null
+	,readByte: function() {
 		throw "Not implemented";
+	}
+	,readBytes: function(s,pos,len) {
+		var k = len;
+		var b = s.b;
+		if(pos < 0 || len < 0 || pos + len > s.length) throw haxe.io.Error.OutsideBounds;
+		while(k > 0) {
+			b[pos] = this.readByte();
+			pos++;
+			k--;
+		}
+		return len;
+	}
+	,set_bigEndian: function(b) {
+		this.bigEndian = b;
+		return b;
+	}
+	,readAll: function(bufsize) {
+		if(bufsize == null) bufsize = 16384;
+		var buf = haxe.io.Bytes.alloc(bufsize);
+		var total = new haxe.io.BytesBuffer();
+		try {
+			while(true) {
+				var len = this.readBytes(buf,0,bufsize);
+				if(len == 0) throw haxe.io.Error.Blocked;
+				total.addBytes(buf,0,len);
+			}
+		} catch( e ) {
+			if( js.Boot.__instanceof(e,haxe.io.Eof) ) {
+			} else throw(e);
+		}
+		return total.getBytes();
+	}
+	,readFullBytes: function(s,pos,len) {
+		while(len > 0) {
+			var k = this.readBytes(s,pos,len);
+			pos += k;
+			len -= k;
+		}
+	}
+	,read: function(nbytes) {
+		var s = haxe.io.Bytes.alloc(nbytes);
+		var p = 0;
+		while(nbytes > 0) {
+			var k = this.readBytes(s,p,nbytes);
+			if(k == 0) throw haxe.io.Error.Blocked;
+			p += k;
+			nbytes -= k;
+		}
+		return s;
+	}
+	,readUInt16: function() {
+		var ch1 = this.readByte();
+		var ch2 = this.readByte();
+		if(this.bigEndian) return ch2 | ch1 << 8; else return ch1 | ch2 << 8;
 	}
 	,readInt32: function() {
 		var ch1 = this.readByte();
@@ -5561,7 +7179,13 @@ haxe.io.Input.prototype = {
 		var ch4 = this.readByte();
 		if(this.bigEndian) return ch4 | ch3 << 8 | ch2 << 16 | ch1 << 24; else return ch1 | ch2 << 8 | ch3 << 16 | ch4 << 24;
 	}
+	,readString: function(len) {
+		var b = haxe.io.Bytes.alloc(len);
+		this.readFullBytes(b,0,len);
+		return b.toString();
+	}
 	,__class__: haxe.io.Input
+	,__properties__: {set_bigEndian:"set_bigEndian"}
 };
 haxe.io.BytesInput = function(b,pos,len) {
 	if(pos == null) pos = 0;
@@ -5576,10 +7200,29 @@ $hxClasses["haxe.io.BytesInput"] = haxe.io.BytesInput;
 haxe.io.BytesInput.__name__ = ["haxe","io","BytesInput"];
 haxe.io.BytesInput.__super__ = haxe.io.Input;
 haxe.io.BytesInput.prototype = $extend(haxe.io.Input.prototype,{
-	readByte: function() {
+	b: null
+	,pos: null
+	,len: null
+	,totlen: null
+	,readByte: function() {
 		if(this.len == 0) throw new haxe.io.Eof();
 		this.len--;
 		return this.b[this.pos++];
+	}
+	,readBytes: function(buf,pos,len) {
+		if(pos < 0 || len < 0 || pos + len > buf.length) throw haxe.io.Error.OutsideBounds;
+		if(this.len == 0 && len > 0) throw new haxe.io.Eof();
+		if(this.len < len) len = this.len;
+		var b1 = this.b;
+		var b2 = buf.b;
+		var _g = 0;
+		while(_g < len) {
+			var i = _g++;
+			b2[pos + i] = b1[this.pos + i];
+		}
+		this.pos += len;
+		this.len -= len;
+		return len;
 	}
 	,__class__: haxe.io.BytesInput
 });
@@ -5587,8 +7230,51 @@ haxe.io.Output = function() { };
 $hxClasses["haxe.io.Output"] = haxe.io.Output;
 haxe.io.Output.__name__ = ["haxe","io","Output"];
 haxe.io.Output.prototype = {
-	writeByte: function(c) {
+	bigEndian: null
+	,writeByte: function(c) {
 		throw "Not implemented";
+	}
+	,writeBytes: function(s,pos,len) {
+		var k = len;
+		var b = s.b;
+		if(pos < 0 || len < 0 || pos + len > s.length) throw haxe.io.Error.OutsideBounds;
+		while(k > 0) {
+			this.writeByte(b[pos]);
+			pos++;
+			k--;
+		}
+		return len;
+	}
+	,set_bigEndian: function(b) {
+		this.bigEndian = b;
+		return b;
+	}
+	,write: function(s) {
+		var l = s.length;
+		var p = 0;
+		while(l > 0) {
+			var k = this.writeBytes(s,p,l);
+			if(k == 0) throw haxe.io.Error.Blocked;
+			p += k;
+			l -= k;
+		}
+	}
+	,writeFullBytes: function(s,pos,len) {
+		while(len > 0) {
+			var k = this.writeBytes(s,pos,len);
+			pos += k;
+			len -= k;
+		}
+	}
+	,writeUInt16: function(x) {
+		if(x < 0 || x >= 65536) throw haxe.io.Error.Overflow;
+		if(this.bigEndian) {
+			this.writeByte(x >> 8);
+			this.writeByte(x & 255);
+		} else {
+			this.writeByte(x & 255);
+			this.writeByte(x >> 8);
+		}
 	}
 	,writeInt32: function(x) {
 		if(this.bigEndian) {
@@ -5603,7 +7289,12 @@ haxe.io.Output.prototype = {
 			this.writeByte(x >>> 24);
 		}
 	}
+	,writeString: function(s) {
+		var b = haxe.io.Bytes.ofString(s);
+		this.writeFullBytes(b,0,b.length);
+	}
 	,__class__: haxe.io.Output
+	,__properties__: {set_bigEndian:"set_bigEndian"}
 };
 haxe.io.BytesOutput = function() {
 	this.b = new haxe.io.BytesBuffer();
@@ -5612,8 +7303,13 @@ $hxClasses["haxe.io.BytesOutput"] = haxe.io.BytesOutput;
 haxe.io.BytesOutput.__name__ = ["haxe","io","BytesOutput"];
 haxe.io.BytesOutput.__super__ = haxe.io.Output;
 haxe.io.BytesOutput.prototype = $extend(haxe.io.Output.prototype,{
-	writeByte: function(c) {
+	b: null
+	,writeByte: function(c) {
 		this.b.b.push(c);
+	}
+	,writeBytes: function(buf,pos,len) {
+		this.b.addBytes(buf,pos,len);
+		return len;
 	}
 	,getBytes: function() {
 		return this.b.getBytes();
@@ -5688,7 +7384,11 @@ haxe.io.Path.addTrailingSlash = function(path) {
 	} else if(c1 != path.length - 1) return path + "/"; else return path;
 };
 haxe.io.Path.prototype = {
-	toString: function() {
+	dir: null
+	,file: null
+	,ext: null
+	,backslash: null
+	,toString: function() {
 		return (this.dir == null?"":this.dir + (this.backslash?"\\":"/")) + this.file + (this.ext == null?"":"." + this.ext);
 	}
 	,__class__: haxe.io.Path
@@ -5838,7 +7538,8 @@ haxe.remoting.Context = function() {
 $hxClasses["haxe.remoting.Context"] = haxe.remoting.Context;
 haxe.remoting.Context.__name__ = ["haxe","remoting","Context"];
 haxe.remoting.Context.prototype = {
-	addObject: function(name,obj,recursive) {
+	objects: null
+	,addObject: function(name,obj,recursive) {
 		this.objects.set(name,{ obj : obj, rec : recursive});
 	}
 	,call: function(path,params) {
@@ -6032,7 +7733,12 @@ haxe.web.Dispatch = function(url,params) {
 $hxClasses["haxe.web.Dispatch"] = haxe.web.Dispatch;
 haxe.web.Dispatch.__name__ = ["haxe","web","Dispatch"];
 haxe.web.Dispatch.prototype = {
-	onMeta: function(v,args) {
+	parts: null
+	,params: null
+	,name: null
+	,cfg: null
+	,subDispatch: null
+	,onMeta: function(v,args) {
 	}
 	,match: function(v,r,opt) {
 		switch(r[1]) {
@@ -6566,7 +8272,8 @@ $hxClasses["minject.ClassMap"] = minject.ClassMap;
 minject.ClassMap.__name__ = ["minject","ClassMap"];
 minject.ClassMap.__interfaces__ = [IMap];
 minject.ClassMap.prototype = {
-	get: function(k) {
+	map: null
+	,get: function(k) {
 		var key = Type.getClassName(k);
 		return this.map.get(key);
 	}
@@ -6611,7 +8318,11 @@ minject.InjectionConfig = function(request,injectionName) {
 $hxClasses["minject.InjectionConfig"] = minject.InjectionConfig;
 minject.InjectionConfig.__name__ = ["minject","InjectionConfig"];
 minject.InjectionConfig.prototype = {
-	getResponse: function(injector) {
+	request: null
+	,injectionName: null
+	,injector: null
+	,result: null
+	,getResponse: function(injector) {
 		if(this.injector != null) injector = this.injector;
 		if(this.result != null) return this.result.getResponse(injector);
 		var parentConfig = injector.getAncestorMapping(this.request,this.injectionName);
@@ -6646,7 +8357,12 @@ minject.Injector = function() {
 $hxClasses["minject.Injector"] = minject.Injector;
 minject.Injector.__name__ = ["minject","Injector"];
 minject.Injector.prototype = {
-	mapValue: function(whenAskedFor,useValue,named) {
+	attendedToInjectees: null
+	,parentInjector: null
+	,children: null
+	,injectionConfigs: null
+	,injecteeDescriptions: null
+	,mapValue: function(whenAskedFor,useValue,named) {
 		if(named == null) named = "";
 		var config = this.getMapping(whenAskedFor,named);
 		config.setResult(new minject.result.InjectValueResult(useValue));
@@ -6872,7 +8588,9 @@ minject.InjecteeDescription = function(ctor,injectionPoints) {
 $hxClasses["minject.InjecteeDescription"] = minject.InjecteeDescription;
 minject.InjecteeDescription.__name__ = ["minject","InjecteeDescription"];
 minject.InjecteeDescription.prototype = {
-	__class__: minject.InjecteeDescription
+	ctor: null
+	,injectionPoints: null
+	,__class__: minject.InjecteeDescription
 };
 minject.RequestHasher = function() { };
 $hxClasses["minject.RequestHasher"] = minject.RequestHasher;
@@ -6889,7 +8607,8 @@ minject.point.InjectionPoint = function() { };
 $hxClasses["minject.point.InjectionPoint"] = minject.point.InjectionPoint;
 minject.point.InjectionPoint.__name__ = ["minject","point","InjectionPoint"];
 minject.point.InjectionPoint.prototype = {
-	__class__: minject.point.InjectionPoint
+	applyInjection: null
+	,__class__: minject.point.InjectionPoint
 };
 minject.point.MethodInjectionPoint = function(name,args) {
 	this.name = name;
@@ -6900,7 +8619,10 @@ $hxClasses["minject.point.MethodInjectionPoint"] = minject.point.MethodInjection
 minject.point.MethodInjectionPoint.__name__ = ["minject","point","MethodInjectionPoint"];
 minject.point.MethodInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.MethodInjectionPoint.prototype = {
-	makeRequestNames: function() {
+	name: null
+	,args: null
+	,requestNames: null
+	,makeRequestNames: function() {
 		this.requestNames = [];
 		var _g1 = 0;
 		var _g = this.args.length;
@@ -6968,7 +8690,9 @@ $hxClasses["minject.point.PostConstructInjectionPoint"] = minject.point.PostCons
 minject.point.PostConstructInjectionPoint.__name__ = ["minject","point","PostConstructInjectionPoint"];
 minject.point.PostConstructInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.PostConstructInjectionPoint.prototype = {
-	applyInjection: function(target,injector) {
+	name: null
+	,order: null
+	,applyInjection: function(target,injector) {
 		Reflect.callMethod(target,Reflect.field(target,this.name),[]);
 		return target;
 	}
@@ -6984,7 +8708,11 @@ $hxClasses["minject.point.PropertyInjectionPoint"] = minject.point.PropertyInjec
 minject.point.PropertyInjectionPoint.__name__ = ["minject","point","PropertyInjectionPoint"];
 minject.point.PropertyInjectionPoint.__interfaces__ = [minject.point.InjectionPoint];
 minject.point.PropertyInjectionPoint.prototype = {
-	applyInjection: function(target,injector) {
+	name: null
+	,type: null
+	,injectionName: null
+	,requestName: null
+	,applyInjection: function(target,injector) {
 		var config = injector.getConfig(this.requestName);
 		Reflect.setProperty(target,this.name,config.getResponse(injector));
 		return target;
@@ -7013,7 +8741,8 @@ $hxClasses["minject.result.InjectClassResult"] = minject.result.InjectClassResul
 minject.result.InjectClassResult.__name__ = ["minject","result","InjectClassResult"];
 minject.result.InjectClassResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectClassResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	getResponse: function(injector) {
+	responseType: null
+	,getResponse: function(injector) {
 		return injector.instantiate(this.responseType);
 	}
 	,toString: function() {
@@ -7029,7 +8758,8 @@ $hxClasses["minject.result.InjectOtherRuleResult"] = minject.result.InjectOtherR
 minject.result.InjectOtherRuleResult.__name__ = ["minject","result","InjectOtherRuleResult"];
 minject.result.InjectOtherRuleResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectOtherRuleResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	getResponse: function(injector) {
+	rule: null
+	,getResponse: function(injector) {
 		return this.rule.getResponse(injector);
 	}
 	,toString: function() {
@@ -7045,7 +8775,9 @@ $hxClasses["minject.result.InjectSingletonResult"] = minject.result.InjectSingle
 minject.result.InjectSingletonResult.__name__ = ["minject","result","InjectSingletonResult"];
 minject.result.InjectSingletonResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectSingletonResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	getResponse: function(injector) {
+	responseType: null
+	,response: null
+	,getResponse: function(injector) {
 		if(this.response == null) {
 			this.response = this.createResponse(injector);
 			injector.injectInto(this.response);
@@ -7068,7 +8800,8 @@ $hxClasses["minject.result.InjectValueResult"] = minject.result.InjectValueResul
 minject.result.InjectValueResult.__name__ = ["minject","result","InjectValueResult"];
 minject.result.InjectValueResult.__super__ = minject.result.InjectionResult;
 minject.result.InjectValueResult.prototype = $extend(minject.result.InjectionResult.prototype,{
-	getResponse: function(injector) {
+	value: null
+	,getResponse: function(injector) {
 		return this.value;
 	}
 	,toString: function() {
@@ -8355,7 +10088,16 @@ nx3.IBarWidthCalculator = function() { };
 $hxClasses["nx3.IBarWidthCalculator"] = nx3.IBarWidthCalculator;
 nx3.IBarWidthCalculator.__name__ = ["nx3","IBarWidthCalculator"];
 nx3.IBarWidthCalculator.prototype = {
-	__class__: nx3.IBarWidthCalculator
+	getLeftBarlineWidth: null
+	,getClefWidth: null
+	,getKeyWidth: null
+	,getTimeWidth: null
+	,getContentLeftMarginWidth: null
+	,getContentWidth: null
+	,getBarlineWidth: null
+	,getClefsWidth: null
+	,getKeysWidth: null
+	,__class__: nx3.IBarWidthCalculator
 };
 nx3.NBar = function(parts,type,time,timeDisplay,allotment,spacing) {
 	if(spacing == null) spacing = 0;
@@ -8375,7 +10117,14 @@ nx3.NBar = function(parts,type,time,timeDisplay,allotment,spacing) {
 $hxClasses["nx3.NBar"] = nx3.NBar;
 nx3.NBar.__name__ = ["nx3","NBar"];
 nx3.NBar.prototype = {
-	getNNote: function(partIdx,voiceIdx,noteIdx) {
+	nscore: null
+	,nparts: null
+	,type: null
+	,time: null
+	,timeDisplay: null
+	,allotment: null
+	,spacing: null
+	,getNNote: function(partIdx,voiceIdx,noteIdx) {
 		return this.getNPart(partIdx).getNVoice(voiceIdx).getNNote(noteIdx);
 	}
 	,getNPart: function(idx) {
@@ -8384,6 +10133,7 @@ nx3.NBar.prototype = {
 	,iterator: function() {
 		return HxOverrides.iter(this.nparts);
 	}
+	,length: null
 	,get_length: function() {
 		return this.nparts.length;
 	}
@@ -8402,6 +10152,28 @@ nx3.NBar.prototype = {
 	,__class__: nx3.NBar
 	,__properties__: {get_length:"get_length"}
 };
+nx3.NBarUtils = function() { };
+$hxClasses["nx3.NBarUtils"] = nx3.NBarUtils;
+nx3.NBarUtils.__name__ = ["nx3","NBarUtils"];
+nx3.NBarUtils.getValue = function(bar) {
+	var barvalue = 0;
+	var $it0 = bar.iterator();
+	while( $it0.hasNext() ) {
+		var part = $it0.next();
+		var $it1 = part.iterator();
+		while( $it1.hasNext() ) {
+			var voice = $it1.next();
+			var voicevalue = 0;
+			var $it2 = voice.iterator();
+			while( $it2.hasNext() ) {
+				var note = $it2.next();
+				voicevalue += nx3.ENoteValTools.value(note.value);
+			}
+			barvalue = Std["int"](Math.max(barvalue,voicevalue));
+		}
+	}
+	return barvalue;
+};
 nx3.NHead = function(type,level,sign,tie,tieTo) {
 	if(level == null) level = 0;
 	if(type != null) this.type = type; else this.type = nx3.EHeadType.Normal;
@@ -8413,7 +10185,13 @@ nx3.NHead = function(type,level,sign,tie,tieTo) {
 $hxClasses["nx3.NHead"] = nx3.NHead;
 nx3.NHead.__name__ = ["nx3","NHead"];
 nx3.NHead.prototype = {
-	toString: function() {
+	level: null
+	,type: null
+	,sign: null
+	,tie: null
+	,tieTo: null
+	,nnote: null
+	,toString: function() {
 		var str = "" + this.level;
 		if(this.type != nx3.EHeadType.Normal) str += " " + this.type[0]; else str += "";
 		if(this.sign != nx3.ESign.None) str += " " + this.sign[0]; else str += "";
@@ -8447,13 +10225,20 @@ $hxClasses["nx3.NNote"] = nx3.NNote;
 nx3.NNote.__name__ = ["nx3","NNote"];
 nx3.NNote.__interfaces__ = [hxlazy.Lazy];
 nx3.NNote.prototype = {
-	iterator: function() {
+	type: null
+	,value: null
+	,direction: null
+	,nheads: null
+	,nvoice: null
+	,iterator: function() {
 		var _this = this.get_nheads();
 		return HxOverrides.iter(_this);
 	}
+	,length: null
 	,get_length: function() {
 		return this.get_nheads().length;
 	}
+	,nheads_: null
 	,get_nheads: function() {
 		if(this.nheads_ != null) return this.nheads_;
 		{
@@ -8504,20 +10289,24 @@ nx3.NNote.prototype = {
 		var val = nx3.ENoteValTools.toValString(this.value);
 		return "%l" + type + headstags + val;
 	}
+	,__lazyheadLevels: null
 	,get_headLevels: function() {
 		if(this.__lazyheadLevels != null) return this.__lazyheadLevels;
 		return this.__lazyheadLevels = Lambda.array(Lambda.map(this,function(head) {
 			return head.level;
 		}));
 	}
+	,__lazytopLevel: null
 	,get_topLevel: function() {
 		if(this.__lazytopLevel != null) return this.__lazytopLevel;
 		return this.__lazytopLevel = this.get_nheads()[0].level;
 	}
+	,__lazybottomLevel: null
 	,get_bottomLevel: function() {
 		if(this.__lazybottomLevel != null) return this.__lazybottomLevel;
 		return this.__lazybottomLevel = this.get_nheads()[this.get_nheads().length - 1].level;
 	}
+	,__lazyties: null
 	,get_ties: function() {
 		if(this.__lazyties != null) return this.__lazyties;
 		return this.__lazyties = Lambda.array(Lambda.filter(this,function(head) {
@@ -8550,9 +10339,17 @@ nx3.NPart.prototype = {
 	iterator: function() {
 		return HxOverrides.iter(this.nvoices);
 	}
+	,length: null
 	,get_length: function() {
 		return this.nvoices.length;
 	}
+	,nbar: null
+	,type: null
+	,nvoices: null
+	,clef: null
+	,clefDisplay: null
+	,key: null
+	,keyDisplay: null
 	,getNVoice: function(idx) {
 		if(idx < 0 || idx > this.nvoices.length) return null; else return this.nvoices[idx];
 	}
@@ -8587,12 +10384,16 @@ nx3.NScore = function(nbars) {
 $hxClasses["nx3.NScore"] = nx3.NScore;
 nx3.NScore.__name__ = ["nx3","NScore"];
 nx3.NScore.prototype = {
-	getNBar: function(idx) {
+	uuid: null
+	,nbars: null
+	,configuration: null
+	,getNBar: function(idx) {
 		if(idx < 0 || idx > this.nbars.length) return null; else return this.nbars[idx];
 	}
 	,iterator: function() {
 		return HxOverrides.iter(this.nbars);
 	}
+	,length: null
 	,get_length: function() {
 		return this.nbars.length;
 	}
@@ -8792,9 +10593,14 @@ nx3.NVoice = function(notes,type,direction) {
 $hxClasses["nx3.NVoice"] = nx3.NVoice;
 nx3.NVoice.__name__ = ["nx3","NVoice"];
 nx3.NVoice.prototype = {
-	iterator: function() {
+	direction: null
+	,nnotes: null
+	,type: null
+	,npart: null
+	,iterator: function() {
 		return HxOverrides.iter(this.nnotes);
 	}
+	,length: null
 	,get_length: function() {
 		return this.nnotes.length;
 	}
@@ -8903,7 +10709,9 @@ nx3.PBamegroupFrameTipCalculator.intMax = function(levels) {
 	return result;
 };
 nx3.PBamegroupFrameTipCalculator.prototype = {
-	getTips: function() {
+	notelevels: null
+	,direction: null
+	,getTips: function() {
 		var stemLength = 7;
 		var min = nx3.PBamegroupFrameTipCalculator.intMin(this.notelevels);
 		var leftTip = this.notelevels[0];
@@ -8941,19 +10749,27 @@ nx3.PBar = function(nbar) {
 $hxClasses["nx3.PBar"] = nx3.PBar;
 nx3.PBar.__name__ = ["nx3","PBar"];
 nx3.PBar.prototype = {
-	iterator: function() {
+	nbar: null
+	,iterator: function() {
 		var _this = this.getParts();
 		return HxOverrides.iter(_this);
 	}
+	,length: null
 	,get_length: function() {
 		return this.getParts().length;
 	}
+	,score: null
 	,getScore: function() {
 		return this.score;
 	}
+	,systembar: null
 	,getSystembar: function() {
 		return this.systembar;
 	}
+	,clefs: null
+	,keys: null
+	,time: null
+	,_clefs: null
 	,get_clefs: function() {
 		if(this._clefs != null) return this._clefs;
 		this._clefs = new Array();
@@ -8966,6 +10782,7 @@ nx3.PBar.prototype = {
 		}
 		return this._clefs;
 	}
+	,_keys: null
 	,get_keys: function() {
 		if(this._keys != null) return this._keys;
 		this._keys = new Array();
@@ -8981,6 +10798,9 @@ nx3.PBar.prototype = {
 	,get_time: function() {
 		return this.nbar.time;
 	}
+	,displayClefs: null
+	,displayKeys: null
+	,displayTime: null
 	,get_displayClefs: function() {
 		var result = nx3.EDisplayALN.Never;
 		var _g = 0;
@@ -9018,6 +10838,7 @@ nx3.PBar.prototype = {
 		if(this.nbar.timeDisplay != null) result = this.nbar.timeDisplay; else result = nx3.EDisplayALN.Layout;
 		return this.nbar.timeDisplay;
 	}
+	,parts: null
 	,getParts: function() {
 		if(this.parts != null) return this.parts;
 		this.parts = [];
@@ -9035,6 +10856,7 @@ nx3.PBar.prototype = {
 	,getPart: function(idx) {
 		if(idx < 0 || idx > this.getParts().length) return null; else return this.getParts()[idx];
 	}
+	,columns: null
 	,getColumns: function() {
 		if(this.columns != null) return this.columns;
 		var generator = new nx3.PColumnsGenerator(this);
@@ -9053,6 +10875,7 @@ nx3.PBar.prototype = {
 	,calculateAPositions: function() {
 		new nx3.PColumnsAllotmentCalculator(this).calculate();
 	}
+	,value: null
 	,getValue: function() {
 		if(this.value != 0) return this.value;
 		var _g = 0;
@@ -9064,17 +10887,21 @@ nx3.PBar.prototype = {
 		}
 		return this.value;
 	}
+	,contentwidth: null
 	,getContentwidth: function() {
 		if(this.contentwidth != null) return this.contentwidth;
 		var lastcolumn = cx.ArrayTools.last(this.getColumns());
 		this.contentwidth = lastcolumn.getAPostion() + Math.max(lastcolumn.getADistance(),lastcolumn.getRightX());
 		return this.contentwidth;
 	}
+	,contentx: null
 	,getContentXZero: function() {
 		var firstcolumn = cx.ArrayTools.first(this.getColumns());
 		this.contentx = -firstcolumn.getLeftX();
 		return this.contentx;
 	}
+	,stretchwidth: null
+	,allottedDistanceSum: null
 	,getAllottedDistanceSum: function() {
 		if(this.allottedDistanceSum != null) return this.allottedDistanceSum;
 		this.getContentwidth();
@@ -9083,6 +10910,7 @@ nx3.PBar.prototype = {
 	,getStretchWidth: function() {
 		return this.stretchwidth;
 	}
+	,tieconnections: null
 	,getTieConnections: function() {
 		if(this.tieconnections != null) return this.tieconnections;
 		this.tieconnections = [];
@@ -9153,7 +10981,14 @@ nx3.PBarConfig = function(showClef,showKey,showTime,showCautClef,showCautKey,sho
 $hxClasses["nx3.PBarConfig"] = nx3.PBarConfig;
 nx3.PBarConfig.__name__ = ["nx3","PBarConfig"];
 nx3.PBarConfig.prototype = {
-	__class__: nx3.PBarConfig
+	showClef: null
+	,showKey: null
+	,showTime: null
+	,showCautClef: null
+	,showCautKey: null
+	,showCautTime: null
+	,calculatedWidth: null
+	,__class__: nx3.PBarConfig
 };
 nx3.PBarStretchCalculator = function(systembar) {
 	this.systembar = systembar;
@@ -9161,7 +10996,8 @@ nx3.PBarStretchCalculator = function(systembar) {
 $hxClasses["nx3.PBarStretchCalculator"] = nx3.PBarStretchCalculator;
 nx3.PBarStretchCalculator.__name__ = ["nx3","PBarStretchCalculator"];
 nx3.PBarStretchCalculator.prototype = {
-	stretch: function(amount) {
+	systembar: null
+	,stretch: function(amount) {
 		this.systembar.getBarMeasurements().setContentWidth(this.systembar.getBarMeasurements().getContentWidth() + amount);
 		if(this.systembar.bar.getColumns().length < 2) return;
 		var columns = this.systembar.bar.getColumns();
@@ -9278,7 +11114,8 @@ nx3.PBaseRectCalculator = function(note) {
 $hxClasses["nx3.PBaseRectCalculator"] = nx3.PBaseRectCalculator;
 nx3.PBaseRectCalculator.__name__ = ["nx3","PBaseRectCalculator"];
 nx3.PBaseRectCalculator.prototype = {
-	getBaseRect: function() {
+	note: null
+	,getBaseRect: function() {
 		{
 			var _g = this.note.nnote.type;
 			switch(_g[1]) {
@@ -9314,7 +11151,8 @@ nx3.PBeamflagCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamflagCalculator"] = nx3.PBeamflagCalculator;
 nx3.PBeamflagCalculator.__name__ = ["nx3","PBeamflagCalculator"];
 nx3.PBeamflagCalculator.prototype = {
-	getBeamflags: function() {
+	beamgroup: null
+	,getBeamflags: function() {
 		var firstpass = [];
 		var noteIdx = 0;
 		var holder = [];
@@ -9368,7 +11206,9 @@ nx3.PBeamgroup = function(pnotes) {
 $hxClasses["nx3.PBeamgroup"] = nx3.PBeamgroup;
 nx3.PBeamgroup.__name__ = ["nx3","PBeamgroup"];
 nx3.PBeamgroup.prototype = {
-	getValue: function() {
+	pnotes: null
+	,value: null
+	,getValue: function() {
 		if(this.value != null) return this.value;
 		this.value = 0;
 		var _g = 0;
@@ -9380,6 +11220,7 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.value;
 	}
+	,direction: null
 	,setDirection: function(direction) {
 		this.direction = direction;
 	}
@@ -9390,9 +11231,11 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.direction;
 	}
+	,voice: null
 	,getPVoice: function() {
 		return this.voice;
 	}
+	,stavexpositions: null
 	,getNotesStemXPositions: function() {
 		if(this.stavexpositions != null) return this.stavexpositions;
 		this.stavexpositions = [];
@@ -9405,6 +11248,7 @@ nx3.PBeamgroup.prototype = {
 		}
 		return this.stavexpositions;
 	}
+	,frame: null
 	,getFrame: function() {
 		if(this.frame != null) return this.frame;
 		var firstnote = this.pnotes[0].nnote;
@@ -9428,12 +11272,14 @@ nx3.PBeamgroupDirectionCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamgroupDirectionCalculator"] = nx3.PBeamgroupDirectionCalculator;
 nx3.PBeamgroupDirectionCalculator.__name__ = ["nx3","PBeamgroupDirectionCalculator"];
 nx3.PBeamgroupDirectionCalculator.prototype = {
-	getDirection: function() {
+	beamgroup: null
+	,getDirection: function() {
 		this.topLevel = this.findTopLevel();
 		this.bottomLevel = this.findBottomLevel();
 		if(this.topLevel + this.bottomLevel <= 0) return nx3.EDirectionUD.Down;
 		return nx3.EDirectionUD.Up;
 	}
+	,topLevel: null
 	,findTopLevel: function() {
 		var topLevel = this.beamgroup.pnotes[0].nnote.get_topLevel();
 		if(this.beamgroup.pnotes.length == 1) return topLevel;
@@ -9446,6 +11292,7 @@ nx3.PBeamgroupDirectionCalculator.prototype = {
 		}
 		return topLevel;
 	}
+	,bottomLevel: null
 	,findBottomLevel: function() {
 		var bottomLevel = this.beamgroup.pnotes[0].nnote.get_bottomLevel();
 		if(this.beamgroup.pnotes.length == 1) return bottomLevel;
@@ -9466,7 +11313,10 @@ nx3.PBeamgroupFrameCalculator = function(beamgroup) {
 $hxClasses["nx3.PBeamgroupFrameCalculator"] = nx3.PBeamgroupFrameCalculator;
 nx3.PBeamgroupFrameCalculator.__name__ = ["nx3","PBeamgroupFrameCalculator"];
 nx3.PBeamgroupFrameCalculator.prototype = {
-	getFrame: function() {
+	beamgroup: null
+	,outerLevels: null
+	,innerLevels: null
+	,getFrame: function() {
 		this.calcLevelArrays();
 		var frame = this.calcFramePrototype();
 		return frame;
@@ -9535,51 +11385,65 @@ nx3.PColumn = function(bar,complexes,valueposition,value) {
 $hxClasses["nx3.PColumn"] = nx3.PColumn;
 nx3.PColumn.__name__ = ["nx3","PColumn"];
 nx3.PColumn.prototype = {
-	getComplexes: function() {
+	bar: null
+	,complexes: null
+	,valueposition: null
+	,getComplexes: function() {
 		return this.complexes;
 	}
 	,getValueposition: function() {
 		return this.valueposition;
 	}
+	,value: null
 	,getValue: function() {
 		if(this.value == null) throw "value shouldnt be null";
 		return this.value;
 	}
+	,mdistance: null
 	,getMDistance: function() {
 		if(this.mdistance == null) throw "mdistance shouldnt be null";
 		return this.mdistance;
 	}
+	,mdistanceBenefit: null
 	,getMDistanceBenefit: function() {
 		if(this.mdistanceBenefit != null) return this.mdistanceBenefit;
 		this.mdistanceBenefit = Math.max(0,this.getMDistance() - 3.2);
 		return this.mdistanceBenefit;
 	}
+	,allottedDistance: null
+	,distancedelta: null
 	,getDistanceDelta: function() {
 		if(this.distancedelta != null) return this.distancedelta;
 		this.bar.getContentwidth();
 		this.distancedelta = this.allottedDistance / this.bar.getAllottedDistanceSum();
 		return this.distancedelta;
 	}
+	,mposition: null
 	,getMPosition: function() {
 		return this.mposition;
 	}
+	,adistance: null
 	,getADistance: function() {
 		if(this.adistance != null) return this.adistance;
 		this.bar.calculateAPositions();
 		return this.adistance;
 	}
+	,adistanceBenefit: null
 	,getADistanceBenefit: function() {
 		return this.adistanceBenefit;
 	}
+	,aposition: null
 	,getAPostion: function() {
 		if(this.aposition != null) return this.aposition;
 		this.bar.calculateAPositions();
 		return this.aposition;
 	}
+	,sposition: null
 	,getSPosition: function() {
 		if(this.sposition != null) return this.sposition;
 		return this.getAPostion();
 	}
+	,rightX: null
 	,getRightX: function() {
 		if(this.rightX != null) return this.rightX;
 		this.rightX = 0;
@@ -9592,6 +11456,7 @@ nx3.PColumn.prototype = {
 		}
 		return this.rightX;
 	}
+	,leftX: null
 	,getLeftX: function() {
 		if(this.leftX != null) return this.leftX;
 		this.leftX = 0;
@@ -9638,7 +11503,9 @@ nx3.PColumnsAllotmentCalculator = function(bar) {
 $hxClasses["nx3.PColumnsAllotmentCalculator"] = nx3.PColumnsAllotmentCalculator;
 nx3.PColumnsAllotmentCalculator.__name__ = ["nx3","PColumnsAllotmentCalculator"];
 nx3.PColumnsAllotmentCalculator.prototype = {
-	calculate: function(stretch) {
+	bar: null
+	,spacing: null
+	,calculate: function(stretch) {
 		if(stretch == null) stretch = 0;
 		var aposition = this.bar.getContentXZero();
 		var _g = 0;
@@ -9679,7 +11546,8 @@ nx3.PColumnsDistancesCalculator = function(bar) {
 $hxClasses["nx3.PColumnsDistancesCalculator"] = nx3.PColumnsDistancesCalculator;
 nx3.PColumnsDistancesCalculator.__name__ = ["nx3","PColumnsDistancesCalculator"];
 nx3.PColumnsDistancesCalculator.prototype = {
-	calculate: function() {
+	bar: null
+	,calculate: function() {
 		var leftColumn = null;
 		var xposition = 0.0;
 		var _g1 = 0;
@@ -9724,6 +11592,7 @@ nx3.PColumnsDistancesCalculator.prototype = {
 			leftColumn = rightColumn;
 		}
 	}
+	,prevLeftComplex: null
 	,getComplexDistances: function(columnIdx,complexIdx,leftComplex,rightComplex) {
 		if(rightComplex == null) {
 			if(leftComplex != null) {
@@ -9757,7 +11626,12 @@ nx3.PColumnsGenerator = function(bar) {
 $hxClasses["nx3.PColumnsGenerator"] = nx3.PColumnsGenerator;
 nx3.PColumnsGenerator.__name__ = ["nx3","PColumnsGenerator"];
 nx3.PColumnsGenerator.prototype = {
-	getColumns: function() {
+	vparts: null
+	,positions: null
+	,columns: null
+	,positionsColumns: null
+	,bar: null
+	,getColumns: function() {
 		if(this.columns != null) return this.columns;
 		this.positions = this.calcPositions(this.vparts);
 		this.calcColumns(this.positions,this.vparts);
@@ -9838,7 +11712,10 @@ nx3.PComplex = function(part,notes,valueposition) {
 $hxClasses["nx3.PComplex"] = nx3.PComplex;
 nx3.PComplex.__name__ = ["nx3","PComplex"];
 nx3.PComplex.prototype = {
-	getNotes: function() {
+	part: null
+	,valueposition: null
+	,notes: null
+	,getNotes: function() {
 		return this.notes;
 	}
 	,getValueposition: function() {
@@ -9847,12 +11724,14 @@ nx3.PComplex.prototype = {
 	,getPart: function() {
 		return this.part;
 	}
+	,column: null
 	,getColumn: function() {
 		if(this.column != null) return this.column;
 		this.part.getBar().getColumns();
 		if(this.column == null) throw "this shouldn't happen";
 		return this.column;
 	}
+	,headsrects: null
 	,getHeadsRects: function() {
 		if(this.headsrects != null) return this.headsrects;
 		var firstrects = this.notes[0].getHeadsRects();
@@ -9865,28 +11744,33 @@ nx3.PComplex.prototype = {
 		this.headsrects = firstrects.concat(secondrects);
 		return this.headsrects;
 	}
+	,signsrects: null
 	,getSignsRects: function() {
 		if(this.signsrects != null) return this.signsrects;
 		if(this.getVisibleSigns().length == 0) return [];
 		this.signsrects = new nx3.PSignsRectsCalculator(this.getVisibleSigns()).getSignRects(this.getHeadsRects());
 		return this.signsrects;
 	}
+	,secondoffset: null
 	,getNoteXOffset: function(note) {
 		if(note == cx.ArrayTools.first(this.getNotes())) return 0;
 		if(this.secondoffset != null) return this.secondoffset;
 		this.secondoffset = new nx3.PNoteOffsetCalculator(this).getNoteOffset(cx.ArrayTools.second(this.getNotes()));
 		return this.secondoffset;
 	}
+	,signs: null
 	,getSigns: function() {
 		if(this.signs != null) return this.signs;
 		this.signs = new nx3.PSignsCalculator(this.getNotes()).getSigns();
 		return this.signs;
 	}
+	,visiblesigns: null
 	,getVisibleSigns: function() {
 		if(this.visiblesigns != null) return this.visiblesigns;
 		this.visiblesigns = new nx3.PSignsCalculator(this.getNotes()).getVisibleSigns();
 		return this.visiblesigns;
 	}
+	,stavesrects: null
 	,getStavesRects: function() {
 		if(this.stavesrects != null) return this.stavesrects;
 		this.stavesrects = [];
@@ -9911,16 +11795,19 @@ nx3.PComplex.prototype = {
 	,getStaveRect: function(note) {
 		return new nx3.PStaveRectCalculator(note).getStaveRect();
 	}
+	,tierects: null
 	,getTieRects: function() {
 		if(this.tierects != null) return this.tierects;
 		this.tierects = new nx3.PComplexTierectsCalculator(this).getTieRects();
 		return this.tierects;
 	}
+	,dotrects: null
 	,getDotRects: function() {
 		if(this.dotrects != null) return this.dotrects;
 		this.dotrects = new nx3.PComplexDotsrectsCalculator(this).getDotRects();
 		return this.dotrects;
 	}
+	,baserect: null
 	,getBaseRect: function() {
 		if(this.baserect != null) return this.baserect;
 		this.baserect = new nx3.geom.Rectangle(0,0,0,0);
@@ -9933,6 +11820,7 @@ nx3.PComplex.prototype = {
 		}
 		return this.baserect;
 	}
+	,allrects: null
 	,getAllRects: function() {
 		if(this.allrects != null) return this.allrects;
 		this.allrects = [];
@@ -9943,10 +11831,12 @@ nx3.PComplex.prototype = {
 		this.allrects = nx3.geom.RectanglesTools.concat(this.allrects,this.getDotRects());
 		return this.allrects;
 	}
+	,rect: null
 	,getRect: function() {
 		this.rect = nx3.geom.RectanglesTools.unionAll(this.getAllRects());
 		return this.rect;
 	}
+	,xposition: null
 	,getXPosition: function() {
 		if(this.xposition != null) return this.xposition;
 		this.getHeadsRects();
@@ -9957,21 +11847,25 @@ nx3.PComplex.prototype = {
 		var _this = this.part.getComplexes();
 		return HxOverrides.indexOf(_this,this,0);
 	}
+	,leftX: null
 	,getLeftX: function() {
 		if(this.leftX != null) return this.leftX;
 		this.leftX = this.getRect().x;
 		return this.leftX;
 	}
+	,rightX: null
 	,getRightX: function() {
 		if(this.rightX != null) return this.rightX;
 		this.rightX = this.getRect().x + this.getRect().width;
 		return this.rightX;
 	}
+	,next: null
 	,getNext: function() {
 		if(this.next != null) return this.next;
 		this.next = this.getColumn().getNextComplex(this);
 		return this.next;
 	}
+	,tieinfos: null
 	,setTieinfos: function(val) {
 		this.tieinfos = val;
 	}
@@ -9992,6 +11886,7 @@ nx3.PComplex.prototype = {
 		}
 		return result;
 	}
+	,hasTie: null
 	,getHasTie: function() {
 		if(this.hasTie != null) return this.hasTie;
 		var _g = 0;
@@ -10007,6 +11902,7 @@ nx3.PComplex.prototype = {
 		this.hasTie = false;
 		return this.hasTie;
 	}
+	,headlevels: null
 	,getHeadLevels: function() {
 		if(this.headlevels != null) return this.headlevels;
 		this.headlevels = [];
@@ -10068,7 +11964,8 @@ nx3.PComplexDotsrectsCalculator = function(complex) {
 $hxClasses["nx3.PComplexDotsrectsCalculator"] = nx3.PComplexDotsrectsCalculator;
 nx3.PComplexDotsrectsCalculator.__name__ = ["nx3","PComplexDotsrectsCalculator"];
 nx3.PComplexDotsrectsCalculator.prototype = {
-	getDotRects: function() {
+	complex: null
+	,getDotRects: function() {
 		var nrofnotes = this.complex.getNotes().length;
 		var firstnote = cx.ArrayTools.first(this.complex.getNotes());
 		var rects = this.getRectsForNote(firstnote,false);
@@ -10116,7 +12013,8 @@ nx3.PComplexTieTargetCalculator = function(tieinfos) {
 $hxClasses["nx3.PComplexTieTargetCalculator"] = nx3.PComplexTieTargetCalculator;
 nx3.PComplexTieTargetCalculator.__name__ = ["nx3","PComplexTieTargetCalculator"];
 nx3.PComplexTieTargetCalculator.prototype = {
-	findTargetHeads: function() {
+	tieinfos: null
+	,findTargetHeads: function() {
 		var _g = 0;
 		var _g1 = this.tieinfos;
 		while(_g < _g1.length) {
@@ -10147,7 +12045,8 @@ nx3.PComplexTierectsCalculator = function(complex) {
 $hxClasses["nx3.PComplexTierectsCalculator"] = nx3.PComplexTierectsCalculator;
 nx3.PComplexTierectsCalculator.__name__ = ["nx3","PComplexTierectsCalculator"];
 nx3.PComplexTierectsCalculator.prototype = {
-	getTieRects: function() {
+	complex: null
+	,getTieRects: function() {
 		var nrofnotes = this.complex.getNotes().length;
 		var firstnote = cx.ArrayTools.first(this.complex.getNotes());
 		var firstties = firstnote.getTies();
@@ -10249,7 +12148,9 @@ nx3.PHead = function(nhead) {
 $hxClasses["nx3.PHead"] = nx3.PHead;
 nx3.PHead.__name__ = ["nx3","PHead"];
 nx3.PHead.prototype = {
-	getNote: function() {
+	nhead: null
+	,note: null
+	,getNote: function() {
 		return this.note;
 	}
 	,toString: function() {
@@ -10264,7 +12165,9 @@ nx3.PHeadPlacementsCalculator = function(vheads,direction) {
 $hxClasses["nx3.PHeadPlacementsCalculator"] = nx3.PHeadPlacementsCalculator;
 nx3.PHeadPlacementsCalculator.__name__ = ["nx3","PHeadPlacementsCalculator"];
 nx3.PHeadPlacementsCalculator.prototype = {
-	getHeadsPlacements: function() {
+	vheads: null
+	,direction: null
+	,getHeadsPlacements: function() {
 		if(this.vheads.length == 1) return [{ level : this.vheads[0].nhead.level, pos : nx3.EHeadPosition.Center}];
 		var len = this.vheads.length;
 		var placements = [];
@@ -10323,7 +12226,12 @@ nx3.PHeadsRectsCalculator = function(note,direction) {
 $hxClasses["nx3.PHeadsRectsCalculator"] = nx3.PHeadsRectsCalculator;
 nx3.PHeadsRectsCalculator.__name__ = ["nx3","PHeadsRectsCalculator"];
 nx3.PHeadsRectsCalculator.prototype = {
-	getHeadsRects: function() {
+	vheads: null
+	,placements: null
+	,notevalue: null
+	,notetype: null
+	,direction: null
+	,getHeadsRects: function() {
 		var rects = new Array();
 		var i = 0;
 		var _g = 0;
@@ -10399,15 +12307,19 @@ nx3.PNote = function(nnote) {
 $hxClasses["nx3.PNote"] = nx3.PNote;
 nx3.PNote.__name__ = ["nx3","PNote"];
 nx3.PNote.prototype = {
-	iterator: function() {
+	nnote: null
+	,iterator: function() {
 		return HxOverrides.iter(this.heads);
 	}
+	,length: null
 	,get_length: function() {
 		return this.heads.length;
 	}
+	,voice: null
 	,getVoice: function() {
 		return this.voice;
 	}
+	,heads: null
 	,getHeads: function() {
 		if(this.heads != null) return this.heads;
 		this.heads = [];
@@ -10422,6 +12334,7 @@ nx3.PNote.prototype = {
 		}
 		return this.heads;
 	}
+	,beamgroup: null
 	,getBeamgroup: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.beamgroup == null) this.voice.getBeamgroups();
@@ -10431,12 +12344,14 @@ nx3.PNote.prototype = {
 	,getDirection: function() {
 		return this.getBeamgroup().getDirection();
 	}
+	,complex: null
 	,getComplex: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.complex == null) this.voice.getPart().getComplexes();
 		if(this.complex == null) throw "Shouldn't happen";
 		return this.complex;
 	}
+	,headsRects: null
 	,getHeadsRects: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.headsRects != null) return this.headsRects;
@@ -10444,6 +12359,8 @@ nx3.PNote.prototype = {
 		this.headsRects = calculator.getHeadsRects();
 		return this.headsRects;
 	}
+	,staveRect: null
+	,staveRectChecked: null
 	,getStaveRect: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.staveRectChecked) return this.staveRect;
@@ -10451,6 +12368,7 @@ nx3.PNote.prototype = {
 		this.staveRectChecked = true;
 		return this.staveRect;
 	}
+	,staveXPosition: null
 	,getStaveXPosition: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.staveXPosition != null) return this.staveXPosition;
@@ -10459,18 +12377,21 @@ nx3.PNote.prototype = {
 		if(this.getDirection() == nx3.EDirectionUD.Up) this.staveXPosition = staverect.width; else this.staveXPosition = staverect.x;
 		return this.staveXPosition;
 	}
+	,baserect: null
 	,getBaseRect: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.baserect != null) return this.baserect;
 		this.baserect = new nx3.PBaseRectCalculator(this).getBaseRect();
 		return this.baserect;
 	}
+	,xoffset: null
 	,getXOffset: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.xoffset != null) return this.xoffset;
 		this.xoffset = this.getComplex().getNoteXOffset(this);
 		return this.xoffset;
 	}
+	,xposition: null
 	,getXPosition: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.xposition != null) return this.xposition;
@@ -10480,6 +12401,7 @@ nx3.PNote.prototype = {
 	,getTies: function() {
 		return this.nnote.get_ties();
 	}
+	,next: null
 	,getNext: function() {
 		if(this.voice == null) throw "PNote doesn't have a parent PVoice";
 		if(this.next != null) return this.next;
@@ -10527,7 +12449,9 @@ nx3.PNoteHeadsRectTplCalculator = function(note) {
 $hxClasses["nx3.PNoteHeadsRectTplCalculator"] = nx3.PNoteHeadsRectTplCalculator;
 nx3.PNoteHeadsRectTplCalculator.__name__ = ["nx3","PNoteHeadsRectTplCalculator"];
 nx3.PNoteHeadsRectTplCalculator.prototype = {
-	getHeadsRects: function() {
+	note: null
+	,level: null
+	,getHeadsRects: function() {
 		return [new nx3.geom.Rectangle(-5.5,-5.3 + this.level,10,8.8)];
 	}
 	,__class__: nx3.PNoteHeadsRectTplCalculator
@@ -10540,7 +12464,10 @@ nx3.PNoteHeadsRectsLyricsCalculator = function(note,text,font) {
 $hxClasses["nx3.PNoteHeadsRectsLyricsCalculator"] = nx3.PNoteHeadsRectsLyricsCalculator;
 nx3.PNoteHeadsRectsLyricsCalculator.__name__ = ["nx3","PNoteHeadsRectsLyricsCalculator"];
 nx3.PNoteHeadsRectsLyricsCalculator.prototype = {
-	getHeadsRects: function() {
+	note: null
+	,text: null
+	,font: null
+	,getHeadsRects: function() {
 		var target = new nx3.render.TargetSvg();
 		if(this.font != null) target.setFont(this.font);
 		var width = target.textwidth(this.text);
@@ -10556,7 +12483,8 @@ nx3.PNoteHeadsRectsPausesCalculator = function(vnote) {
 $hxClasses["nx3.PNoteHeadsRectsPausesCalculator"] = nx3.PNoteHeadsRectsPausesCalculator;
 nx3.PNoteHeadsRectsPausesCalculator.__name__ = ["nx3","PNoteHeadsRectsPausesCalculator"];
 nx3.PNoteHeadsRectsPausesCalculator.prototype = {
-	getHeadsRects: function() {
+	vnote: null
+	,getHeadsRects: function() {
 		var rects;
 		var _g = nx3.ENoteValTools.beaminglevel(this.vnote.nnote.value);
 		switch(_g) {
@@ -10626,7 +12554,12 @@ nx3.PNoteHeadsRectsPitchCalculator = function(note) {
 $hxClasses["nx3.PNoteHeadsRectsPitchCalculator"] = nx3.PNoteHeadsRectsPitchCalculator;
 nx3.PNoteHeadsRectsPitchCalculator.__name__ = ["nx3","PNoteHeadsRectsPitchCalculator"];
 nx3.PNoteHeadsRectsPitchCalculator.prototype = {
-	getHeadsRects: function() {
+	note: null
+	,partlevel: null
+	,level: null
+	,midinote: null
+	,chain: null
+	,getHeadsRects: function() {
 		if(!this.chain) return [new nx3.geom.Rectangle(-2,-2,1,4)];
 		var rlevel = this.level + this.midinote;
 		return [new nx3.geom.Rectangle(-2,-2 + rlevel,1,4)];
@@ -10639,7 +12572,8 @@ nx3.PNoteOffsetCalculator = function(complex) {
 $hxClasses["nx3.PNoteOffsetCalculator"] = nx3.PNoteOffsetCalculator;
 nx3.PNoteOffsetCalculator.__name__ = ["nx3","PNoteOffsetCalculator"];
 nx3.PNoteOffsetCalculator.prototype = {
-	getNoteOffset: function(note) {
+	complex: null
+	,getNoteOffset: function(note) {
 		if(note == cx.ArrayTools.first(this.complex.getNotes())) return 0;
 		var firstrects = this.complex.notes[0].getHeadsRects();
 		var secondrects;
@@ -10662,7 +12596,10 @@ nx3.PNoteheadsRectsCalculator = function(note) {
 $hxClasses["nx3.PNoteheadsRectsCalculator"] = nx3.PNoteheadsRectsCalculator;
 nx3.PNoteheadsRectsCalculator.__name__ = ["nx3","PNoteheadsRectsCalculator"];
 nx3.PNoteheadsRectsCalculator.prototype = {
-	getHeadsRects: function() {
+	note: null
+	,heads: null
+	,placements: null
+	,getHeadsRects: function() {
 		{
 			var _g = this.note.nnote.type;
 			switch(_g[1]) {
@@ -10704,16 +12641,20 @@ nx3.PPart = function(npart) {
 $hxClasses["nx3.PPart"] = nx3.PPart;
 nx3.PPart.__name__ = ["nx3","PPart"];
 nx3.PPart.prototype = {
-	iterator: function() {
+	npart: null
+	,iterator: function() {
 		var _this = this.getVoices();
 		return HxOverrides.iter(_this);
 	}
+	,length: null
 	,get_length: function() {
 		return this.getVoices().length;
 	}
+	,bar: null
 	,getBar: function() {
 		return this.bar;
 	}
+	,voices: null
 	,getVoices: function() {
 		if(this.voices != null) return this.voices;
 		this.voices = [];
@@ -10731,12 +12672,14 @@ nx3.PPart.prototype = {
 	,getVoice: function(idx) {
 		if(idx < 0 || idx > this.getVoices().length) return null; else return this.getVoices()[idx];
 	}
+	,complexes: null
 	,getComplexes: function() {
 		if(this.complexes != null) return this.complexes;
 		var generator = new nx3.PPartComplexesGenerator(this);
 		this.complexes = generator.getComplexes();
 		return this.complexes;
 	}
+	,positionsComplexes: null
 	,getPositionsComplexes: function() {
 		if(this.positionsComplexes != null) return this.positionsComplexes;
 		this.positionsComplexes = new haxe.ds.IntMap();
@@ -10753,6 +12696,7 @@ nx3.PPart.prototype = {
 		var _this = this.bar.getParts();
 		return HxOverrides.indexOf(_this,this,0);
 	}
+	,value: null
 	,getValue: function() {
 		if(this.value != 0) return this.value;
 		var _g = 0;
@@ -10764,6 +12708,7 @@ nx3.PPart.prototype = {
 		}
 		return this.value;
 	}
+	,rect: null
 	,getRect: function() {
 		if(this.rect != null) return this.rect;
 		var result;
@@ -10828,7 +12773,10 @@ nx3.PPartComplexesGenerator = function(part) {
 $hxClasses["nx3.PPartComplexesGenerator"] = nx3.PPartComplexesGenerator;
 nx3.PPartComplexesGenerator.__name__ = ["nx3","PPartComplexesGenerator"];
 nx3.PPartComplexesGenerator.prototype = {
-	getComplexes: function() {
+	part: null
+	,vvoices: null
+	,complexes: null
+	,getComplexes: function() {
 		if(this.complexes != null) return this.complexes;
 		this.positionsMap = this.calcPositionsMap();
 		this.calcComplexes(this.positionsMap);
@@ -10847,6 +12795,7 @@ nx3.PPartComplexesGenerator.prototype = {
 			this.complexes.push(vcomplex);
 		}
 	}
+	,positionsMap: null
 	,calcPositionsMap: function() {
 		var positionsMap = new haxe.ds.IntMap();
 		var _g = 0;
@@ -10876,7 +12825,8 @@ nx3.PPartbeamgroupsDirectionCalculator = function(ppart) {
 $hxClasses["nx3.PPartbeamgroupsDirectionCalculator"] = nx3.PPartbeamgroupsDirectionCalculator;
 nx3.PPartbeamgroupsDirectionCalculator.__name__ = ["nx3","PPartbeamgroupsDirectionCalculator"];
 nx3.PPartbeamgroupsDirectionCalculator.prototype = {
-	calculateBeamgroupsDirections: function() {
+	ppart: null
+	,calculateBeamgroupsDirections: function() {
 		var partbeamgroups = [];
 		var _g = 0;
 		var _g1 = this.ppart.getVoices();
@@ -10967,7 +12917,9 @@ nx3.PScore = function(nscore) {
 $hxClasses["nx3.PScore"] = nx3.PScore;
 nx3.PScore.__name__ = ["nx3","PScore"];
 nx3.PScore.prototype = {
-	getBars: function() {
+	nscore: null
+	,bars: null
+	,getBars: function() {
 		if(this.bars != null) return this.bars;
 		this.bars = [];
 		var _g = 0;
@@ -10992,6 +12944,8 @@ nx3.PScore.prototype = {
 		}
 		return result;
 	}
+	,systems: null
+	,prevSystemwidth: null
 	,getSystems: function(systemwidth) {
 		if(systemwidth != this.prevSystemwidth) this.systems = null;
 		if(this.systems != null) return this.systems;
@@ -11053,7 +13007,8 @@ nx3.PScoreSystemStretcher = function(system) {
 $hxClasses["nx3.PScoreSystemStretcher"] = nx3.PScoreSystemStretcher;
 nx3.PScoreSystemStretcher.__name__ = ["nx3","PScoreSystemStretcher"];
 nx3.PScoreSystemStretcher.prototype = {
-	stretchTo: function(stretchSystemToWidth,ifMoreThan) {
+	system: null
+	,stretchTo: function(stretchSystemToWidth,ifMoreThan) {
 		if(ifMoreThan == null) ifMoreThan = 0;
 		if(ifMoreThan > 0) {
 			if(this.system.getWidth() <= ifMoreThan) return true;
@@ -11080,7 +13035,9 @@ nx3.PScoreSystemsGenerator = function(score,bars) {
 $hxClasses["nx3.PScoreSystemsGenerator"] = nx3.PScoreSystemsGenerator;
 nx3.PScoreSystemsGenerator.__name__ = ["nx3","PScoreSystemsGenerator"];
 nx3.PScoreSystemsGenerator.prototype = {
-	getsSystems: function(systemwidths) {
+	bars: null
+	,score: null
+	,getsSystems: function(systemwidths) {
 		var tempbars = this.bars.slice();
 		var result = new Array();
 		var sysidx = 0;
@@ -11105,12 +13062,14 @@ nx3.PSignsCalculator = function(notes) {
 $hxClasses["nx3.PSignsCalculator"] = nx3.PSignsCalculator;
 nx3.PSignsCalculator.__name__ = ["nx3","PSignsCalculator"];
 nx3.PSignsCalculator.prototype = {
-	getSigns: function() {
+	notes: null
+	,getSigns: function() {
 		var signs;
 		signs = this.calcUnsortedSigns(this.notes);
 		signs = this.calcSortSigns(signs);
 		return signs;
 	}
+	,visibleSigns: null
 	,getVisibleSigns: function() {
 		return this.calcVisibleSigns(this.getSigns());
 	}
@@ -11156,7 +13115,8 @@ nx3.PSignsRectsCalculator = function(signs) {
 $hxClasses["nx3.PSignsRectsCalculator"] = nx3.PSignsRectsCalculator;
 nx3.PSignsRectsCalculator.__name__ = ["nx3","PSignsRectsCalculator"];
 nx3.PSignsRectsCalculator.prototype = {
-	getSignRects: function(headsRects) {
+	signs: null
+	,getSignRects: function(headsRects) {
 		var rects = new Array();
 		if(headsRects == null) headsRects = [];
 		var _g = 0;
@@ -11217,7 +13177,8 @@ nx3.PStaveRectCalculator = function(note) {
 $hxClasses["nx3.PStaveRectCalculator"] = nx3.PStaveRectCalculator;
 nx3.PStaveRectCalculator.__name__ = ["nx3","PStaveRectCalculator"];
 nx3.PStaveRectCalculator.prototype = {
-	getStaveRect: function() {
+	note: null
+	,getStaveRect: function() {
 		if(this.note.nnote.type[0] != "Note") return null;
 		if(nx3.ENoteValTools.stavinglevel(this.note.nnote.value) < 1) return null;
 		var headw;
@@ -11268,12 +13229,16 @@ nx3.PSystem = function(score) {
 $hxClasses["nx3.PSystem"] = nx3.PSystem;
 nx3.PSystem.__name__ = ["nx3","PSystem"];
 nx3.PSystem.prototype = {
-	getStatus: function() {
+	score: null
+	,status: null
+	,getStatus: function() {
 		return this.status;
 	}
+	,width: null
 	,getWidth: function() {
 		return this.width;
 	}
+	,systembars: null
 	,getSystembars: function() {
 		return this.systembars;
 	}
@@ -11281,9 +13246,11 @@ nx3.PSystem.prototype = {
 		if(this.systembars.length == 0) return null;
 		return cx.ArrayTools.last(this.systembars).actAttributes;
 	}
+	,systemBreakWidth: null
 	,getSystemBreakWidth: function() {
 		return this.systemBreakWidth;
 	}
+	,value: null
 	,getValue: function() {
 		if(this.value != null) return this.value;
 		this.value = 0;
@@ -11404,16 +13371,24 @@ nx3.PSystemBar = function(system,bar,barConfig,barMeasurements,actAttributes,caA
 $hxClasses["nx3.PSystemBar"] = nx3.PSystemBar;
 nx3.PSystemBar.__name__ = ["nx3","PSystemBar"];
 nx3.PSystemBar.prototype = {
-	setBarStretch: function(amount) {
+	system: null
+	,bar: null
+	,barConfig: null
+	,actAttributes: null
+	,caAttributes: null
+	,stretchamount: null
+	,setBarStretch: function(amount) {
 		if(amount == this.stretchamount) return;
 		var calculator = new nx3.PBarStretchCalculator(this);
 		if(amount == 0) calculator.resetStretch(); else calculator.stretch(amount);
 	}
+	,barMeasurements: null
 	,getBarMeasurements: function() {
 		if(this.barMeasurements != null) return this.barMeasurements;
 		this.barMeasurements = new nx3.PSystembarMeasurements(this.bar).init(this.actAttributes,this.barConfig,this.caAttributes);
 		return this.barMeasurements;
 	}
+	,xposition: null
 	,getXPosition: function() {
 		return this.xposition;
 	}
@@ -11435,7 +13410,14 @@ nx3.PSystemBarsGenerator = function(score,bars,systemConfig,prevBarAttributes,br
 $hxClasses["nx3.PSystemBarsGenerator"] = nx3.PSystemBarsGenerator;
 nx3.PSystemBarsGenerator.__name__ = ["nx3","PSystemBarsGenerator"];
 nx3.PSystemBarsGenerator.prototype = {
-	getSystem: function() {
+	bars: null
+	,systemConfig: null
+	,prevBarAttributes: null
+	,breakSystemwidth: null
+	,system: null
+	,barWidthCalculator: null
+	,score: null
+	,getSystem: function() {
 		this.system.systemBreakWidth = this.breakSystemwidth;
 		var tryAnotherBar = true;
 		while(tryAnotherBar) {
@@ -11683,24 +13665,32 @@ nx3.PSystembarMeasurements = function(bar) {
 $hxClasses["nx3.PSystembarMeasurements"] = nx3.PSystembarMeasurements;
 nx3.PSystembarMeasurements.__name__ = ["nx3","PSystembarMeasurements"];
 nx3.PSystembarMeasurements.prototype = {
-	getAckoladeXPosition: function() {
+	bar: null
+	,ackoladeWidth: null
+	,getAckoladeXPosition: function() {
 		return 0;
 	}
+	,clefWidth: null
 	,getClefXPosition: function() {
 		return this.getAckoladeXPosition() + this.ackoladeWidth;
 	}
+	,keyWidth: null
 	,getKeyXPosition: function() {
 		return this.getClefXPosition() + this.clefWidth;
 	}
+	,timeWidth: null
 	,getTimeXPosition: function() {
 		return this.getKeyXPosition() + this.keyWidth;
 	}
+	,leftContentMarginWidth: null
 	,getLeftContentMarginXPosition: function() {
 		return this.getTimeXPosition() + this.timeWidth;
 	}
+	,contentXZero: null
 	,getContentXZero: function() {
 		return this.contentXZero;
 	}
+	,contentWidth: null
 	,getContentXPosition: function() {
 		return this.getLeftContentMarginXPosition() + this.leftContentMarginWidth;
 	}
@@ -11710,15 +13700,19 @@ nx3.PSystembarMeasurements.prototype = {
 	,setContentWidth: function(val) {
 		this.contentWidth = val;
 	}
+	,cautClefWidth: null
 	,getCautClefXPosition: function() {
 		return this.getContentXPosition() + this.contentWidth;
 	}
+	,cautKeyWidth: null
 	,getCautKeyXPosition: function() {
 		return this.getCautClefXPosition() + this.cautClefWidth;
 	}
+	,cautTimeWidth: null
 	,getCautTimeXPosition: function() {
 		return this.getCautKeyXPosition() + this.cautKeyWidth;
 	}
+	,barlineWidth: null
 	,getBarlineXPosition: function() {
 		return this.getCautTimeXPosition() + this.cautTimeWidth;
 	}
@@ -11742,22 +13736,300 @@ nx3.PSystembarMeasurements.prototype = {
 	}
 	,__class__: nx3.PSystembarMeasurements
 };
+nx3.PSystemsTools = function(systems) {
+	this.systems = systems;
+};
+$hxClasses["nx3.PSystemsTools"] = nx3.PSystemsTools;
+nx3.PSystemsTools.__name__ = ["nx3","PSystemsTools"];
+nx3.PSystemsTools.prototype = {
+	systems: null
+	,columns: null
+	,getColumns: function() {
+		if(this.columns != null) return this.columns;
+		this.columns = [];
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var _g4 = 0;
+				var _g5 = sysbar.bar.getColumns();
+				while(_g4 < _g5.length) {
+					var column = _g5[_g4];
+					++_g4;
+					this.columns.push(column);
+				}
+			}
+		}
+		return this.columns;
+	}
+	,columnsSysbars: null
+	,getColumnsSysbars: function() {
+		if(this.columnsSysbars != null) return this.columnsSysbars;
+		this.columnsSysbars = new haxe.ds.ObjectMap();
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var _g4 = 0;
+				var _g5 = sysbar.bar.getColumns();
+				while(_g4 < _g5.length) {
+					var column = _g5[_g4];
+					++_g4;
+					this.columnsSysbars.set(column,sysbar);
+				}
+			}
+		}
+		return this.columnsSysbars;
+	}
+	,columnsPointH: null
+	,getColumnsPointH: function() {
+		if(this.columnsPointH != null) return this.columnsPointH;
+		this.columnsPointH = new haxe.ds.ObjectMap();
+		var ADD_TO_ENDS = 4;
+		var _g = 0;
+		var _g1 = this.getColumns();
+		while(_g < _g1.length) {
+			var column = _g1[_g];
+			++_g;
+			var sysbar;
+			var this1 = this.getColumnsSysbars();
+			sysbar = this1.get(column);
+			var contentX = sysbar.getBarMeasurements().getContentXPosition();
+			var columnX = column.getSPosition();
+			var sysbarX = sysbar.getXPosition();
+			var systemY = sysbar.system.getY();
+			var x = sysbarX + contentX + columnX;
+			var y = systemY + sysbar.system.getTopPartY() - ADD_TO_ENDS;
+			var y2 = systemY + sysbar.system.getBottomPartY() + ADD_TO_ENDS;
+			var h = y2 - y;
+			this.columnsPointH.set(column,{ x : x, y : y, height : h});
+		}
+		return this.columnsPointH;
+	}
+	,pnotes: null
+	,getNotes: function() {
+		if(this.pnotes != null) return this.pnotes; else this.pnotes = [];
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var $it0 = sysbar.bar.iterator();
+				while( $it0.hasNext() ) {
+					var part = $it0.next();
+					var $it1 = part.iterator();
+					while( $it1.hasNext() ) {
+						var voice = $it1.next();
+						var $it2 = voice.iterator();
+						while( $it2.hasNext() ) {
+							var note = $it2.next();
+							this.pnotes.push(note);
+						}
+					}
+				}
+			}
+		}
+		return this.pnotes;
+	}
+	,pnotesParts: null
+	,getNotesParts: function() {
+		if(this.pnotesParts != null) return this.pnotesParts; else this.pnotesParts = new haxe.ds.ObjectMap();
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var $it0 = sysbar.bar.iterator();
+				while( $it0.hasNext() ) {
+					var part = $it0.next();
+					var $it1 = part.iterator();
+					while( $it1.hasNext() ) {
+						var voice = $it1.next();
+						var $it2 = voice.iterator();
+						while( $it2.hasNext() ) {
+							var note = $it2.next();
+							this.pnotesParts.set(note,part);
+						}
+					}
+				}
+			}
+		}
+		return this.pnotesParts;
+	}
+	,pnotesRects: null
+	,getNotesRects: function() {
+		if(this.pnotesRects != null) return this.pnotesRects; else this.pnotesRects = new haxe.ds.ObjectMap();
+		var _g = 0;
+		var _g1 = this.getNotes();
+		while(_g < _g1.length) {
+			var note = _g1[_g];
+			++_g;
+			var column = note.getComplex().getColumn();
+			var columnPointH;
+			var this1 = this.getColumnsPointH();
+			columnPointH = this1.get(column);
+			var part;
+			var this2 = this.getNotesParts();
+			part = this2.get(note);
+			var partIdx = part.getIndex();
+			var sysbar;
+			var this3 = this.getColumnsSysbars();
+			sysbar = this3.get(column);
+			var system = sysbar.system;
+			var noteRect = nx3.geom.RectangleTools.union(note.getHeadsRects());
+			noteRect.offset(columnPointH.x,system.getY() + system.getPartY(partIdx));
+			this.pnotesRects.set(note,noteRect);
+		}
+		return this.pnotesRects;
+	}
+	,getNoteFromCoord: function(x,y) {
+		var point = new nx3.geom.Point(x,y);
+		var _g = 0;
+		var _g1 = this.getNotes();
+		while(_g < _g1.length) {
+			var note = _g1[_g];
+			++_g;
+			var rect;
+			var this1 = this.getNotesRects();
+			rect = this1.get(note);
+			if(rect.containsPoint(point)) return note;
+		}
+		return null;
+	}
+	,nbars: null
+	,getNBarsFromSystems: function() {
+		if(this.nbars != null) return this.nbars; else this.nbars = [];
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var nbar = sysbar.bar.nbar;
+				this.nbars.push(nbar);
+			}
+		}
+		return this.nbars;
+	}
+	,notesNotenritems: null
+	,getNotesNotenritems: function() {
+		if(this.notesNotenritems != null) return this.notesNotenritems;
+		this.notesNotenritems = new haxe.ds.ObjectMap();
+		var nbars = this.getNBarsFromSystems();
+		if(nx3.utils.VoiceSplitter.canSplit(nbars)) nbars = new nx3.utils.VoiceSplitter(nbars).getVoicesplittedNBars();
+		var partsnotes = new nx3.audio.NotenrBarsCalculator(nbars).getPartsNotenrItems();
+		this.notesNotenritems = nx3.audio.NotenrTools.getNotesNotenritems(partsnotes);
+		return this.notesNotenritems;
+	}
+	,columnsPositions: null
+	,getColumnsPositions: function() {
+		if(this.columnsPositions != null) return this.columnsPositions;
+		this.columnsPositions = new haxe.ds.ObjectMap();
+		var barpos = 0;
+		var _g = 0;
+		var _g1 = this.systems;
+		while(_g < _g1.length) {
+			var system = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = system.getSystembars();
+			while(_g2 < _g3.length) {
+				var sysbar = _g3[_g2];
+				++_g2;
+				var _g4 = 0;
+				var _g5 = sysbar.bar.getColumns();
+				while(_g4 < _g5.length) {
+					var column = _g5[_g4];
+					++_g4;
+					var value = column.getValueposition() + barpos;
+					this.columnsPositions.set(column,value);
+				}
+				barpos += sysbar.bar.getValue();
+			}
+		}
+		return this.columnsPositions;
+	}
+	,columnsTime: null
+	,getColumnsTimeFixed: function(fixedTempoBPM,beatfactor) {
+		if(beatfactor == null) beatfactor = 1.0;
+		if(fixedTempoBPM == null) fixedTempoBPM = 60;
+		if(this.columnsTime != null) return this.columnsTime;
+		this.columnsTime = new haxe.ds.ObjectMap();
+		var columnsPositions = this.getColumnsPositions();
+		var $it0 = columnsPositions.keys();
+		while( $it0.hasNext() ) {
+			var column = $it0.next();
+			var position = columnsPositions.h[column.__id__];
+			var time = position / 3024 / (fixedTempoBPM / 60) / beatfactor;
+			this.columnsTime.set(column,time);
+		}
+		return this.columnsTime;
+	}
+	,timesColumns: null
+	,getTimesColumns: function(fixedTempoBPM,beatfactor) {
+		if(beatfactor == null) beatfactor = 1.0;
+		if(fixedTempoBPM == null) fixedTempoBPM = 60;
+		if(this.timesColumns != null) return this.timesColumns;
+		var columnsTime = this.getColumnsTimeFixed(fixedTempoBPM,beatfactor);
+		this.timesColumns = [];
+		var $it0 = columnsTime.keys();
+		while( $it0.hasNext() ) {
+			var column = $it0.next();
+			this.timesColumns.push({ time : columnsTime.h[column.__id__], column : column});
+		}
+		this.timesColumns.sort(function(a,b) {
+			return Reflect.compare(a.time,b.time);
+		});
+		return this.timesColumns;
+	}
+	,__class__: nx3.PSystemsTools
+};
 nx3.PVoice = function(nvoice) {
 	this.nvoice = nvoice;
 };
 $hxClasses["nx3.PVoice"] = nx3.PVoice;
 nx3.PVoice.__name__ = ["nx3","PVoice"];
 nx3.PVoice.prototype = {
-	iterator: function() {
+	nvoice: null
+	,iterator: function() {
 		var _this = this.getNotes();
 		return HxOverrides.iter(_this);
 	}
+	,length: null
 	,get_length: function() {
 		return this.getNotes().length;
 	}
+	,part: null
 	,getPart: function() {
 		return this.part;
 	}
+	,notes: null
 	,getNotes: function() {
 		if(this.notes != null) return this.notes;
 		this.notes = [];
@@ -11775,6 +14047,7 @@ nx3.PVoice.prototype = {
 	,getNote: function(idx) {
 		if(idx < 0 || idx > this.getNotes().length) return null; else return this.getNotes()[idx];
 	}
+	,value: null
 	,getValue: function() {
 		if(this.value != null) return this.value;
 		if(this.notes == null) this.getNotes();
@@ -11788,6 +14061,8 @@ nx3.PVoice.prototype = {
 		}
 		return this.value;
 	}
+	,beamgroups: null
+	,beampattern: null
 	,getBeamgroups: function(pattern) {
 		if(pattern != null && pattern != this.beampattern) {
 			this.beampattern = pattern;
@@ -11797,6 +14072,7 @@ nx3.PVoice.prototype = {
 		this.beamgroups = new nx3.PVoiceBeamgroupsGenerator(this.getNotes(),pattern).getBeamgroups();
 		return this.beamgroups;
 	}
+	,pnotePositions: null
 	,getNotePositions: function() {
 		if(this.pnotePositions != null) return this.pnotePositions;
 		if(this.notes == null) this.getNotes();
@@ -11825,7 +14101,10 @@ nx3.PVoiceBeamgroupsGenerator = function(pnotes,pattern) {
 $hxClasses["nx3.PVoiceBeamgroupsGenerator"] = nx3.PVoiceBeamgroupsGenerator;
 nx3.PVoiceBeamgroupsGenerator.__name__ = ["nx3","PVoiceBeamgroupsGenerator"];
 nx3.PVoiceBeamgroupsGenerator.prototype = {
-	getBeamgroups: function() {
+	notes: null
+	,pattern: null
+	,voice: null
+	,getBeamgroups: function() {
 		var patternPositions = this.getPatternPositions();
 		var notesPositions = this.getNotesPositions();
 		var notesBeamgroupPosIndexes = this.getNotesBeamgroupPosIndexes(patternPositions,notesPositions);
@@ -11974,6 +14253,183 @@ nx3.PVoiceBeamgroupsGenerator.prototype = {
 	}
 	,__class__: nx3.PVoiceBeamgroupsGenerator
 };
+nx3.QNote = function(headLevel,headLevels,head,heads,value,signs,direction) {
+	if(signs == null) signs = "";
+	signs += "...........";
+	var aSigns = signs.split("");
+	if(headLevel != null) headLevels = [headLevel];
+	if(headLevels != null) {
+		heads = [];
+		var i = 0;
+		var _g = 0;
+		while(_g < headLevels.length) {
+			var level = headLevels[_g];
+			++_g;
+			heads.push(new nx3.NHead(null,level,this.getSign(aSigns[i++])));
+		}
+	}
+	if(head != null) heads = [head];
+	if(heads == null) heads = [new nx3.NHead(null,0)];
+	if(value == null) value = nx3.ENoteVal.Nv4;
+	nx3.NNote.call(this,null,heads,value,direction);
+};
+$hxClasses["nx3.QNote"] = nx3.QNote;
+nx3.QNote.__name__ = ["nx3","QNote"];
+nx3.QNote.__super__ = nx3.NNote;
+nx3.QNote.prototype = $extend(nx3.NNote.prototype,{
+	getSign: function(val) {
+		switch(val) {
+		case "#":
+			return nx3.ESign.Sharp;
+		case "b":
+			return nx3.ESign.Flat;
+		case "N":case "n":
+			return nx3.ESign.Natural;
+		default:
+			return null;
+		}
+	}
+	,__class__: nx3.QNote
+});
+nx3.QPause16 = function(level) {
+	if(level == null) level = 0;
+	nx3.NNote.call(this,nx3.ENoteType.Pause(level),null,nx3.ENoteVal.Nv16);
+};
+$hxClasses["nx3.QPause16"] = nx3.QPause16;
+nx3.QPause16.__name__ = ["nx3","QPause16"];
+nx3.QPause16.__super__ = nx3.NNote;
+nx3.QPause16.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QPause16
+});
+nx3.QPause8 = function(level) {
+	if(level == null) level = 0;
+	nx3.NNote.call(this,nx3.ENoteType.Pause(level),null,nx3.ENoteVal.Nv8);
+};
+$hxClasses["nx3.QPause8"] = nx3.QPause8;
+nx3.QPause8.__name__ = ["nx3","QPause8"];
+nx3.QPause8.__super__ = nx3.NNote;
+nx3.QPause8.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QPause8
+});
+nx3.QPause4 = function(level) {
+	if(level == null) level = 0;
+	nx3.NNote.call(this,nx3.ENoteType.Pause(level),null,nx3.ENoteVal.Nv4);
+};
+$hxClasses["nx3.QPause4"] = nx3.QPause4;
+nx3.QPause4.__name__ = ["nx3","QPause4"];
+nx3.QPause4.__super__ = nx3.NNote;
+nx3.QPause4.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QPause4
+});
+nx3.QPause2 = function(level) {
+	if(level == null) level = 0;
+	nx3.NNote.call(this,nx3.ENoteType.Pause(level),null,nx3.ENoteVal.Nv2);
+};
+$hxClasses["nx3.QPause2"] = nx3.QPause2;
+nx3.QPause2.__name__ = ["nx3","QPause2"];
+nx3.QPause2.__super__ = nx3.NNote;
+nx3.QPause2.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QPause2
+});
+nx3.QPause1 = function(level) {
+	if(level == null) level = 0;
+	nx3.NNote.call(this,nx3.ENoteType.Pause(level),null,nx3.ENoteVal.Nv1);
+};
+$hxClasses["nx3.QPause1"] = nx3.QPause1;
+nx3.QPause1.__name__ = ["nx3","QPause1"];
+nx3.QPause1.__super__ = nx3.NNote;
+nx3.QPause1.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QPause1
+});
+nx3.QLyric8 = function(text) {
+	if(text == null) text = "QLyric4";
+	nx3.NNote.call(this,nx3.ENoteType.Lyric(text),null,nx3.ENoteVal.Nv8);
+};
+$hxClasses["nx3.QLyric8"] = nx3.QLyric8;
+nx3.QLyric8.__name__ = ["nx3","QLyric8"];
+nx3.QLyric8.__super__ = nx3.NNote;
+nx3.QLyric8.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QLyric8
+});
+nx3.QLyric4 = function(text) {
+	if(text == null) text = "QLyric4";
+	nx3.NNote.call(this,nx3.ENoteType.Lyric(text),null,nx3.ENoteVal.Nv4);
+};
+$hxClasses["nx3.QLyric4"] = nx3.QLyric4;
+nx3.QLyric4.__name__ = ["nx3","QLyric4"];
+nx3.QLyric4.__super__ = nx3.NNote;
+nx3.QLyric4.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QLyric4
+});
+nx3.QLyric2 = function(text) {
+	if(text == null) text = "QLyric4";
+	nx3.NNote.call(this,nx3.ENoteType.Lyric(text),null,nx3.ENoteVal.Nv2);
+};
+$hxClasses["nx3.QLyric2"] = nx3.QLyric2;
+nx3.QLyric2.__name__ = ["nx3","QLyric2"];
+nx3.QLyric2.__super__ = nx3.NNote;
+nx3.QLyric2.prototype = $extend(nx3.NNote.prototype,{
+	__class__: nx3.QLyric2
+});
+nx3.QNote4 = function(dot,headLevel,headLevels,signs) {
+	if(signs == null) signs = "";
+	if(dot == null) dot = false;
+	var val;
+	if(dot) val = nx3.ENoteVal.Nv4dot; else val = nx3.ENoteVal.Nv4;
+	nx3.QNote.call(this,headLevel,headLevels,null,null,val,signs);
+};
+$hxClasses["nx3.QNote4"] = nx3.QNote4;
+nx3.QNote4.__name__ = ["nx3","QNote4"];
+nx3.QNote4.__super__ = nx3.QNote;
+nx3.QNote4.prototype = $extend(nx3.QNote.prototype,{
+	__class__: nx3.QNote4
+});
+nx3.QNote8 = function(dot,headLevel,headLevels,signs) {
+	if(signs == null) signs = "";
+	if(dot == null) dot = false;
+	var val;
+	if(dot) val = nx3.ENoteVal.Nv8dot; else val = nx3.ENoteVal.Nv8;
+	nx3.QNote.call(this,headLevel,headLevels,null,null,val,signs);
+};
+$hxClasses["nx3.QNote8"] = nx3.QNote8;
+nx3.QNote8.__name__ = ["nx3","QNote8"];
+nx3.QNote8.__super__ = nx3.QNote;
+nx3.QNote8.prototype = $extend(nx3.QNote.prototype,{
+	__class__: nx3.QNote8
+});
+nx3.QNote16 = function(headLevel,headLevels,signs) {
+	if(signs == null) signs = "";
+	nx3.QNote.call(this,headLevel,headLevels,null,null,nx3.ENoteVal.Nv16,signs);
+};
+$hxClasses["nx3.QNote16"] = nx3.QNote16;
+nx3.QNote16.__name__ = ["nx3","QNote16"];
+nx3.QNote16.__super__ = nx3.QNote;
+nx3.QNote16.prototype = $extend(nx3.QNote.prototype,{
+	__class__: nx3.QNote16
+});
+nx3.QNote2 = function(dot,headLevel,headLevels,signs) {
+	if(signs == null) signs = "";
+	if(dot == null) dot = false;
+	var val;
+	if(dot) val = nx3.ENoteVal.Nv2dot; else val = nx3.ENoteVal.Nv2;
+	nx3.QNote.call(this,headLevel,headLevels,null,null,val,signs);
+};
+$hxClasses["nx3.QNote2"] = nx3.QNote2;
+nx3.QNote2.__name__ = ["nx3","QNote2"];
+nx3.QNote2.__super__ = nx3.QNote;
+nx3.QNote2.prototype = $extend(nx3.QNote.prototype,{
+	__class__: nx3.QNote2
+});
+nx3.QNote1 = function(headLevel,headLevels,signs) {
+	if(signs == null) signs = "";
+	nx3.QNote.call(this,headLevel,headLevels,null,null,nx3.ENoteVal.Nv1,signs);
+};
+$hxClasses["nx3.QNote1"] = nx3.QNote1;
+nx3.QNote1.__name__ = ["nx3","QNote1"];
+nx3.QNote1.__super__ = nx3.QNote;
+nx3.QNote1.prototype = $extend(nx3.QNote.prototype,{
+	__class__: nx3.QNote1
+});
 nx3.action = {};
 nx3.action.EActionInfo = $hxClasses["nx3.action.EActionInfo"] = { __ename__ : ["nx3","action","EActionInfo"], __constructs__ : ["TargetXY"] };
 nx3.action.EActionInfo.TargetXY = function(target,x,y) { var $x = ["TargetXY",0,target,x,y]; $x.__enum__ = nx3.action.EActionInfo; $x.toString = $estr; return $x; };
@@ -12000,7 +14456,544 @@ nx3.action.IInteractivity = function() { };
 $hxClasses["nx3.action.IInteractivity"] = nx3.action.IInteractivity;
 nx3.action.IInteractivity.__name__ = ["nx3","action","IInteractivity"];
 nx3.action.IInteractivity.prototype = {
-	__class__: nx3.action.IInteractivity
+	handleAction: null
+	,__class__: nx3.action.IInteractivity
+};
+nx3.audio = {};
+nx3.audio.NotenrBarsCalculator = function(nbars) {
+	this.nbars = nbars;
+};
+$hxClasses["nx3.audio.NotenrBarsCalculator"] = nx3.audio.NotenrBarsCalculator;
+nx3.audio.NotenrBarsCalculator.__name__ = ["nx3","audio","NotenrBarsCalculator"];
+nx3.audio.NotenrBarsCalculator.prototype = {
+	nbars: null
+	,getPartsNotenrItems: function() {
+		var partsNotenerItems = [];
+		var barvalues = [];
+		var _g = 0;
+		var _g1 = this.nbars;
+		while(_g < _g1.length) {
+			var bar = _g1[_g];
+			++_g;
+			var barvalue = nx3.NBarUtils.getValue(bar);
+			barvalues.push(barvalue);
+		}
+		var partslist = this.getPartslist();
+		var partnr = 0;
+		var _g2 = 0;
+		while(_g2 < partslist.length) {
+			var parts = partslist[_g2];
+			++_g2;
+			var partNotenrItems = new nx3.audio.NotenrPartsCalculator(parts,partnr,barvalues).execute();
+			partsNotenerItems.push(partNotenrItems);
+			partnr++;
+		}
+		return partsNotenerItems;
+	}
+	,getPartslist: function() {
+		var partcount = this.nbars[0].nparts.length;
+		var result = [];
+		var _g = 0;
+		while(_g < partcount) {
+			var partidx = _g++;
+			var parts = new Array();
+			var _g1 = 0;
+			var _g2 = this.nbars;
+			while(_g1 < _g2.length) {
+				var bar = _g2[_g1];
+				++_g1;
+				var barpart = bar.nparts[partidx];
+				parts.push(barpart);
+			}
+			result.push(parts);
+		}
+		return result;
+	}
+	,__class__: nx3.audio.NotenrBarsCalculator
+};
+nx3.audio.NotenrPartsCalculator = function(rowOfParts,partnr,partvalues) {
+	this.parts = rowOfParts;
+	this.partnr = partnr;
+	this.partvalues = partvalues;
+};
+$hxClasses["nx3.audio.NotenrPartsCalculator"] = nx3.audio.NotenrPartsCalculator;
+nx3.audio.NotenrPartsCalculator.__name__ = ["nx3","audio","NotenrPartsCalculator"];
+nx3.audio.NotenrPartsCalculator.prototype = {
+	parts: null
+	,partvalues: null
+	,partnr: null
+	,execute: function() {
+		var partsItems = [];
+		var currentclef = null;
+		var currentkey = null;
+		var prevpart = null;
+		var prevnoteitems = null;
+		var resultnoteitems = [];
+		var partposition = 0;
+		var baridx = 0;
+		var _g = 0;
+		var _g1 = this.parts;
+		while(_g < _g1.length) {
+			var part = _g1[_g];
+			++_g;
+			if(part.clef != null) currentclef = part.clef;
+			if(part.key != null) currentkey = part.key;
+			var partvalue = [cx.ArrayTools.indexOrNull(this.partvalues,baridx)];
+			var noteitems = new nx3.audio.PartNotesToNotenrCalculator(part,this.partnr,baridx,partvalue[0],currentclef,currentkey).getNotnrItems();
+			if(partvalue[0] == null) {
+				partvalue[0] = 0;
+				Lambda.iter(noteitems,(function(partvalue) {
+					return function(item) {
+						partvalue[0] = Std["int"](Math.max(partvalue[0],item.position + item.noteval));
+					};
+				})(partvalue));
+			}
+			Lambda.iter(noteitems,(function() {
+				return function(item1) {
+					item1.partposition = partposition;
+				};
+			})());
+			partposition += partvalue[0];
+			resultnoteitems = resultnoteitems.concat(noteitems);
+			prevnoteitems = noteitems;
+			baridx++;
+		}
+		return resultnoteitems;
+	}
+	,__class__: nx3.audio.NotenrPartsCalculator
+};
+nx3.audio.PartNotesToNotenrCalculator = function(part,partnr,barnr,barvalue,partclef,partkey) {
+	this.part = part;
+	this.partnr = partnr;
+	this.partclef = partclef;
+	this.partkey = partkey;
+	this.barnr = barnr;
+	this.barvalue = barvalue;
+};
+$hxClasses["nx3.audio.PartNotesToNotenrCalculator"] = nx3.audio.PartNotesToNotenrCalculator;
+nx3.audio.PartNotesToNotenrCalculator.__name__ = ["nx3","audio","PartNotesToNotenrCalculator"];
+nx3.audio.PartNotesToNotenrCalculator.prototype = {
+	part: null
+	,signstable: null
+	,partkey: null
+	,partclef: null
+	,barnr: null
+	,barvalue: null
+	,partnr: null
+	,getNotnrItems: function() {
+		var map = this.getPartPositionsNotes(this.part);
+		this.signstable = nx3.audio.NotenrTools.getSignsTable(this.partkey);
+		var items = this.partPositionsToNotenr(map,this.partclef,this.partkey);
+		return items;
+	}
+	,partPositionsToNotenr: function(map,partclef,partkey) {
+		var result = new Array();
+		var positions = cx.ArrayTools.fromHashKeys(map.keys());
+		positions.sort(function(a,b) {
+			return Reflect.compare(a,b);
+		});
+		var _g = 0;
+		while(_g < positions.length) {
+			var position = positions[_g];
+			++_g;
+			var notes = map.get(position);
+			var _g1 = 0;
+			while(_g1 < notes.length) {
+				var note = notes[_g1];
+				++_g1;
+				var $it0 = note.iterator();
+				while( $it0.hasNext() ) {
+					var head = $it0.next();
+					var cleflevel = nx3.audio.NotenrTools.clefLevel(head.level,partclef);
+					var keysign = this.signstable.get(cleflevel);
+					var headsign = head.sign;
+					var playsign;
+					switch(headsign[1]) {
+					case 0:
+						playsign = keysign;
+						break;
+					case 1:
+						playsign = headsign;
+						break;
+					default:
+						playsign = headsign;
+					}
+					var notenr = nx3.audio.NotenrTools.getSignaffectedNotenr(cleflevel,keysign,headsign);
+					var midinr = nx3.audio.NotenrTools.getMidinr(notenr);
+					var notename = nx3.audio.NotenrTools.getNotename(notenr,playsign);
+					var tie = head.tie != null;
+					var playable = nx3.audio.NotenrTools.getPlayable(note);
+					result.push({ note : note, position : position, noteval : nx3.ENoteValTools.value(note.value), level : cleflevel, notenr : notenr, midinr : midinr, notename : notename, tie : tie, headsign : headsign, keysign : keysign, playsign : playsign, partposition : 0, playable : playable, partnr : this.partnr, barnr : this.barnr, barvalue : this.barvalue});
+					if(headsign != null && headsign != nx3.ESign.None) this.signstable.set(cleflevel,headsign);
+				}
+			}
+		}
+		return result;
+	}
+	,getPartPositionsNotes: function(part) {
+		var result = new haxe.ds.IntMap();
+		var $it0 = part.iterator();
+		while( $it0.hasNext() ) {
+			var voice = $it0.next();
+			var pos = 0;
+			var $it1 = voice.iterator();
+			while( $it1.hasNext() ) {
+				var note = $it1.next();
+				if(!result.exists(pos)) result.set(pos,[]);
+				result.get(pos).push(note);
+				pos += nx3.ENoteValTools.value(note.value);
+			}
+		}
+		return result;
+	}
+	,__class__: nx3.audio.PartNotesToNotenrCalculator
+};
+nx3.audio.TestScores = function() { };
+$hxClasses["nx3.audio.TestScores"] = nx3.audio.TestScores;
+nx3.audio.TestScores.__name__ = ["nx3","audio","TestScores"];
+nx3.audio.TestScores.score1 = function() {
+	return null;
+};
+nx3.audio.NotenrTestItems = function() { };
+$hxClasses["nx3.audio.NotenrTestItems"] = nx3.audio.NotenrTestItems;
+nx3.audio.NotenrTestItems.__name__ = ["nx3","audio","NotenrTestItems"];
+nx3.audio.NotenrTestItems.testTies = function() {
+	var p1 = new nx3.NPart([new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)])]),new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None,nx3.ETie.Tie(nx3.EDirectionUAD.Auto,0))],nx3.ENoteVal.Nv2)])],null,nx3.EClef.ClefG,null,nx3.EKey.Flat2);
+	var p2 = new nx3.NPart([new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)])])]);
+	return [p1,p2];
+};
+nx3.audio.NotenrTestItems.testTwoVoices = function() {
+	var p1 = new nx3.NPart([new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.Flat)]),new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)])]),new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.Sharp)])])],null,nx3.EClef.ClefG,null,nx3.EKey.Natural);
+	return [p1];
+};
+nx3.audio.NotenrTestItems.testParts0 = function() {
+	var p1 = new nx3.NPart([new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,3,nx3.ESign.Natural)]),new nx3.NNote(null,[new nx3.NHead(null,0,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,1,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,1,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,2,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,2,nx3.ESign.None)]),new nx3.NNote(null,[new nx3.NHead(null,3,nx3.ESign.None)])])],null,nx3.EClef.ClefG,null,nx3.EKey.Sharp3);
+	return [p1];
+};
+nx3.audio.NotenrTestItems.testParts1 = function() {
+	var p1 = new nx3.NPart([new nx3.NVoice([new nx3.NNote(null,[new nx3.NHead(null,0)]),new nx3.NNote(null,[new nx3.NHead(null,1)]),new nx3.QNote4(null,2),new nx3.QNote4(null,3),new nx3.QNote4(null,4),new nx3.QNote4(null,5),new nx3.QNote4(null,6)])],null,nx3.EClef.ClefG,null,nx3.EKey.Flat1);
+	var p2 = new nx3.NPart([new nx3.NVoice([new nx3.QNote4(null,0),new nx3.QNote4(null,1),new nx3.QNote4(null,2),new nx3.QNote4(null,3),new nx3.QNote4(null,4),new nx3.QNote4(null,5),new nx3.QNote4(null,6)])],null,null);
+	return [p1,p2];
+};
+nx3.audio.NotenrTestItems.testParts2 = function() {
+	var p1 = new nx3.NPart([new nx3.NVoice([new nx3.QNote4(null,0),new nx3.QNote4(null,0),new nx3.QNote4(null,0),new nx3.QNote4(null,0)]),new nx3.NVoice([new nx3.QNote2(null,2),new nx3.QNote4(true,2),new nx3.QNote8(null,2)])]);
+	var p2 = new nx3.NPart([new nx3.NVoice([new nx3.QNote4(null,0),new nx3.QNote4(null,0),new nx3.QNote4(null,0),new nx3.QNote4(null,0)]),new nx3.NVoice([new nx3.QNote2(null,2),new nx3.QNote4(true,2),new nx3.QNote8(null,2)])]);
+	return [p1,p2];
+};
+nx3.audio.NotenrTools = function(clef,key) {
+	this.clef = clef;
+	this.key = key;
+	this.table = nx3.audio.NotenrTools.getNotenrTable(key);
+};
+$hxClasses["nx3.audio.NotenrTools"] = nx3.audio.NotenrTools;
+nx3.audio.NotenrTools.__name__ = ["nx3","audio","NotenrTools"];
+nx3.audio.NotenrTools.getNotenrTable = function(key,levelmin,levelmax) {
+	if(levelmax == null) levelmax = 30;
+	if(levelmin == null) levelmin = -30;
+	var table = new haxe.ds.IntMap();
+	var _g = levelmin;
+	while(_g < levelmax) {
+		var level = _g++;
+		var octave = Math.floor(level / 7);
+		var basekey;
+		if(level >= 0) basekey = level % 7; else basekey = (level % 7 + 7) % 7;
+		var notenr;
+		notenr = (function($this) {
+			var $r;
+			var this1 = nx3.EKeysTools.getNotenrBaseMap(key);
+			$r = this1.get(basekey);
+			return $r;
+		}(this)) - 12 * octave;
+		table.set(level,notenr);
+	}
+	return table;
+};
+nx3.audio.NotenrTools.getSignsTable = function(key,levelmin,levelmax) {
+	if(levelmax == null) levelmax = 30;
+	if(levelmin == null) levelmin = -30;
+	var table = new haxe.ds.IntMap();
+	var _g = levelmin;
+	while(_g < levelmax) {
+		var level = _g++;
+		var octave = Math.floor(level / 7);
+		var basekey;
+		if(level >= 0) basekey = level % 7; else basekey = (level % 7 + 7) % 7;
+		var sign;
+		var this1 = nx3.EKeysTools.getSignsBaseMap(key);
+		sign = this1.get(basekey);
+		table.set(level,sign);
+	}
+	return table;
+};
+nx3.audio.NotenrTools.getNotename = function(notenr,sign) {
+	var base = ["c","ciss/dess","d","diss/ess","e","f","fiss/gess","g","giss/ass","a","aiss/bess","b"];
+	var bnr;
+	if(notenr >= 0) bnr = notenr % 12; else bnr = (notenr % 12 + 12) % 12;
+	var octave;
+	if(notenr >= 0) octave = Math.floor(notenr / 12); else octave = Math.floor(notenr / 12);
+	var bname = base[bnr];
+	if(sign != null && sign != nx3.ESign.Natural || sign != nx3.ESign.None) {
+		if(bname.indexOf("/") > -1) {
+			var bnames = bname.split("/");
+			switch(sign[1]) {
+			case 3:
+				bname = bnames[0];
+				break;
+			case 2:
+				bname = bnames[1];
+				break;
+			default:
+				bname = bname;
+			}
+		}
+	}
+	return "" + bname + "[" + octave + "]";
+};
+nx3.audio.NotenrTools.getMidinr = function(notenr) {
+	return notenr + 72;
+};
+nx3.audio.NotenrTools.clefLevel = function(level,clef) {
+	if(clef == null) return level;
+	switch(clef[1]) {
+	case 2:
+		return level + 6;
+	case 1:
+		return level + 12;
+	default:
+		return level;
+	}
+};
+nx3.audio.NotenrTools.getSignaffectedNotenr = function(level,keysign,headsign) {
+	var sign = keysign;
+	if(headsign != null && headsign != keysign && headsign != nx3.ESign.None) sign = headsign;
+	var stemtonenr = nx3.audio.NotenrTools.stemtonestable.get(level);
+	if(sign == null) return stemtonenr;
+	switch(sign[1]) {
+	case 1:
+		return stemtonenr;
+	case 2:
+		return stemtonenr - 1;
+	case 4:
+		return stemtonenr - 2;
+	case 3:
+		return stemtonenr + 1;
+	case 5:
+		return stemtonenr + 2;
+	default:
+		return stemtonenr;
+	}
+};
+nx3.audio.NotenrTools.getPlayable = function(note) {
+	{
+		var _g = note.type;
+		switch(_g[1]) {
+		case 0:
+			return true;
+		case 3:
+			return true;
+		default:
+			return false;
+		}
+	}
+};
+nx3.audio.NotenrTools.calculateSoundLengths = function(partsnotes,tempos,defaulttempo) {
+	if(defaulttempo == null) defaulttempo = 120;
+	var partidx = 0;
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var part = partsnotes[_g];
+		++_g;
+		var barsoundends = [];
+		var _g1 = 0;
+		while(_g1 < part.length) {
+			var note = part[_g1];
+			++_g1;
+			var barnr = note.barnr;
+			var info = new nx3.audio.SoundlengthCalculator(note,tempos,defaulttempo).getSoundposAndDuration();
+			note.soundlength = info.length;
+			note.soundposition = info.pos;
+			note.barsoundlength = info.barlength;
+			if(barnr == 0) {
+				note.barsoundposition = 0;
+				barsoundends[0] = note.barsoundlength;
+			} else {
+				note.barsoundposition = barsoundends[barnr - 1];
+				barsoundends[barnr] = note.barsoundposition + note.barsoundlength;
+			}
+			note.playpos = note.barsoundposition + note.soundposition;
+			note.playend = note.playpos + note.soundlength;
+		}
+		partidx++;
+	}
+};
+nx3.audio.NotenrTools.getTotalLength = function(partsnotes) {
+	var lenght = 0.0;
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var part = partsnotes[_g];
+		++_g;
+		var last = part[part.length - 1];
+		lenght = Math.max(lenght,last.barsoundposition + last.barsoundlength);
+	}
+	return lenght;
+};
+nx3.audio.NotenrTools.resolveTies = function(partsnotes) {
+	var result = [];
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var part = partsnotes[_g];
+		++_g;
+		var newpart = [];
+		var note = part[0];
+		var previdx = -1;
+		while(note != null) {
+			newpart.push(note);
+			var noteidx = cx.ArrayTools.index(part,note);
+			var foundtie = false;
+			if(note.tie) {
+				var nextpos = note.partposition + note.position + note.noteval;
+				var nextnote = cx.ArrayTools.indexOrNull(part,HxOverrides.indexOf(part,note,0) + 1);
+				while(nextnote != null) {
+					var pos = nextnote.partposition + nextnote.position;
+					if(pos == nextpos && nextnote.midinr == note.midinr) {
+						var newsoundlength = note.soundlength + nextnote.soundlength;
+						var newvalue = note.noteval + nextnote.noteval;
+						note.soundlength = newsoundlength;
+						note.noteval = newvalue;
+						HxOverrides.remove(part,nextnote);
+						note.tie = nextnote.tie;
+						foundtie = true;
+					}
+					if(pos == nextpos) nextnote = cx.ArrayTools.indexOrNull(part,HxOverrides.indexOf(part,nextnote,0) + 1); else nextnote = null;
+				}
+			}
+			if(!foundtie) note = cx.ArrayTools.indexOrNull(part,HxOverrides.indexOf(part,note,0) + 1); else {
+				HxOverrides.remove(newpart,note);
+				previdx = noteidx;
+			}
+		}
+		result.push(newpart);
+	}
+	return result;
+};
+nx3.audio.NotenrTools.debug = function(partsnotes) {
+	haxe.Log.trace("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ",{ fileName : "NotenrTools.hx", lineNumber : 217, className : "nx3.audio.NotenrTools", methodName : "debug"});
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var part = partsnotes[_g];
+		++_g;
+		haxe.Log.trace("Part: ",{ fileName : "NotenrTools.hx", lineNumber : 219, className : "nx3.audio.NotenrTools", methodName : "debug"});
+		var _g1 = 0;
+		while(_g1 < part.length) {
+			var note = part[_g1];
+			++_g1;
+			haxe.Log.trace([note.barnr,note.position,note.midinr,note.noteval],{ fileName : "NotenrTools.hx", lineNumber : 221, className : "nx3.audio.NotenrTools", methodName : "debug"});
+		}
+	}
+};
+nx3.audio.NotenrTools.getNotesNotenritems = function(partsnotes) {
+	var map = new haxe.ds.ObjectMap();
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var items = partsnotes[_g];
+		++_g;
+		var _g1 = 0;
+		while(_g1 < items.length) {
+			var item = items[_g1];
+			++_g1;
+			var note = item.note;
+			map.set(note,item);
+		}
+	}
+	return map;
+};
+nx3.audio.NotenrTools.getPartsnotesMp3files = function(partsnotes,partsSounds,path,soundFallback) {
+	if(soundFallback == null) soundFallback = "piano";
+	if(path == null) path = "sounds/";
+	var result = [];
+	if(partsSounds == null) partsSounds = [];
+	while(partsSounds.length < partsnotes.length) partsSounds.push(soundFallback);
+	var _g = 0;
+	while(_g < partsnotes.length) {
+		var items = partsnotes[_g];
+		++_g;
+		var sound = partsSounds.shift();
+		var soundPath = "" + path + sound + "/";
+		var _g1 = 0;
+		while(_g1 < items.length) {
+			var item = items[_g1];
+			++_g1;
+			var note = item.note;
+			var midinr = item.midinr;
+			var filename = "" + path + sound + "/" + midinr + ".mp3";
+			item.mp3file = filename;
+			if(!Lambda.has(result,filename)) result.push(filename);
+		}
+	}
+	return result;
+};
+nx3.audio.NotenrTools.getPartsnotes = function(nbars,tempo,resolveTies) {
+	if(resolveTies == null) resolveTies = true;
+	if(tempo == null) tempo = 60;
+	var partsnotes = new nx3.audio.NotenrBarsCalculator(nbars).getPartsNotenrItems();
+	nx3.audio.NotenrTools.calculateSoundLengths(partsnotes,null,tempo);
+	partsnotes = nx3.audio.NotenrTools.resolveTies(partsnotes);
+	return partsnotes;
+};
+nx3.audio.NotenrTools.prototype = {
+	clef: null
+	,key: null
+	,table: null
+	,getNotenr: function(level) {
+		var _g = this.clef;
+		switch(_g[1]) {
+		case 1:
+			return this.table.get(level + 12);
+		default:
+			return this.table.get(level);
+		}
+	}
+	,__class__: nx3.audio.NotenrTools
+};
+nx3.audio.SoundlengthCalculator = function(n,tempos,defaulttempo,pulseval) {
+	if(defaulttempo == null) defaulttempo = 60;
+	if(pulseval == null) this.beatvalue = nx3.ENoteValTools.value(nx3.ENoteVal.Nv4); else this.beatvalue = nx3.ENoteValTools.value(pulseval);
+	this.n = n;
+	this.tempos = tempos;
+	if(this.tempos != null) this.tempos.sort(function(a,b) {
+		return Reflect.compare(a.pos,b.pos);
+	});
+	this.defaulttempo = defaulttempo;
+};
+$hxClasses["nx3.audio.SoundlengthCalculator"] = nx3.audio.SoundlengthCalculator;
+nx3.audio.SoundlengthCalculator.__name__ = ["nx3","audio","SoundlengthCalculator"];
+nx3.audio.SoundlengthCalculator.prototype = {
+	n: null
+	,tempos: null
+	,defaulttempo: null
+	,beatvalue: null
+	,getSoundposAndDuration: function() {
+		var note = this.n;
+		var starttempo = this.defaulttempo;
+		var endtempo = null;
+		if(this.tempos != null && this.tempos.length >= 1) {
+			var firsttempoinfo = this.tempos[0];
+			starttempo = firsttempoinfo.bpm;
+		}
+		if(this.tempos != null && this.tempos.length >= 2) {
+			var secondtempo = this.tempos[1];
+			endtempo = secondtempo.bpm;
+		}
+		if(this.tempos != null && this.tempos.length >= 3) throw "This version can't handle more than two tempoinfos!";
+		var tempochange = endtempo != null;
+		if(tempochange) {
+		}
+		var soundlength = note.noteval / this.beatvalue * (60 / this.defaulttempo);
+		var soundposition = note.position / this.beatvalue * (60 / this.defaulttempo);
+		var barlength = note.barvalue / this.beatvalue * (60 / this.defaulttempo);
+		return { length : soundlength, pos : soundposition, barlength : barlength};
+	}
+	,__class__: nx3.audio.SoundlengthCalculator
 };
 nx3.geom = {};
 nx3.geom.BezieerTool = function() { };
@@ -12045,7 +15038,10 @@ nx3.geom.Point.polar = function(len,angle) {
 	return new nx3.geom.Point(len * Math.cos(angle),len * Math.sin(angle));
 };
 nx3.geom.Point.prototype = {
-	add: function(v) {
+	length: null
+	,x: null
+	,y: null
+	,add: function(v) {
 		return new nx3.geom.Point(v.x + this.x,v.y + this.y);
 	}
 	,clone: function() {
@@ -12098,7 +15094,11 @@ nx3.geom.Rectangle = function(x,y,width,height) {
 $hxClasses["nx3.geom.Rectangle"] = nx3.geom.Rectangle;
 nx3.geom.Rectangle.__name__ = ["nx3","geom","Rectangle"];
 nx3.geom.Rectangle.prototype = {
-	clone: function() {
+	height: null
+	,width: null
+	,x: null
+	,y: null
+	,clone: function() {
 		return new nx3.geom.Rectangle(this.x,this.y,this.width,this.height);
 	}
 	,contains: function(x,y) {
@@ -12255,6 +15255,24 @@ nx3.geom.Rectangle.prototype = {
 	,__class__: nx3.geom.Rectangle
 	,__properties__: {set_topLeft:"set_topLeft",get_topLeft:"get_topLeft",set_top:"set_top",get_top:"get_top",set_size:"set_size",get_size:"get_size",set_right:"set_right",get_right:"get_right",set_left:"set_left",get_left:"get_left",set_bottomRight:"set_bottomRight",get_bottomRight:"get_bottomRight",set_bottom:"set_bottom",get_bottom:"get_bottom"}
 };
+nx3.geom.RectangleTools = function() { };
+$hxClasses["nx3.geom.RectangleTools"] = nx3.geom.RectangleTools;
+nx3.geom.RectangleTools.__name__ = ["nx3","geom","RectangleTools"];
+nx3.geom.RectangleTools.union = function(rectangles) {
+	var result = rectangles[0].clone();
+	if(rectangles.length == 1) return result;
+	var _g1 = 1;
+	var _g = rectangles.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		result = result.union(rectangles[i]);
+	}
+	return result;
+};
+nx3.geom.RectangleTools.draw = function(ctx,rect,enlarge) {
+	if(enlarge == null) enlarge = 0;
+	ctx.strokeRect(rect.x - enlarge,rect.y - enlarge,rect.width + enlarge * 2,rect.height + enlarge * 2);
+};
 nx3.geom.RectanglesTools = function() { };
 $hxClasses["nx3.geom.RectanglesTools"] = nx3.geom.RectanglesTools;
 nx3.geom.RectanglesTools.__name__ = ["nx3","geom","RectanglesTools"];
@@ -12336,12 +15354,42 @@ nx3.geom.RectanglesTools.concat = function(rectsA,rectsB) {
 	}
 	return rectsA;
 };
+nx3.js = {};
+nx3.js.MouseInteraction = $hxClasses["nx3.js.MouseInteraction"] = { __ename__ : ["nx3","js","MouseInteraction"], __constructs__ : ["PlayNote","StopNote","ShowTooltip","HideTooltip"] };
+nx3.js.MouseInteraction.PlayNote = function(scoreId,note,noteinfo,sound) { var $x = ["PlayNote",0,scoreId,note,noteinfo,sound]; $x.__enum__ = nx3.js.MouseInteraction; $x.toString = $estr; return $x; };
+nx3.js.MouseInteraction.StopNote = function(scoreId) { var $x = ["StopNote",1,scoreId]; $x.__enum__ = nx3.js.MouseInteraction; $x.toString = $estr; return $x; };
+nx3.js.MouseInteraction.ShowTooltip = function(scoreId,note,noteinfo,type) { var $x = ["ShowTooltip",2,scoreId,note,noteinfo,type]; $x.__enum__ = nx3.js.MouseInteraction; $x.toString = $estr; return $x; };
+nx3.js.MouseInteraction.HideTooltip = function(scoreId) { var $x = ["HideTooltip",3,scoreId]; $x.__enum__ = nx3.js.MouseInteraction; $x.toString = $estr; return $x; };
+nx3.js.MouseInteraction.__empty_constructs__ = [];
 nx3.render = {};
 nx3.render.ITarget = function() { };
 $hxClasses["nx3.render.ITarget"] = nx3.render.ITarget;
 nx3.render.ITarget.__name__ = ["nx3","render","ITarget"];
 nx3.render.ITarget.prototype = {
-	__class__: nx3.render.ITarget
+	getScaling: null
+	,clear: null
+	,testLines: null
+	,rect: null
+	,rectangle: null
+	,rectangles: null
+	,filledrectangle: null
+	,filledellipse: null
+	,line: null
+	,shape: null
+	,text: null
+	,textwidth: null
+	,textheight: null
+	,setFont: null
+	,parallellogram: null
+	,polyline: null
+	,polyfill: null
+	,interactiveEllipse: null
+	,scaleRect: null
+	,tooltipShow: null
+	,tooltipHide: null
+	,totalWidth: null
+	,totalHeight: null
+	,__class__: nx3.render.ITarget
 };
 nx3.render.Renderer = function(target,targetX,targetY,interactions) {
 	if(targetY == null) targetY = 0;
@@ -12355,7 +15403,12 @@ nx3.render.Renderer = function(target,targetX,targetY,interactions) {
 $hxClasses["nx3.render.Renderer"] = nx3.render.Renderer;
 nx3.render.Renderer.__name__ = ["nx3","render","Renderer"];
 nx3.render.Renderer.prototype = {
-	xToUnitX: function(x) {
+	target: null
+	,targetY: null
+	,targetX: null
+	,scaling: null
+	,interactions: null
+	,xToUnitX: function(x) {
 		return x * (1 / this.scaling.unitX);
 	}
 	,yToUnitY: function(y) {
@@ -13263,7 +16316,13 @@ nx3.render.TargetSvg.hex = function($int) {
 	if($int == 0) return "#000"; else return "#" + StringTools.hex($int);
 };
 nx3.render.TargetSvg.prototype = {
-	testLines: function(x,y,width) {
+	svgId: null
+	,jsFileName: null
+	,scaling: null
+	,snap: null
+	,totalHeight: null
+	,totalWidth: null
+	,testLines: function(x,y,width) {
 		var _g = -2;
 		while(_g < 3) {
 			var i = _g++;
@@ -13328,6 +16387,7 @@ nx3.render.TargetSvg.prototype = {
 		y = y + -13 * this.scaling.fontScaling;
 		var etext = this.snap.text(x,y,text).attr({ fontSize : "" + fontsize + "px ", fontFamily : this.font.name});
 	}
+	,context: null
 	,textwidth: function(text) {
 		if(this.context == null) {
 			var canvas = window.document.getElementById("CanvasTextMeasurement");
@@ -13343,6 +16403,7 @@ nx3.render.TargetSvg.prototype = {
 	,textheight: function(text) {
 		return this.font.size / 3.8;
 	}
+	,font: null
 	,setFont: function(font) {
 		this.font = font;
 	}
@@ -13420,6 +16481,8 @@ nx3.render.TargetSvg.prototype = {
 	,tooltipHide: function() {
 		if(this.tooltip != null) this.tooltip.attr({ visibility : "hidden"});
 	}
+	,tooltip: null
+	,toolText: null
 	,createTooltip: function(rect,text) {
 		this.tooltip = this.snap.el("svg",{ x : rect.x, y : rect.y});
 		var toolBackground = this.snap.rect(0,0,rect.width,rect.height);
@@ -13462,7 +16525,12 @@ nx3.render.TargetSvgXml.hex = function($int) {
 	if($int == 0) return "#000"; else return "#" + StringTools.hex($int);
 };
 nx3.render.TargetSvgXml.prototype = {
-	getXml: function() {
+	svg: null
+	,scaling: null
+	,svgId: null
+	,totalHeight: null
+	,totalWidth: null
+	,getXml: function() {
 		this.svg.set("width",Std.string(this.totalWidth));
 		this.svg.set("height",Std.string(this.totalHeight));
 		return this.svg;
@@ -13583,6 +16651,7 @@ nx3.render.TargetSvgXml.prototype = {
 	}
 	,tooltipHide: function() {
 	}
+	,font: null
 	,setFont: function(font) {
 		this.font = font;
 	}
@@ -13599,6 +16668,7 @@ nx3.render.TargetSvgXml.prototype = {
 		txt.addChild(str);
 		this.svg.addChild(txt);
 	}
+	,context: null
 	,textwidth: function(text) {
 		if(this.context == null) {
 			var canvas = window.document.getElementById("CanvasTextMeasurement");
@@ -13626,6 +16696,54 @@ nx3.render.scaling.Scaling.__name__ = ["nx3","render","scaling","Scaling"];
 nx3.render.scaling.Scaling.scaleRect = function(scaling,rect) {
 	return new nx3.geom.Rectangle(rect.x * scaling.unitX,rect.y * scaling.unitY,rect.width * scaling.unitX,rect.height * scaling.unitY);
 };
+nx3.render.scaling.ScalingTools = function() { };
+$hxClasses["nx3.render.scaling.ScalingTools"] = nx3.render.scaling.ScalingTools;
+nx3.render.scaling.ScalingTools.__name__ = ["nx3","render","scaling","ScalingTools"];
+nx3.render.scaling.ScalingTools.scaleRect = function(scaling,rect) {
+	return new nx3.geom.Rectangle(rect.x * scaling.unitX,rect.y * scaling.unitY,rect.width * scaling.unitX,rect.height * scaling.unitY);
+};
+nx3.render.scaling.ScalingTools.targetRect = function(scaling,rect) {
+	return new nx3.geom.Rectangle(rect.x / scaling.unitX,rect.y / scaling.unitY,rect.width / scaling.unitX,rect.height / scaling.unitY);
+};
+nx3.render.scaling.ScalingTools.scalePoint = function(scaling,x,y) {
+	return { x : x * scaling.unitX, y : y * scaling.unitY};
+};
+nx3.render.scaling.ScalingTools.targetPoint = function(scaling,x,y) {
+	return { x : x / scaling.unitX, y : y / scaling.unitY};
+};
+nx3.render.scaling.ScalingTools.scaleX = function(scaling,x) {
+	return x * scaling.unitX;
+};
+nx3.render.scaling.ScalingTools.scaleY = function(scaling,y) {
+	return y * scaling.unitY;
+};
+nx3.render.scaling.ScalingTools.targetX = function(scaling,x) {
+	return x / scaling.unitX;
+};
+nx3.render.scaling.ScalingTools.targetY = function(scaling,y) {
+	return y / scaling.unitY;
+};
+nx3.render.scaling.ScalingTools.fromString = function(scl) {
+	if(scl == null) return nx3.render.scaling.Scaling.NORMAL;
+	if(scl == "") return nx3.render.scaling.Scaling.NORMAL;
+	scl = scl.toLowerCase();
+	switch(scl) {
+	case "mini":case "1":
+		return nx3.render.scaling.Scaling.MINI;
+	case "small":case "2":
+		return nx3.render.scaling.Scaling.SMALL;
+	case "normal":case "3":
+		return nx3.render.scaling.Scaling.NORMAL;
+	case "mid":case "4":
+		return nx3.render.scaling.Scaling.MID;
+	case "big":case "5":
+		return nx3.render.scaling.Scaling.BIG;
+	case "print1":case "6":
+		return nx3.render.scaling.Scaling.PRINT1;
+	default:
+		return nx3.render.scaling.Scaling.NORMAL;
+	}
+};
 nx3.render.svg = {};
 nx3.render.svg.SvgElements = function() { };
 $hxClasses["nx3.render.svg.SvgElements"] = nx3.render.svg.SvgElements;
@@ -13638,6 +16756,561 @@ nx3.test.TestItemsBach.scoreBachSinfonia4 = function() {
 	var xmlStr = "<score>\r\n\t<config test=\"12345\" />\r\n\t<bar time=\"C\">\r\n\t\t<part key=\"Flat1\"\r\n\t\t\t  clef=\"ClefG\">\r\n\t\t\t<voice>\r\n\t\t\t\t<pause level=\"-5\"\r\n\t\t\t\t\t   val=\"16\" />\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-4\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<pause level=\"2\"\r\n\t\t\t\t\t   val=\"1\" />\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part clef=\"ClefF\"\r\n\t\t\t  key=\"Flat1\">\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-6\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t\r\n\t\r\n\t\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-6\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8.\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<pause val=\"16\" />\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-2\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-7\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-7\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-8\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-6\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   sign=\"Natural\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-4\"\r\n\t\t\t\t\t\t   tie=\"true\"\r\n\t\t\t\t\t\t   tielevel=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-3\"\r\n\t\t\t\t\t\t   tie=\"true\"\r\n\t\t\t\t\t\t   tielevel=\"5\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<pause />\r\n\t\t\t\t<pause val=\"2\" />\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"4.\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8.\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<pause val=\"16\" />\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-2\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-3\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<pause val=\"16\" />\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-7\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-7\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-3\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Sharp\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"2\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   sign=\"Natural\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"3\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-4\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-2\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-2\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-5\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\r\n\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"2\">\r\n\t\t\t\t\t<headx level=\"-1\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"5\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"2\">\r\n\t\t\t\t\t<headx level=\"3\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-8\"\r\n\t\t\t\t\t\t   sign=\"Flat\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-7\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-4\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\r\n\t<bar>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"2\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"0\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"-1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<pause val=\"8\" />\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-4\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t\t<voice>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note>\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<pause val=\"16\" />\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"16\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\"\r\n\t\t\t\t\t\t   tie=\"true\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t\t<part>\r\n\t\t\t<voice>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"-6\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"1\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"5\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"4\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"3\" />\r\n\t\t\t\t</note>\r\n\t\t\t\t<note val=\"8\">\r\n\t\t\t\t\t<headx level=\"5\" />\r\n\t\t\t\t</note>\r\n\t\t\t</voice>\r\n\t\t</part>\r\n\t</bar>\t\r\n</score>\r\n";
 	var nscore = nx3.xml.ScoreXML.fromXmlStr(xmlStr);
 	return nscore;
+};
+nx3.utils = {};
+nx3.utils.DrawTools = function() { };
+$hxClasses["nx3.utils.DrawTools"] = nx3.utils.DrawTools;
+nx3.utils.DrawTools.__name__ = ["nx3","utils","DrawTools"];
+nx3.utils.DrawTools.draw = function(ctx,rect,enlarge) {
+	if(enlarge == null) enlarge = 0;
+	ctx.strokeRect(rect.x - enlarge,rect.y - enlarge,rect.width + enlarge * 2,rect.height + enlarge * 2);
+};
+nx3.utils.DrawTools.setLineStyle = function(ctx,color,width) {
+	if(width == null) width = 1;
+	var strokestyle = "#" + StringTools.hex(color,6);
+	ctx.lineWidth = width;
+	ctx.strokeStyle = strokestyle;
+};
+nx3.utils.DrawTools.drawLine = function(ctx,x,y,x2,y2) {
+	ctx.beginPath();
+	ctx.moveTo(x,y);
+	ctx.lineTo(x2,y2);
+	ctx.stroke();
+};
+nx3.utils.DrawTools.clean = function(ctx,width,height) {
+	ctx.clearRect(0,0,width,height);
+};
+nx3.utils.ScoreDrawingTools = function(score,width,scaling,tempo,context) {
+	if(tempo == null) tempo = 60;
+	this.lastTimeIdx = 0;
+	this.lastTime = -1;
+	this.context = context;
+	this.score = score;
+	this.scaling = scaling;
+	this.width = width;
+	this.tempo = tempo;
+	this.systools = new nx3.PSystemsTools(this.score.getSystems(this.width));
+	this.scoreWidth = this.score.getWidth() * this.scaling.unitX;
+	this.scoreHeight = this.score.getHeight() * this.scaling.unitY;
+	this.columnsPos = this.systools.getColumnsPointH();
+	this.columns = this.systools.getColumns();
+	this.columnsPositions = this.systools.getColumnsPositions();
+	this.columnsTime = this.systools.getColumnsTimeFixed(this.tempo,1);
+	var _this = this.systools.getTimesColumns(this.tempo);
+	this.timesColumns = _this.slice();
+};
+$hxClasses["nx3.utils.ScoreDrawingTools"] = nx3.utils.ScoreDrawingTools;
+nx3.utils.ScoreDrawingTools.__name__ = ["nx3","utils","ScoreDrawingTools"];
+nx3.utils.ScoreDrawingTools.prototype = {
+	score: null
+	,width: null
+	,systools: null
+	,scaling: null
+	,columnsPositions: null
+	,columnsPos: null
+	,columnsTime: null
+	,timesColumns: null
+	,columns: null
+	,tempo: null
+	,scoreWidth: null
+	,scoreHeight: null
+	,lastTime: null
+	,lastTimeIdx: null
+	,context: null
+	,clean: function() {
+		nx3.utils.DrawTools.clean(this.context,this.scoreWidth,this.scoreHeight);
+	}
+	,drawNotesRects: function(color) {
+		if(color == null) color = 255;
+		var notes = this.systools.getNotes();
+		var notesRects = this.systools.getNotesRects();
+		nx3.utils.DrawTools.setLineStyle(this.context,color);
+		var _g = 0;
+		while(_g < notes.length) {
+			var note = notes[_g];
+			++_g;
+			var noteRect = notesRects.h[note.__id__];
+			var scaledRect = nx3.render.scaling.ScalingTools.scaleRect(this.scaling,noteRect);
+			nx3.utils.DrawTools.draw(this.context,scaledRect);
+		}
+	}
+	,getNotesRects: function() {
+		return this.systools.getNotesRects();
+	}
+	,getNotesNotenritems: function() {
+		return this.systools.getNotesNotenritems();
+	}
+	,drawColumns: function(color) {
+		if(color == null) color = 16711680;
+		var columnsPos = this.systools.getColumnsPointH();
+		nx3.utils.DrawTools.setLineStyle(this.context,color);
+		var _g = 0;
+		var _g1 = this.columns;
+		while(_g < _g1.length) {
+			var column = _g1[_g];
+			++_g;
+			var columnPosH = columnsPos.h[column.__id__];
+			var x = columnPosH.x * this.scaling.unitX;
+			var y = columnPosH.y * this.scaling.unitY;
+			var h = columnPosH.height * this.scaling.unitY;
+			nx3.utils.DrawTools.drawLine(this.context,x,y,x,y + h);
+		}
+	}
+	,drawColumnFromTime: function(time,color,width) {
+		if(width == null) width = 3;
+		if(color == null) color = 16744960;
+		if(this.lastTime == time) return;
+		var column = null;
+		var timeIdx = 0;
+		var startIdx;
+		if(time > this.lastTime) startIdx = this.lastTimeIdx; else startIdx = 0;
+		var _g1 = startIdx;
+		var _g = this.timesColumns.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var timeColumn = this.timesColumns[i];
+			if(timeColumn.time >= time) {
+				var idx = Std["int"](Math.max(0,i - 1));
+				column = this.timesColumns[idx].column;
+				timeIdx = idx;
+				break;
+			}
+		}
+		if(column == null) return;
+		var pos = this.columnsPos.h[column.__id__];
+		this.clean();
+		nx3.utils.DrawTools.setLineStyle(this.context,color,width);
+		nx3.utils.DrawTools.drawLine(this.context,pos.x * this.scaling.unitX,pos.y * this.scaling.unitY,pos.x * this.scaling.unitX,(pos.y + pos.height) * this.scaling.unitY);
+		this.lastTime = time;
+		this.lastTimeIdx = timeIdx;
+	}
+	,setLineStyle: function(color,width) {
+		if(width == null) width = 1;
+		nx3.utils.DrawTools.setLineStyle(this.context,width | 0,color);
+	}
+	,__class__: nx3.utils.ScoreDrawingTools
+};
+nx3.utils.ScriptScoreX = function(scriptElement) {
+	this.id = dtx.single.ElementManipulation.attr(scriptElement,"id");
+	this.parent = scriptElement.parentNode;
+	this.parentWrapper = dtx.single.Traversing.parent(this.parent);
+	dtx.single.ElementManipulation.setAttr(this.parent,"id",this.id + "-parent");
+	dtx.single.ElementManipulation.addClass(this.parent,"nx-parent");
+	this.script = StringTools.htmlUnescape(dtx.single.ElementManipulation.innerHTML(scriptElement));
+	this.nscore = nx3.xml.ScoreXML.fromXmlStr(this.script);
+	var tmpo = Std.parseInt(dtx.single.ElementManipulation.attr(scriptElement,"data-tempo"));
+	if(tmpo == null) this.tempo = 60; else this.tempo = tmpo;
+	var snds = dtx.single.ElementManipulation.attr(scriptElement,"data-sounds");
+	if(snds != null) this.sounds = snds.split(",").map(function(s) {
+		return StringTools.trim(s);
+	}); else this.sounds = [];
+	var scl = dtx.single.ElementManipulation.attr(scriptElement,"data-scaling");
+	this.scaling = nx3.render.scaling.ScalingTools.fromString(scl);
+	var fxw = dtx.single.ElementManipulation.attr(scriptElement,"data-width");
+	if(fxw != null) {
+		if(fxw.toLowerCase() == "auto") {
+			this.autoWidth = true;
+			this.fixedWidth = 780;
+		} else {
+			var w = Std.parseInt(fxw);
+			if(w != null) w = Std["int"](Math.max(400,w)); else w = 780;
+			this.fixedWidth = w;
+			this.autoWidth = false;
+		}
+	} else {
+		this.fixedWidth = 780;
+		this.autoWidth = false;
+	}
+	this.render();
+	this.addHandlers();
+};
+$hxClasses["nx3.utils.ScriptScoreX"] = nx3.utils.ScriptScoreX;
+nx3.utils.ScriptScoreX.__name__ = ["nx3","utils","ScriptScoreX"];
+nx3.utils.ScriptScoreX.prototype = {
+	id: null
+	,parent: null
+	,scaling: null
+	,script: null
+	,nscore: null
+	,tempo: null
+	,sounds: null
+	,autoWidth: null
+	,fixedWidth: null
+	,svgSize: null
+	,svgElement: null
+	,canvasElement: null
+	,toolbar: null
+	,btnPlay: null
+	,btnStop: null
+	,labelTime: null
+	,parentWrapper: null
+	,context: null
+	,drawingtools: null
+	,getHtml: function() {
+		return Std.string(this.parent);
+	}
+	,render: function() {
+		if(this.autoWidth) this._autorender(); else this._render(this.fixedWidth);
+	}
+	,clear: function(clearHeight) {
+		if(clearHeight == null) clearHeight = true;
+		var parent = window.document.getElementById(this.id + "-parent");
+		var svg = window.document.getElementById(this.id + "-svg");
+		var canvas = window.document.getElementById(this.id + "-canvas");
+		if(svg != null) {
+			parent.removeChild(svg);
+			svg = null;
+			this.svgElement = null;
+		}
+		if(canvas != null) {
+			parent.removeChild(canvas);
+			canvas = null;
+			this.canvasElement = null;
+		}
+		if(clearHeight) dtx.single.ElementManipulation.setAttr(parent,"style","" + 30 + "px");
+	}
+	,_autorender: function() {
+		var _g = this;
+		var whenUserIdle = function() {
+			var par = window.document.getElementById(_g.id + "-parent");
+			var parentWrapper = par.parentElement;
+			var parentwrapperWidth = parentWrapper.clientWidth - 40;
+			var width = Std["int"](Math.max(400,parentwrapperWidth));
+			_g.clear(false);
+			_g._render(width);
+			_g.addHandlers();
+		};
+		var idleTimer = null;
+		var resetTimer = function() {
+			window.clearTimeout(idleTimer);
+			idleTimer = window.setTimeout(whenUserIdle,500);
+		};
+		window.addEventListener("resize",function(e) {
+			resetTimer();
+		});
+		whenUserIdle();
+	}
+	,_render: function(width) {
+		width = Math.max(width,400);
+		var toolbarId = this.id + "-toolbar";
+		var existingToolbar = dtx.single.Traversing.find(this.parent,"#" + toolbarId).first();
+		if(existingToolbar != null) this.labelTime = dtx.Tools.find("#" + toolbarId + "-label").first(); else {
+			this.toolbar = dtx.Tools.create("div");
+			dtx.single.ElementManipulation.setAttr(this.toolbar,"id",toolbarId);
+			dtx.single.ElementManipulation.addClass(this.toolbar,"nx-control toolbar");
+			dtx.single.ElementManipulation.setAttr(this.toolbar,"style","height:" + 30 + ";");
+			this.btnPlay = dtx.Tools.create("button");
+			dtx.single.ElementManipulation.setAttr(this.btnPlay,"id",toolbarId + "-play");
+			dtx.single.ElementManipulation.addClass(this.btnPlay,"nx-button nx-green");
+			this.btnPlay.textContent = "Play";
+			this.btnStop = dtx.Tools.create("button");
+			dtx.single.ElementManipulation.setAttr(this.btnStop,"id",toolbarId + "-stop");
+			dtx.single.ElementManipulation.addClass(this.btnStop,"nx-button nx-red");
+			this.btnStop.textContent = "Stop";
+			this.labelTime = dtx.Tools.create("span");
+			dtx.single.ElementManipulation.setAttr(this.labelTime,"id",toolbarId + "-label");
+			this.labelTime.textContent = "0";
+			dtx.single.ElementManipulation.setAttr(this.labelTime,"style","maxWidth:40px;");
+			this.toolbar.appendChild(this.btnPlay);
+			this.toolbar.appendChild(this.btnStop);
+			this.toolbar.appendChild(this.labelTime);
+			this.parent.appendChild(this.toolbar);
+		}
+		var svgId = this.id + "-svg";
+		var existingSvg = dtx.single.Traversing.find(this.parent,"#" + svgId).first();
+		var pscore = null;
+		if(existingSvg != null) {
+			var existingWidth = dtx.single.ElementManipulation.attr(existingSvg,"width");
+			var existingHeight = dtx.single.ElementManipulation.attr(existingSvg,"height");
+			this.svgSize = { width : Std.parseFloat(existingWidth), height : Std.parseFloat(existingHeight)};
+		} else {
+			var target = new nx3.render.TargetSvgXml(svgId,this.scaling);
+			var render = new nx3.render.Renderer(target);
+			var scaledWidth = width / this.scaling.unitX;
+			pscore = new nx3.PScore(this.nscore);
+			this.svgSize = render.renderScore(pscore,0,0,scaledWidth);
+			var svgXml = target.getXml().toString();
+			this.svgElement = dtx.Tools.parse(svgXml).first();
+			var style = "position:absolute";
+			dtx.single.ElementManipulation.setAttr(this.svgElement,"style",style);
+			dtx.single.DOMManipulation.append(this.parent,this.svgElement);
+		}
+		var canvasId = this.id + "-canvas";
+		var existingCanvas = dtx.single.Traversing.find(this.parent,"#" + canvasId).first();
+		if(existingCanvas != null) {
+		} else {
+			this.canvasElement = dtx.Tools.create("canvas");
+			dtx.single.ElementManipulation.setAttr(this.canvasElement,"id",canvasId);
+			dtx.single.ElementManipulation.setAttr(this.canvasElement,"width",Std.string(this.svgSize.width));
+			dtx.single.ElementManipulation.setAttr(this.canvasElement,"height",Std.string(this.svgSize.height));
+			dtx.single.ElementManipulation.setAttr(this.canvasElement,"width",this.svgSize.width + "px");
+			var style1 = "zindex:8; position:absolute;";
+			dtx.single.ElementManipulation.setAttr(this.canvasElement,"style",style1);
+			this.parent.appendChild(this.canvasElement);
+		}
+		dtx.single.ElementManipulation.setAttr(this.parent,"style","width: " + this.svgSize.width + "px; height: " + (this.svgSize.height + 30) + "px");
+		var canvas = window.document.getElementById(this.id + "-canvas");
+		this.context = canvas.getContext("2d");
+		if(pscore == null) pscore = new nx3.PScore(this.nscore);
+		this.drawingtools = new nx3.utils.ScoreDrawingTools(pscore,width / this.scaling.unitX,this.scaling,this.tempo,this.context);
+	}
+	,addHandlers: function() {
+		var _g = this;
+		var notesrects = this.drawingtools.getNotesRects();
+		window.document.getElementById(this.id + "-toolbar").onmousedown = function(e) {
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onActivate(_g);
+			e.stopPropagation();
+		};
+		window.document.getElementById(this.id + "-toolbar" + "-play").onmousedown = function(e1) {
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onActivate(_g);
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onPlay(_g);
+			e1.stopPropagation();
+		};
+		window.document.getElementById(this.id + "-toolbar" + "-stop").onmousedown = function(e2) {
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onActivate(_g);
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onStop();
+			e2.stopPropagation();
+		};
+		var canvas = window.document.getElementById(this.id + "-canvas");
+		var canvasClientX = 0;
+		var canvasClientY = 0;
+		var canvasTimer = null;
+		var findNote = function() {
+			var rect = canvas.getBoundingClientRect();
+			var x = canvasClientX - rect.left;
+			var y = canvasClientY - rect.top;
+			var point = new nx3.geom.Point(x / _g.scaling.unitX,y / _g.scaling.unitY);
+			var $it0 = notesrects.keys();
+			while( $it0.hasNext() ) {
+				var note = $it0.next();
+				var rect1 = notesrects.h[note.__id__];
+				if(rect1.containsPoint(point)) {
+					var noteinfo;
+					var this1 = _g.drawingtools.getNotesNotenritems();
+					noteinfo = this1.get(note.nnote);
+					return { note : note, noteinfo : noteinfo};
+					break;
+				}
+			}
+			return null;
+		};
+		var resetCanvasTimer = function() {
+			window.clearTimeout(canvasTimer);
+			canvasTimer = window.setTimeout(function() {
+				var foundnote = findNote();
+				if(foundnote == null) (nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onInteract(_g,nx3.js.MouseInteraction.HideTooltip(_g.id)); else (nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onInteract(_g,nx3.js.MouseInteraction.ShowTooltip(_g.id,foundnote.note,foundnote.noteinfo,"TESSSSST"));
+			},500);
+		};
+		canvas.onmousemove = function(e3) {
+			canvasClientX = e3.clientX;
+			canvasClientY = e3.clientY;
+			resetCanvasTimer();
+		};
+		canvas.onmousedown = function(e4) {
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onActivate(_g);
+			canvasClientX = e4.clientX;
+			canvasClientY = e4.clientY;
+			var foundnote1 = findNote();
+			if(foundnote1 == null) return;
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onInteract(_g,nx3.js.MouseInteraction.PlayNote(_g.id,foundnote1.note,foundnote1.noteinfo,"piano"));
+			e4.stopPropagation();
+		};
+		canvas.onmouseup = function(e5) {
+			(nx3.utils.ScriptScoresXInteraction.instance == null?nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction():nx3.utils.ScriptScoresXInteraction.instance).onInteract(_g,nx3.js.MouseInteraction.StopNote(_g.id));
+		};
+	}
+	,__class__: nx3.utils.ScriptScoreX
+};
+nx3.utils.ScriptScoresX = function() {
+};
+$hxClasses["nx3.utils.ScriptScoresX"] = nx3.utils.ScriptScoresX;
+nx3.utils.ScriptScoresX.__name__ = ["nx3","utils","ScriptScoresX"];
+nx3.utils.ScriptScoresX.getInstance = function() {
+	if(nx3.utils.ScriptScoresX.instance == null) return nx3.utils.ScriptScoresX.instance = new nx3.utils.ScriptScoresX(); else return nx3.utils.ScriptScoresX.instance;
+};
+nx3.utils.ScriptScoresX.prototype = {
+	resolveScriptScores: function(xmlString) {
+		var parsed = dtx.Tools.parse(StringTools.trim(xmlString));
+		var html = "";
+		var _g = 0;
+		var _g1 = parsed.collection;
+		while(_g < _g1.length) {
+			var node = _g1[_g];
+			++_g;
+			var _g2;
+			if(node.nodeType == null) _g2 = "null"; else _g2 = "" + node.nodeType;
+			switch(_g2) {
+			case "element":
+				dtx.Tools.setDocument(node);
+				this.invokeScriptScores(node);
+				html += Std.string(dtx.Tools.get_document());
+				break;
+			default:
+				html += Std.string(node);
+			}
+		}
+		return html;
+	}
+	,invokeScriptScores: function(node) {
+		var scripts = dtx.single.Traversing.find(node,".nx-score");
+		var $it0 = HxOverrides.iter(scripts.collection);
+		while( $it0.hasNext() ) {
+			var script = $it0.next();
+			var scriptScore = new nx3.utils.ScriptScoreX(script);
+		}
+	}
+	,invokeBodyScores: function() {
+		this.invokeScriptScores(dtx.Tools.find("body").first());
+	}
+	,__class__: nx3.utils.ScriptScoresX
+};
+nx3.utils.ScriptScoresXInteraction = function() {
+	this.currentActive = null;
+};
+$hxClasses["nx3.utils.ScriptScoresXInteraction"] = nx3.utils.ScriptScoresXInteraction;
+nx3.utils.ScriptScoresXInteraction.__name__ = ["nx3","utils","ScriptScoresXInteraction"];
+nx3.utils.ScriptScoresXInteraction.getInstance = function() {
+	if(nx3.utils.ScriptScoresXInteraction.instance == null) return nx3.utils.ScriptScoresXInteraction.instance = new nx3.utils.ScriptScoresXInteraction(); else return nx3.utils.ScriptScoresXInteraction.instance;
+};
+nx3.utils.ScriptScoresXInteraction.prototype = {
+	onActivate: function(scriptScore) {
+		this.activateScore(scriptScore);
+	}
+	,onPlay: function(scriptScore) {
+		this.play(scriptScore);
+	}
+	,onStop: function() {
+		this.stop();
+	}
+	,onInteract: function(scriptScore,interaction) {
+		switch(interaction[1]) {
+		case 0:
+			var sound = interaction[5];
+			var noteinfo = interaction[4];
+			var note = interaction[3];
+			var scoreId = interaction[2];
+			var midinr = noteinfo.midinr;
+			var filename = "sounds/piano/" + midinr + ".mp3";
+			var this1 = (audiotools.sound.Wav16SoundLoader.instance == null?audiotools.sound.Wav16SoundLoader.instance = new audiotools.sound.Wav16SoundLoader():audiotools.sound.Wav16SoundLoader.instance).getWav16s([filename],function(val) {
+			});
+			this1(function(map) {
+				var wav16 = map.get(filename);
+				(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).initSound(wav16,function(key,pos) {
+				},scoreId + "PLAY");
+				(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).start(0);
+			});
+			break;
+		case 1:
+			var scoreId1 = interaction[2];
+			(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).stop();
+			break;
+		default:
+		}
+	}
+	,currentActive: null
+	,activateScore: function(scriptScore) {
+		if(this.currentActive == scriptScore) return;
+		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).stop();
+		haxe.Log.trace("activate",{ fileName : "ScriptScoresXInteraction.hx", lineNumber : 71, className : "nx3.utils.ScriptScoresXInteraction", methodName : "activateScore"});
+		var parents = this.findNxParents();
+		var $it0 = HxOverrides.iter(parents.collection);
+		while( $it0.hasNext() ) {
+			var parent = $it0.next();
+			dtx.single.ElementManipulation.removeClass(parent,"nx-active");
+		}
+		dtx.single.ElementManipulation.addClass(scriptScore.parent,"nx-active");
+		this.currentActive = scriptScore;
+	}
+	,findNxParents: function() {
+		return dtx.Tools.find(".nx-parent");
+	}
+	,play: function(scriptScore) {
+		var _g = this;
+		var startPlayack = function(pos) {
+			(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).start(0);
+			dtx.single.ElementManipulation.removeClass(scriptScore.parent,"nx-activating");
+			dtx.single.ElementManipulation.addClass(scriptScore.parent,"nx-active");
+		};
+		scriptScore.labelTime.textContent = "Laddar...";
+		dtx.single.ElementManipulation.addClass(scriptScore.parent,"nx-activating");
+		var timeStart = new Date().getTime();
+		var nscore = scriptScore.nscore;
+		var tempo = scriptScore.tempo;
+		var sounds = scriptScore.sounds;
+		var this1 = (audiotools.utils.Wav16PartsBuilder.instance == null?audiotools.utils.Wav16PartsBuilder.instance = new audiotools.utils.Wav16PartsBuilder():audiotools.utils.Wav16PartsBuilder.instance).getScoreWav16Async(scriptScore.nscore,scriptScore.tempo,scriptScore.sounds);
+		this1(function(wav16) {
+			(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).initSound(wav16,$bind(_g,_g.playCallback),scriptScore.id + scriptScore.tempo + Std.string(scriptScore.sounds));
+			var timeBuild = new Date().getTime() - timeStart;
+			if(timeBuild > 500) window.setTimeout(function() {
+				startPlayack(0);
+			},1000); else startPlayack(0);
+		});
+	}
+	,stop: function() {
+		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).stop();
+	}
+	,playCallback: function(key,pos) {
+		if(this.currentActive == null) return;
+		this.currentActive.drawingtools.drawColumnFromTime(pos);
+		var _this;
+		if(pos == null) _this = "null"; else _this = "" + pos;
+		this.currentActive.labelTime.textContent = HxOverrides.substr(_this,0,5);
+	}
+	,__class__: nx3.utils.ScriptScoresXInteraction
+};
+nx3.utils.VoiceSplitter = function(nbars) {
+	this.nbars = nbars;
+	if(!nx3.utils.VoiceSplitter.canSplit(this.nbars)) throw "Can't split this nbars - irregular voice pattern";
+};
+$hxClasses["nx3.utils.VoiceSplitter"] = nx3.utils.VoiceSplitter;
+nx3.utils.VoiceSplitter.__name__ = ["nx3","utils","VoiceSplitter"];
+nx3.utils.VoiceSplitter.canSplit = function(nbars) {
+	var firstpattern = nx3.utils.VoiceSplitter.getPartPattern(nbars[0]);
+	var _g = 0;
+	while(_g < nbars.length) {
+		var bar = nbars[_g];
+		++_g;
+		var barpattern = nx3.utils.VoiceSplitter.getPartPattern(bar);
+		if(Std.string(barpattern) != Std.string(firstpattern)) return false;
+	}
+	return true;
+};
+nx3.utils.VoiceSplitter.getPartPattern = function(bar) {
+	var pattern = [];
+	var $it0 = bar.iterator();
+	while( $it0.hasNext() ) {
+		var part = $it0.next();
+		pattern.push(part.get_length());
+	}
+	return pattern;
+};
+nx3.utils.VoiceSplitter.prototype = {
+	nbars: null
+	,getVoicesplittedNBars: function() {
+		var newbars = new Array();
+		var _g = 0;
+		var _g1 = this.nbars;
+		while(_g < _g1.length) {
+			var bar = _g1[_g];
+			++_g;
+			var newparts = new Array();
+			var $it0 = bar.iterator();
+			while( $it0.hasNext() ) {
+				var part = $it0.next();
+				var $it1 = part.iterator();
+				while( $it1.hasNext() ) {
+					var voice = $it1.next();
+					var newvoice = new nx3.NVoice(voice.nnotes,voice.type,voice.direction);
+					var newpart = new nx3.NPart([newvoice],part.type,part.clef,part.clefDisplay,part.key,part.keyDisplay);
+					newparts.push(newpart);
+				}
+			}
+			var newbar = new nx3.NBar(newparts,bar.type,bar.time,bar.timeDisplay,bar.allotment,bar.spacing);
+			newbars.push(newbar);
+		}
+		return newbars;
+	}
+	,__class__: nx3.utils.VoiceSplitter
 };
 nx3.xml = {};
 nx3.xml.BarXML = function() { };
@@ -14437,6 +18110,11 @@ thx.core.Arrays.pushIf = function(array,condition,value) {
 thx.core.Arrays.reduce = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
+thx.core.Arrays.resize = function(array,length,fill) {
+	while(array.length < length) array.push(fill);
+	array.splice(length,array.length - length);
+	return array;
+};
 thx.core.Arrays.reducei = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
@@ -14483,6 +18161,23 @@ thx.core.Arrays.take = function(arr,n) {
 };
 thx.core.Arrays.takeLast = function(arr,n) {
 	return arr.slice(arr.length - n);
+};
+thx.core.Arrays.rotate = function(arr) {
+	var result = [];
+	var _g1 = 0;
+	var _g = arr[0].length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var row = [];
+		result.push(row);
+		var _g3 = 0;
+		var _g2 = arr.length;
+		while(_g3 < _g2) {
+			var j = _g3++;
+			row.push(arr[j][i]);
+		}
+	}
+	return result;
 };
 thx.core.Arrays.zip = function(array1,array2) {
 	var length = thx.core.Ints.min(array1.length,array2.length);
@@ -14593,6 +18288,12 @@ thx.core.ArrayFloats.min = function(arr) {
 		if(v < min) return v; else return min;
 	},arr[0]);
 };
+thx.core.ArrayFloats.resize = function(array,length,fill) {
+	if(fill == null) fill = 0.0;
+	while(array.length < length) array.push(fill);
+	array.splice(length,array.length - length);
+	return array;
+};
 thx.core.ArrayFloats.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
 		return tot + v;
@@ -14613,6 +18314,12 @@ thx.core.ArrayInts.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
+};
+thx.core.ArrayInts.resize = function(array,length,fill) {
+	if(fill == null) fill = 0;
+	while(array.length < length) array.push(fill);
+	array.splice(length,array.length - length);
+	return array;
 };
 thx.core.ArrayInts.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
@@ -14636,6 +18343,174 @@ thx.core.ArrayStrings.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
+};
+thx.core.Dynamics = function() { };
+$hxClasses["thx.core.Dynamics"] = thx.core.Dynamics;
+thx.core.Dynamics.__name__ = ["thx","core","Dynamics"];
+thx.core.Dynamics.equals = function(a,b) {
+	if(!thx.core.Types.sameType(a,b)) return false;
+	if(a == b) return true;
+	{
+		var _g = Type["typeof"](a);
+		switch(_g[1]) {
+		case 2:case 0:case 1:case 3:
+			return false;
+		case 5:
+			return Reflect.compareMethods(a,b);
+		case 6:
+			var c = _g[2];
+			var ca = Type.getClassName(c);
+			var cb = Type.getClassName(Type.getClass(b));
+			if(ca != cb) return false;
+			if(typeof(a) == "string") return false;
+			if((a instanceof Array) && a.__enum__ == null) {
+				var aa = a;
+				var ab = b;
+				if(aa.length != ab.length) return false;
+				var _g2 = 0;
+				var _g1 = aa.length;
+				while(_g2 < _g1) {
+					var i = _g2++;
+					if(!thx.core.Dynamics.equals(aa[i],ab[i])) return false;
+				}
+				return true;
+			}
+			if(js.Boot.__instanceof(a,Date)) return a.getTime() == b.getTime();
+			if(js.Boot.__instanceof(a,IMap)) {
+				var ha = a;
+				var hb = b;
+				var ka = thx.core.Iterators.toArray(ha.keys());
+				var kb = thx.core.Iterators.toArray(hb.keys());
+				if(ka.length != kb.length) return false;
+				var _g11 = 0;
+				while(_g11 < ka.length) {
+					var key = ka[_g11];
+					++_g11;
+					if(!hb.exists(key) || !thx.core.Dynamics.equals(ha.get(key),hb.get(key))) return false;
+				}
+				return true;
+			}
+			var t = false;
+			if((t = thx.core.Iterators.isIterator(a)) || thx.core.Iterables.isIterable(a)) {
+				var va;
+				if(t) va = thx.core.Iterators.toArray(a); else va = thx.core.Iterators.toArray($iterator(a)());
+				var vb;
+				if(t) vb = thx.core.Iterators.toArray(b); else vb = thx.core.Iterators.toArray($iterator(b)());
+				if(va.length != vb.length) return false;
+				var _g21 = 0;
+				var _g12 = va.length;
+				while(_g21 < _g12) {
+					var i1 = _g21++;
+					if(!thx.core.Dynamics.equals(va[i1],vb[i1])) return false;
+				}
+				return true;
+			}
+			var f = null;
+			if(Object.prototype.hasOwnProperty.call(a,"equals") && Reflect.isFunction(f = Reflect.field(a,"equals"))) return f.apply(a,[b]);
+			var fields = Type.getInstanceFields(Type.getClass(a));
+			var _g13 = 0;
+			while(_g13 < fields.length) {
+				var field = fields[_g13];
+				++_g13;
+				var va1 = Reflect.field(a,field);
+				if(Reflect.isFunction(va1)) continue;
+				var vb1 = Reflect.field(b,field);
+				if(!thx.core.Dynamics.equals(va1,vb1)) return false;
+			}
+			return true;
+		case 7:
+			var e = _g[2];
+			var ea = Type.getEnumName(e);
+			var teb = Type.getEnum(b);
+			var eb = Type.getEnumName(teb);
+			if(ea != eb) return false;
+			if(a[1] != b[1]) return false;
+			var pa = a.slice(2);
+			var pb = b.slice(2);
+			var _g22 = 0;
+			var _g14 = pa.length;
+			while(_g22 < _g14) {
+				var i2 = _g22++;
+				if(!thx.core.Dynamics.equals(pa[i2],pb[i2])) return false;
+			}
+			return true;
+		case 4:
+			var fa = Reflect.fields(a);
+			var fb = Reflect.fields(b);
+			var _g15 = 0;
+			while(_g15 < fa.length) {
+				var field1 = fa[_g15];
+				++_g15;
+				HxOverrides.remove(fb,field1);
+				if(!Object.prototype.hasOwnProperty.call(b,field1)) return false;
+				var va2 = Reflect.field(a,field1);
+				if(Reflect.isFunction(va2)) continue;
+				var vb2 = Reflect.field(b,field1);
+				if(!thx.core.Dynamics.equals(va2,vb2)) return false;
+			}
+			if(fb.length > 0) return false;
+			var t1 = false;
+			if((t1 = thx.core.Iterators.isIterator(a)) || thx.core.Iterables.isIterable(a)) {
+				if(t1 && !thx.core.Iterators.isIterator(b)) return false;
+				if(!t1 && !thx.core.Iterables.isIterable(b)) return false;
+				var aa1;
+				if(t1) aa1 = thx.core.Iterators.toArray(a); else aa1 = thx.core.Iterators.toArray($iterator(a)());
+				var ab1;
+				if(t1) ab1 = thx.core.Iterators.toArray(b); else ab1 = thx.core.Iterators.toArray($iterator(b)());
+				if(aa1.length != ab1.length) return false;
+				var _g23 = 0;
+				var _g16 = aa1.length;
+				while(_g23 < _g16) {
+					var i3 = _g23++;
+					if(!thx.core.Dynamics.equals(aa1[i3],ab1[i3])) return false;
+				}
+				return true;
+			}
+			return true;
+		case 8:
+			throw "Unable to compare two unknown types";
+			break;
+		}
+	}
+	throw new thx.core.Error("Unable to compare values: " + Std.string(a) + " and " + Std.string(b),null,{ fileName : "Dynamics.hx", lineNumber : 151, className : "thx.core.Dynamics", methodName : "equals"});
+};
+thx.core.Dynamics.clone = function(v,cloneInstances) {
+	if(cloneInstances == null) cloneInstances = false;
+	{
+		var _g = Type["typeof"](v);
+		switch(_g[1]) {
+		case 0:
+			return null;
+		case 1:case 2:case 3:case 7:case 8:case 5:
+			return v;
+		case 4:
+			return thx.core.Objects.copyTo(v,{ });
+		case 6:
+			var c = _g[2];
+			var name = Type.getClassName(c);
+			switch(name) {
+			case "Array":
+				return v.map(function(v1) {
+					return thx.core.Dynamics.clone(v1,cloneInstances);
+				});
+			case "String":case "Date":
+				return v;
+			default:
+				if(cloneInstances) {
+					var o = Type.createEmptyInstance(c);
+					var _g1 = 0;
+					var _g2 = Type.getInstanceFields(c);
+					while(_g1 < _g2.length) {
+						var field = _g2[_g1];
+						++_g1;
+						Reflect.setField(o,field,thx.core.Dynamics.clone(Reflect.field(v,field),cloneInstances));
+					}
+					return o;
+				} else return v;
+			}
+			break;
+		}
+	}
 };
 thx.core.Error = function(message,stack,pos) {
 	Error.call(this,message);
@@ -14663,7 +18538,9 @@ thx.core.Error.fromDynamic = function(err,pos) {
 };
 thx.core.Error.__super__ = Error;
 thx.core.Error.prototype = $extend(Error.prototype,{
-	toString: function() {
+	pos: null
+	,stackItems: null
+	,toString: function() {
 		return this.message + "\nfrom: " + this.pos.className + "." + this.pos.methodName + "() at " + this.pos.lineNumber + "\n\n" + haxe.CallStack.toString(this.stackItems);
 	}
 	,__class__: thx.core.Error
@@ -14884,6 +18761,167 @@ thx.core.Ints.wrapCircular = function(v,max) {
 	if(v < 0) v += max;
 	return v;
 };
+thx.core.Iterables = function() { };
+$hxClasses["thx.core.Iterables"] = thx.core.Iterables;
+thx.core.Iterables.__name__ = ["thx","core","Iterables"];
+thx.core.Iterables.all = function(it,predicate) {
+	return thx.core.Iterators.all($iterator(it)(),predicate);
+};
+thx.core.Iterables.any = function(it,predicate) {
+	return thx.core.Iterators.any($iterator(it)(),predicate);
+};
+thx.core.Iterables.eachPair = function(it,handler) {
+	return thx.core.Iterators.eachPair($iterator(it)(),handler);
+};
+thx.core.Iterables.filter = function(it,predicate) {
+	return thx.core.Iterators.filter($iterator(it)(),predicate);
+};
+thx.core.Iterables.find = function(it,predicate) {
+	return thx.core.Iterators.find($iterator(it)(),predicate);
+};
+thx.core.Iterables.first = function(it) {
+	return thx.core.Iterators.first($iterator(it)());
+};
+thx.core.Iterables.last = function(it) {
+	return thx.core.Iterators.last($iterator(it)());
+};
+thx.core.Iterables.isEmpty = function(it) {
+	return thx.core.Iterators.isEmpty($iterator(it)());
+};
+thx.core.Iterables.isIterable = function(v) {
+	var fields;
+	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
+	if(!Lambda.has(fields,"iterator")) return false;
+	return Reflect.isFunction(Reflect.field(v,"iterator"));
+};
+thx.core.Iterables.map = function(it,f) {
+	return thx.core.Iterators.map($iterator(it)(),f);
+};
+thx.core.Iterables.mapi = function(it,f) {
+	return thx.core.Iterators.mapi($iterator(it)(),f);
+};
+thx.core.Iterables.order = function(it,sort) {
+	return thx.core.Iterators.order($iterator(it)(),sort);
+};
+thx.core.Iterables.reduce = function(it,callback,initial) {
+	return thx.core.Iterators.reduce($iterator(it)(),callback,initial);
+};
+thx.core.Iterables.reducei = function(it,callback,initial) {
+	return thx.core.Iterators.reducei($iterator(it)(),callback,initial);
+};
+thx.core.Iterables.toArray = function(it) {
+	return thx.core.Iterators.toArray($iterator(it)());
+};
+thx.core.Iterators = function() { };
+$hxClasses["thx.core.Iterators"] = thx.core.Iterators;
+thx.core.Iterators.__name__ = ["thx","core","Iterators"];
+thx.core.Iterators.all = function(it,predicate) {
+	while( it.hasNext() ) {
+		var item = it.next();
+		if(!predicate(item)) return false;
+	}
+	return true;
+};
+thx.core.Iterators.any = function(it,predicate) {
+	while( it.hasNext() ) {
+		var item = it.next();
+		if(predicate(item)) return true;
+	}
+	return false;
+};
+thx.core.Iterators.eachPair = function(it,handler) {
+	thx.core.Arrays.eachPair(thx.core.Iterators.toArray(it),handler);
+};
+thx.core.Iterators.filter = function(it,predicate) {
+	return thx.core.Iterators.reduce(it,function(acc,item) {
+		if(predicate(item)) acc.push(item);
+		return acc;
+	},[]);
+};
+thx.core.Iterators.find = function(it,f) {
+	while( it.hasNext() ) {
+		var item = it.next();
+		if(f(item)) return item;
+	}
+	return null;
+};
+thx.core.Iterators.first = function(it) {
+	if(it.hasNext()) return it.next(); else return null;
+};
+thx.core.Iterators.isEmpty = function(it) {
+	return !it.hasNext();
+};
+thx.core.Iterators.isIterator = function(v) {
+	var fields;
+	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
+	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
+	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
+};
+thx.core.Iterators.last = function(it) {
+	var buf = null;
+	while(it.hasNext()) buf = it.next();
+	return buf;
+};
+thx.core.Iterators.map = function(it,f) {
+	var acc = [];
+	while( it.hasNext() ) {
+		var v = it.next();
+		acc.push(f(v));
+	}
+	return acc;
+};
+thx.core.Iterators.mapi = function(it,f) {
+	var acc = [];
+	var i = 0;
+	while( it.hasNext() ) {
+		var v = it.next();
+		acc.push(f(v,i++));
+	}
+	return acc;
+};
+thx.core.Iterators.order = function(it,sort) {
+	var n = thx.core.Iterators.toArray(it);
+	n.sort(sort);
+	return n;
+};
+thx.core.Iterators.reduce = function(it,callback,initial) {
+	thx.core.Iterators.map(it,function(v) {
+		initial = callback(initial,v);
+	});
+	return initial;
+};
+thx.core.Iterators.reducei = function(it,callback,initial) {
+	thx.core.Iterators.mapi(it,function(v,i) {
+		initial = callback(initial,v,i);
+	});
+	return initial;
+};
+thx.core.Iterators.toArray = function(it) {
+	var items = [];
+	while( it.hasNext() ) {
+		var item = it.next();
+		items.push(item);
+	}
+	return items;
+};
+thx.core.Maps = function() { };
+$hxClasses["thx.core.Maps"] = thx.core.Maps;
+thx.core.Maps.__name__ = ["thx","core","Maps"];
+thx.core.Maps.tuples = function(map) {
+	return thx.core.Iterators.map(map.keys(),function(key) {
+		var _1 = map.get(key);
+		return { _0 : key, _1 : _1};
+	});
+};
+thx.core.Maps.mapToObject = function(map) {
+	return thx.core.Arrays.reduce(thx.core.Maps.tuples(map),function(o,t) {
+		o[t._0] = t._1;
+		return o;
+	},{ });
+};
+thx.core.Maps.isMap = function(v) {
+	return js.Boot.__instanceof(v,IMap);
+};
 thx.core.Nil = $hxClasses["thx.core.Nil"] = { __ename__ : ["thx","core","Nil"], __constructs__ : ["nil"] };
 thx.core.Nil.nil = ["nil",0];
 thx.core.Nil.nil.toString = $estr;
@@ -14900,6 +18938,37 @@ thx.core.Objects.exists = function(o,name) {
 };
 thx.core.Objects.fields = function(o) {
 	return Reflect.fields(o);
+};
+thx.core.Objects.merge = function(to,from,replacef) {
+	if(null == replacef) replacef = function(field,oldv,newv) {
+		return newv;
+	};
+	var _g = 0;
+	var _g1 = Reflect.fields(from);
+	while(_g < _g1.length) {
+		var field1 = _g1[_g];
+		++_g;
+		var newv1 = Reflect.field(from,field1);
+		if(Object.prototype.hasOwnProperty.call(to,field1)) Reflect.setField(to,field1,replacef(field1,Reflect.field(to,field1),newv1)); else to[field1] = newv1;
+	}
+	return to;
+};
+thx.core.Objects.copyTo = function(src,dst,cloneInstances) {
+	if(cloneInstances == null) cloneInstances = false;
+	var _g = 0;
+	var _g1 = Reflect.fields(src);
+	while(_g < _g1.length) {
+		var field = _g1[_g];
+		++_g;
+		var sv = thx.core.Dynamics.clone(Reflect.field(src,field),cloneInstances);
+		var dv = Reflect.field(dst,field);
+		if(Reflect.isObject(sv) && null == Type.getClass(sv) && (Reflect.isObject(dv) && null == Type.getClass(dv))) thx.core.Objects.copyTo(sv,dv); else dst[field] = sv;
+	}
+	return dst;
+};
+thx.core.Objects.clone = function(src,cloneInstances) {
+	if(cloneInstances == null) cloneInstances = false;
+	return thx.core.Dynamics.clone(src,cloneInstances);
 };
 thx.core.Objects.objectToMap = function(o) {
 	return thx.core.Arrays.reduce(thx.core.Objects.tuples(o),function(map,t) {
@@ -14971,6 +19040,12 @@ thx.core.Strings.humanize = function(s) {
 thx.core.Strings.isAlphaNum = function(value) {
 	return thx.core.Strings.ALPHANUM.match(value);
 };
+thx.core.Strings.isLowerCase = function(value) {
+	return value.toLowerCase() == value;
+};
+thx.core.Strings.isUpperCase = function(value) {
+	return value.toUpperCase() == value;
+};
 thx.core.Strings.ifEmpty = function(value,alt) {
 	if(null != value && "" != value) return value; else return alt;
 };
@@ -15011,6 +19086,11 @@ thx.core.Strings.repeat = function(s,times) {
 		return $r;
 	}(this))).join("");
 };
+thx.core.Strings.reverse = function(s) {
+	var arr = s.split("");
+	arr.reverse();
+	return arr.join("");
+};
 thx.core.Strings.stripTags = function(s) {
 	return thx.core.Strings.STRIPTAGS.replace(s,"");
 };
@@ -15033,10 +19113,10 @@ thx.core.Strings.toChunks = function(s,len) {
 	}
 	return chunks;
 };
-thx.core.Strings.trim = function(value,charlist) {
-	return thx.core.Strings.trimRight(thx.core.Strings.trimLeft(value,charlist),charlist);
+thx.core.Strings.trimChars = function(value,charlist) {
+	return thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(value,charlist),charlist);
 };
-thx.core.Strings.trimLeft = function(value,charlist) {
+thx.core.Strings.trimCharsLeft = function(value,charlist) {
 	var pos = 0;
 	var _g1 = 0;
 	var _g = value.length;
@@ -15046,7 +19126,7 @@ thx.core.Strings.trimLeft = function(value,charlist) {
 	}
 	return value.substring(pos);
 };
-thx.core.Strings.trimRight = function(value,charlist) {
+thx.core.Strings.trimCharsRight = function(value,charlist) {
 	var len = value.length;
 	var pos = len;
 	var i;
@@ -15255,6 +19335,27 @@ thx.core.Types.__name__ = ["thx","core","Types"];
 thx.core.Types.isAnonymousObject = function(v) {
 	return Reflect.isObject(v) && null == Type.getClass(v);
 };
+thx.core.Types.isPrimitive = function(v) {
+	{
+		var _g = Type["typeof"](v);
+		switch(_g[1]) {
+		case 1:case 2:case 3:
+			return true;
+		case 0:case 5:case 7:case 4:case 8:
+			return false;
+		case 6:
+			var c = _g[2];
+			return Type.getClassName(c) == "String";
+		}
+	}
+};
+thx.core.Types.hasSuperClass = function(cls,sup) {
+	while(null != cls) {
+		if(cls == sup) return true;
+		cls = Type.getSuperClass(cls);
+	}
+	return false;
+};
 thx.core.Types.sameType = function(a,b) {
 	return thx.core.Types.typeToString(Type["typeof"](a)) == thx.core.Types.typeToString(Type["typeof"](b));
 };
@@ -15448,7 +19549,8 @@ tink.core._Callback.Cell.get = function() {
 	if(tink.core._Callback.Cell.pool.length > 0) return tink.core._Callback.Cell.pool.pop(); else return new tink.core._Callback.Cell();
 };
 tink.core._Callback.Cell.prototype = {
-	free: function() {
+	cb: null
+	,free: function() {
 		this.cb = null;
 		tink.core._Callback.Cell.pool.push(this);
 	}
@@ -15519,7 +19621,11 @@ tink.core.TypedError.withData = function(code,message,data,pos) {
 	return ret;
 };
 tink.core.TypedError.prototype = {
-	printPos: function() {
+	message: null
+	,code: null
+	,data: null
+	,pos: null
+	,printPos: function() {
 		return this.pos.className + "." + this.pos.methodName + ":" + this.pos.lineNumber;
 	}
 	,toString: function() {
@@ -15710,7 +19816,10 @@ tink.core.FutureTrigger = function() {
 $hxClasses["tink.core.FutureTrigger"] = tink.core.FutureTrigger;
 tink.core.FutureTrigger.__name__ = ["tink","core","FutureTrigger"];
 tink.core.FutureTrigger.prototype = {
-	asFuture: function() {
+	result: null
+	,list: null
+	,future: null
+	,asFuture: function() {
 		return this.future;
 	}
 	,trigger: function(result) {
@@ -16083,7 +20192,9 @@ ufront.api.UFApi = function() {
 $hxClasses["ufront.api.UFApi"] = ufront.api.UFApi;
 ufront.api.UFApi.__name__ = ["ufront","api","UFApi"];
 ufront.api.UFApi.prototype = {
-	ufTrace: function(msg,pos) {
+	auth: null
+	,messages: null
+	,ufTrace: function(msg,pos) {
 		this.messages.push({ msg : msg, pos : pos, type : ufront.log.MessageType.Trace});
 	}
 	,ufLog: function(msg,pos) {
@@ -16104,9 +20215,9 @@ ufront.api.UFAsyncApi = function() { };
 $hxClasses["ufront.api.UFAsyncApi"] = ufront.api.UFAsyncApi;
 ufront.api.UFAsyncApi.__name__ = ["ufront","api","UFAsyncApi"];
 ufront.api.UFAsyncApi.prototype = {
-	_makeApiCall: function(method,args,flags) {
+	className: null
+	,_makeApiCall: function(method,args,flags) {
 		var remotingCallString = "" + this.className + "." + method + "(" + args.join(",") + ")";
-		throw "Neither -Dclient nor -Dserver is set";
 		return null;
 	}
 	,__class__: ufront.api.UFAsyncApi
@@ -16116,7 +20227,8 @@ ufront.api.UFApiContext = function() {
 $hxClasses["ufront.api.UFApiContext"] = ufront.api.UFApiContext;
 ufront.api.UFApiContext.__name__ = ["ufront","api","UFApiContext"];
 ufront.api.UFApiContext.prototype = {
-	__class__: ufront.api.UFApiContext
+	injector: null
+	,__class__: ufront.api.UFApiContext
 };
 ufront.app = {};
 ufront.app.HttpApplication = function() {
@@ -16138,7 +20250,18 @@ ufront.app.HttpApplication = function() {
 $hxClasses["ufront.app.HttpApplication"] = ufront.app.HttpApplication;
 ufront.app.HttpApplication.__name__ = ["ufront","app","HttpApplication"];
 ufront.app.HttpApplication.prototype = {
-	inject: function(cl,val,cl2,singleton,named) {
+	injector: null
+	,requestMiddleware: null
+	,requestHandlers: null
+	,responseMiddleware: null
+	,logHandlers: null
+	,errorHandlers: null
+	,urlFilters: null
+	,messages: null
+	,modulesReady: null
+	,currentModule: null
+	,pathToContentDir: null
+	,inject: function(cl,val,cl2,singleton,named) {
 		if(singleton == null) singleton = false;
 		ufront.core.InjectionTools.inject(this.injector,cl,val,cl2,singleton,named);
 		return this;
@@ -16284,7 +20407,7 @@ ufront.app.HttpApplication.prototype = {
 					return f3(a13,a21);
 				};
 			})($bind(m3,m3.log),_g.messages);
-			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 			return { a : a4, b : b3};
 		});
 		var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(this.init(),function(n) {
@@ -16351,7 +20474,7 @@ ufront.app.HttpApplication.prototype = {
 						return f(a1,a2);
 					};
 				})($bind(m,m.handleError),err);
-				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
+				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
 				return { a : a, b : b};
 			});
 			var resMidModules = this.responseMiddleware.map(function(m1) {
@@ -16369,7 +20492,7 @@ ufront.app.HttpApplication.prototype = {
 						return f2(a12,a21);
 					};
 				})($bind(m2,m2.log),_g.messages);
-				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 				return { a : a4, b : b2};
 			});
 			var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(tink.core._Future.Future_Impl_._tryFailingFlatMap(this.executeModules(errHandlerModules,ctx,ufront.web.context.RequestCompletion.CErrorHandlersComplete),function(n) {
@@ -16436,31 +20559,37 @@ ufront.app.UFErrorHandler = function() { };
 $hxClasses["ufront.app.UFErrorHandler"] = ufront.app.UFErrorHandler;
 ufront.app.UFErrorHandler.__name__ = ["ufront","app","UFErrorHandler"];
 ufront.app.UFErrorHandler.prototype = {
-	__class__: ufront.app.UFErrorHandler
+	handleError: null
+	,__class__: ufront.app.UFErrorHandler
 };
 ufront.app.UFInitRequired = function() { };
 $hxClasses["ufront.app.UFInitRequired"] = ufront.app.UFInitRequired;
 ufront.app.UFInitRequired.__name__ = ["ufront","app","UFInitRequired"];
 ufront.app.UFInitRequired.prototype = {
-	__class__: ufront.app.UFInitRequired
+	init: null
+	,dispose: null
+	,__class__: ufront.app.UFInitRequired
 };
 ufront.app.UFLogHandler = function() { };
 $hxClasses["ufront.app.UFLogHandler"] = ufront.app.UFLogHandler;
 ufront.app.UFLogHandler.__name__ = ["ufront","app","UFLogHandler"];
 ufront.app.UFLogHandler.prototype = {
-	__class__: ufront.app.UFLogHandler
+	log: null
+	,__class__: ufront.app.UFLogHandler
 };
 ufront.app.UFResponseMiddleware = function() { };
 $hxClasses["ufront.app.UFResponseMiddleware"] = ufront.app.UFResponseMiddleware;
 ufront.app.UFResponseMiddleware.__name__ = ["ufront","app","UFResponseMiddleware"];
 ufront.app.UFResponseMiddleware.prototype = {
-	__class__: ufront.app.UFResponseMiddleware
+	responseOut: null
+	,__class__: ufront.app.UFResponseMiddleware
 };
 ufront.app.UFRequestMiddleware = function() { };
 $hxClasses["ufront.app.UFRequestMiddleware"] = ufront.app.UFRequestMiddleware;
 ufront.app.UFRequestMiddleware.__name__ = ["ufront","app","UFRequestMiddleware"];
 ufront.app.UFRequestMiddleware.prototype = {
-	__class__: ufront.app.UFRequestMiddleware
+	requestIn: null
+	,__class__: ufront.app.UFRequestMiddleware
 };
 ufront.app.UFMiddleware = function() { };
 $hxClasses["ufront.app.UFMiddleware"] = ufront.app.UFMiddleware;
@@ -16470,7 +20599,9 @@ ufront.app.UFRequestHandler = function() { };
 $hxClasses["ufront.app.UFRequestHandler"] = ufront.app.UFRequestHandler;
 ufront.app.UFRequestHandler.__name__ = ["ufront","app","UFRequestHandler"];
 ufront.app.UFRequestHandler.prototype = {
-	__class__: ufront.app.UFRequestHandler
+	handleRequest: null
+	,toString: null
+	,__class__: ufront.app.UFRequestHandler
 };
 ufront.app.UfrontApplication = function(optionsIn) {
 	this.appTemplatingEngines = new List();
@@ -16507,7 +20638,7 @@ ufront.app.UfrontApplication = function(optionsIn) {
 		this.addLogHandler(new ufront.log.RemotingLogger(),null,null);
 	}
 	if(null != this.configuration.logFile) this.addLogHandler(new ufront.log.FileLogger(this.configuration.logFile),null,null);
-	var path = thx.core.Strings.trimRight(thx.core.Strings.trimLeft(this.configuration.basePath,"/"),"/");
+	var path = thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(this.configuration.basePath,"/"),"/");
 	if(path.length > 0) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.DirectoryUrlFilter(path));
 	if(this.configuration.urlRewrite != true) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.PathInfoUrlFilter());
 	if(this.configuration.sessionImplementation != null) this.inject(ufront.web.session.UFHttpSession,null,this.configuration.sessionImplementation);
@@ -16530,11 +20661,16 @@ $hxClasses["ufront.app.UfrontApplication"] = ufront.app.UfrontApplication;
 ufront.app.UfrontApplication.__name__ = ["ufront","app","UfrontApplication"];
 ufront.app.UfrontApplication.__super__ = ufront.app.HttpApplication;
 ufront.app.UfrontApplication.prototype = $extend(ufront.app.HttpApplication.prototype,{
-	execute: function(httpContext) {
+	configuration: null
+	,mvcHandler: null
+	,remotingHandler: null
+	,viewEngine: null
+	,execute: function(httpContext) {
 		if(null == httpContext) throw new thx.core.error.NullArgument("argument \"httpContext\" cannot be null",{ fileName : "NullArgument.hx", lineNumber : 32, className : "ufront.app.UfrontApplication", methodName : "execute"});
 		if(this.firstRun) this.initOnFirstExecute(httpContext);
 		return ufront.app.HttpApplication.prototype.execute.call(this,httpContext);
 	}
+	,firstRun: null
 	,initOnFirstExecute: function(httpContext) {
 		this.firstRun = false;
 		this.inject(String,httpContext.request.get_scriptDirectory(),null,null,"scriptDirectory");
@@ -16555,6 +20691,7 @@ ufront.app.UfrontApplication.prototype = $extend(ufront.app.HttpApplication.prot
 		this.remotingHandler.apiContexts.push(apiContext);
 		return this;
 	}
+	,appTemplatingEngines: null
 	,addTemplatingEngine: function(engine) {
 		this.appTemplatingEngines.add(engine);
 		if(this.viewEngine != null) this.viewEngine.engines.push(engine);
@@ -16669,7 +20806,8 @@ $hxClasses["ufront.auth.BossUser"] = ufront.auth.BossUser;
 ufront.auth.BossUser.__name__ = ["ufront","auth","BossUser"];
 ufront.auth.BossUser.__interfaces__ = [ufront.auth.UFAuthUser];
 ufront.auth.BossUser.prototype = {
-	can: function(p,ps) {
+	userID: null
+	,can: function(p,ps) {
 		return true;
 	}
 	,get_userID: function() {
@@ -16692,7 +20830,8 @@ ufront.core.InjectionRef.of = function(v) {
 	} else return new ufront.core.InjectionRef(v);
 };
 ufront.core.InjectionRef.prototype = {
-	get: function() {
+	value: null
+	,get: function() {
 		var v = this.value;
 		this.value = null;
 		ufront.core.InjectionRef.pool.push(this);
@@ -16878,7 +21017,8 @@ ufront.core.OrderedStringMap = function() {
 $hxClasses["ufront.core.OrderedStringMap"] = ufront.core.OrderedStringMap;
 ufront.core.OrderedStringMap.__name__ = ["ufront","core","OrderedStringMap"];
 ufront.core.OrderedStringMap.prototype = {
-	set: function(key,value) {
+	length: null
+	,set: function(key,value) {
 		if(!this.__hash.exists(key)) {
 			this.__keys.push(key);
 			this.length++;
@@ -16967,6 +21107,8 @@ ufront.core.OrderedStringMap.prototype = {
 		s.b += "}";
 		return s.b;
 	}
+	,__keys: null
+	,__hash: null
 	,__class__: ufront.core.OrderedStringMap
 };
 ufront.core.Sync = function() { };
@@ -16995,7 +21137,8 @@ ufront.handler.ErrorPageHandler.errorStackItems = function(stack) {
 	return arr1;
 };
 ufront.handler.ErrorPageHandler.prototype = {
-	handleError: function(httpError,ctx) {
+	catchErrors: null
+	,handleError: function(httpError,ctx) {
 		var callStack = "";
 		var inner;
 		if(httpError != null && httpError.data != null) inner = " (" + Std.string(httpError.data) + ")"; else inner = "";
@@ -17038,7 +21181,8 @@ $hxClasses["ufront.handler.MVCHandler"] = ufront.handler.MVCHandler;
 ufront.handler.MVCHandler.__name__ = ["ufront","handler","MVCHandler"];
 ufront.handler.MVCHandler.__interfaces__ = [ufront.app.UFInitRequired,ufront.app.UFRequestHandler];
 ufront.handler.MVCHandler.prototype = {
-	init: function(application) {
+	indexController: null
+	,init: function(application) {
 		var ufApp;
 		if((application instanceof ufront.app.UfrontApplication)) ufApp = application; else ufApp = null;
 		if(ufApp != null) this.indexController = ufApp.configuration.indexController;
@@ -17088,7 +21232,10 @@ $hxClasses["ufront.handler.RemotingHandler"] = ufront.handler.RemotingHandler;
 ufront.handler.RemotingHandler.__name__ = ["ufront","handler","RemotingHandler"];
 ufront.handler.RemotingHandler.__interfaces__ = [ufront.app.UFInitRequired,ufront.app.UFRequestHandler];
 ufront.handler.RemotingHandler.prototype = {
-	loadApi: function(api) {
+	apiContexts: null
+	,apis: null
+	,context: null
+	,loadApi: function(api) {
 		this.apis.push(api);
 	}
 	,loadApis: function(newAPIs) {
@@ -17266,7 +21413,8 @@ ufront.log.FileLogger.format = function(msg) {
 	return "[" + type + "] " + pos.className + "." + pos.methodName + "(" + pos.lineNumber + "): " + text;
 };
 ufront.log.FileLogger.prototype = {
-	init: function(app) {
+	path: null
+	,init: function(app) {
 		return ufront.core.Sync.success();
 	}
 	,dispose: function(app) {
@@ -17321,7 +21469,9 @@ ufront.log.MessageList = function(messages,onMessage) {
 $hxClasses["ufront.log.MessageList"] = ufront.log.MessageList;
 ufront.log.MessageList.__name__ = ["ufront","log","MessageList"];
 ufront.log.MessageList.prototype = {
-	push: function(m) {
+	messages: null
+	,onMessage: null
+	,push: function(m) {
 		if(this.messages != null) this.messages.push(m);
 		if(this.onMessage != null) this.onMessage(m);
 	}
@@ -17458,7 +21608,9 @@ ufront.view.UFViewEngine = function(cachingEnabled) {
 $hxClasses["ufront.view.UFViewEngine"] = ufront.view.UFViewEngine;
 ufront.view.UFViewEngine.__name__ = ["ufront","view","UFViewEngine"];
 ufront.view.UFViewEngine.prototype = {
-	getTemplate: function(path,templatingEngine) {
+	engines: null
+	,cache: null
+	,getTemplate: function(path,templatingEngine) {
 		var _g = this;
 		if(this.cache != null && this.cache.exists(path)) {
 			var cached = this.cache.get(path);
@@ -17628,7 +21780,11 @@ $hxClasses["ufront.view.FileViewEngine"] = ufront.view.FileViewEngine;
 ufront.view.FileViewEngine.__name__ = ["ufront","view","FileViewEngine"];
 ufront.view.FileViewEngine.__super__ = ufront.view.UFViewEngine;
 ufront.view.FileViewEngine.prototype = $extend(ufront.view.UFViewEngine.prototype,{
-	get_viewDirectory: function() {
+	scriptDir: null
+	,path: null
+	,isPathAbsolute: null
+	,viewDirectory: null
+	,get_viewDirectory: function() {
 		if(this.get_isPathAbsolute()) return haxe.io.Path.addTrailingSlash(this.path); else return this.scriptDir + haxe.io.Path.addTrailingSlash(this.path);
 	}
 	,getTemplateString: function(viewRelativePath) {
@@ -17780,7 +21936,13 @@ $hxClasses["ufront.web.Dispatch"] = ufront.web.Dispatch;
 ufront.web.Dispatch.__name__ = ["ufront","web","Dispatch"];
 ufront.web.Dispatch.__super__ = haxe.web.Dispatch;
 ufront.web.Dispatch.prototype = $extend(haxe.web.Dispatch.prototype,{
-	resolveNames: function(name) {
+	method: null
+	,controller: null
+	,action: null
+	,'arguments': null
+	,onProcessDispatchRequest: null
+	,onProcessDispatchRequestTrigger: null
+	,resolveNames: function(name) {
 		var arr = [];
 		if(this.method != null) arr.push(this.method + "_" + name);
 		arr.push(name);
@@ -17875,7 +22037,14 @@ ufront.web.HttpCookie.addPair = function(buf,name,value,allowNullValue) {
 	if(value == null) buf.b += "null"; else buf.b += "" + value;
 };
 ufront.web.HttpCookie.prototype = {
-	expireNow: function() {
+	domain: null
+	,expires: null
+	,name: null
+	,path: null
+	,secure: null
+	,httpOnly: null
+	,value: null
+	,expireNow: function() {
 		var d = new Date();
 		d.setTime(0);
 		this.expires = d;
@@ -18034,7 +22203,12 @@ ufront.web.UserAgent.searchString = function(data,s) {
 	return null;
 };
 ufront.web.UserAgent.prototype = {
-	toString: function() {
+	browser: null
+	,version: null
+	,majorVersion: null
+	,minorVersion: null
+	,platform: null
+	,toString: function() {
 		return this.browser + " v." + this.majorVersion + "." + this.minorVersion + " (" + this.version + ") on " + this.platform;
 	}
 	,__class__: ufront.web.UserAgent
@@ -18046,7 +22220,14 @@ ufront.web.context.ActionContext = function(httpContext) {
 $hxClasses["ufront.web.context.ActionContext"] = ufront.web.context.ActionContext;
 ufront.web.context.ActionContext.__name__ = ["ufront","web","context","ActionContext"];
 ufront.web.context.ActionContext.prototype = {
-	get_uriParts: function() {
+	httpContext: null
+	,handler: null
+	,controller: null
+	,action: null
+	,args: null
+	,actionResult: null
+	,uriParts: null
+	,get_uriParts: function() {
 		if(this.uriParts == null) {
 			this.uriParts = this.httpContext.getRequestUri().split("/");
 			if(this.uriParts.length > 0 && this.uriParts[0] == "") this.uriParts.shift();
@@ -18097,7 +22278,19 @@ ufront.web.context.HttpContext = function(request,response,appInjector,session,a
 $hxClasses["ufront.web.context.HttpContext"] = ufront.web.context.HttpContext;
 ufront.web.context.HttpContext.__name__ = ["ufront","web","context","HttpContext"];
 ufront.web.context.HttpContext.prototype = {
-	getRequestUri: function() {
+	injector: null
+	,request: null
+	,response: null
+	,session: null
+	,sessionID: null
+	,auth: null
+	,currentUser: null
+	,currentUserID: null
+	,actionContext: null
+	,completion: null
+	,urlFilters: null
+	,_requestUri: null
+	,getRequestUri: function() {
 		if(null == this._requestUri) {
 			var url = ufront.web.url.PartialUrl.parse(this.request.get_uri());
 			var $it0 = $iterator(this.urlFilters)();
@@ -18120,6 +22313,9 @@ ufront.web.context.HttpContext.prototype = {
 		if(filters != null) this.urlFilters = filters; else this.urlFilters = [];
 		this._requestUri = null;
 	}
+	,contentDirectory: null
+	,relativeContentDir: null
+	,_contentDir: null
 	,get_contentDirectory: function() {
 		if(this._contentDir == null) {
 			if(this.request.get_scriptDirectory() != null) this._contentDir = haxe.io.Path.addTrailingSlash(this.request.get_scriptDirectory()) + haxe.io.Path.addTrailingSlash(this.relativeContentDir); else this._contentDir = haxe.io.Path.addTrailingSlash(this.relativeContentDir);
@@ -18141,6 +22337,7 @@ ufront.web.context.HttpContext.prototype = {
 	,ufError: function(msg,pos) {
 		this.messages.push({ msg : msg, pos : pos, type : ufront.log.MessageType.Error});
 	}
+	,messages: null
 	,get_sessionID: function() {
 		if(null != this.session) return this.session.get_id(); else return null;
 	}
@@ -18181,7 +22378,9 @@ $hxClasses["ufront.web.result.ContentResult"] = ufront.web.result.ContentResult;
 ufront.web.result.ContentResult.__name__ = ["ufront","web","result","ContentResult"];
 ufront.web.result.ContentResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.ContentResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	executeResult: function(actionContext) {
+	content: null
+	,contentType: null
+	,executeResult: function(actionContext) {
 		if(null != this.contentType) actionContext.httpContext.response.set_contentType(this.contentType);
 		actionContext.httpContext.response.write(this.content);
 		return ufront.core.Sync.success();
@@ -18196,7 +22395,8 @@ $hxClasses["ufront.web.result.EmptyResult"] = ufront.web.result.EmptyResult;
 ufront.web.result.EmptyResult.__name__ = ["ufront","web","result","EmptyResult"];
 ufront.web.result.EmptyResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.EmptyResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	executeResult: function(actionContext) {
+	preventFlush: null
+	,executeResult: function(actionContext) {
 		if(this.preventFlush) actionContext.httpContext.response.preventFlush();
 		return ufront.core.Sync.success();
 	}
@@ -18212,7 +22412,9 @@ $hxClasses["ufront.web.result.RedirectResult"] = ufront.web.result.RedirectResul
 ufront.web.result.RedirectResult.__name__ = ["ufront","web","result","RedirectResult"];
 ufront.web.result.RedirectResult.__super__ = ufront.web.result.ActionResult;
 ufront.web.result.RedirectResult.prototype = $extend(ufront.web.result.ActionResult.prototype,{
-	executeResult: function(actionContext) {
+	url: null
+	,permanentRedirect: null
+	,executeResult: function(actionContext) {
 		actionContext.httpContext.response.clearContent();
 		actionContext.httpContext.response.clearHeaders();
 		if(this.permanentRedirect) actionContext.httpContext.response.permanentRedirect(this.url); else actionContext.httpContext.response.redirect(this.url);
@@ -18239,13 +22441,25 @@ ufront.web.session.FileSession.testValidId = function(id) {
 	}
 };
 ufront.web.session.FileSession.prototype = {
-	injectConfig: function() {
+	started: null
+	,commitFlag: null
+	,closeFlag: null
+	,regenerateFlag: null
+	,expiryFlag: null
+	,sessionID: null
+	,oldSessionID: null
+	,sessionData: null
+	,context: null
+	,injectConfig: function() {
 		if(this.context.injector.hasMapping(String,"sessionName")) this.sessionName = this.context.injector.getInstance(String,"sessionName"); else this.sessionName = ufront.web.session.FileSession.defaultSessionName;
 		if(this.context.injector.hasMapping(ufront.core.InjectionRef,"sessionExpiry")) this.expiry = this.context.injector.getInstance(ufront.core.InjectionRef,"sessionExpiry").get(); else this.expiry = ufront.web.session.FileSession.defaultExpiry;
 		if(this.context.injector.hasMapping(String,"sessionSavePath")) this.savePath = this.context.injector.getInstance(String,"sessionSavePath"); else this.savePath = ufront.web.session.FileSession.defaultSavePath;
 		this.savePath = haxe.io.Path.addTrailingSlash(this.savePath);
 		if(!StringTools.startsWith(this.savePath,"/")) this.savePath = this.context.get_contentDirectory() + this.savePath;
 	}
+	,sessionName: null
+	,expiry: null
+	,savePath: null
 	,setExpiry: function(e) {
 		this.expiry = e;
 	}
@@ -18342,7 +22556,8 @@ $hxClasses["ufront.web.session.VoidSession"] = ufront.web.session.VoidSession;
 ufront.web.session.VoidSession.__name__ = ["ufront","web","session","VoidSession"];
 ufront.web.session.VoidSession.__interfaces__ = [ufront.web.session.UFHttpSession];
 ufront.web.session.VoidSession.prototype = {
-	setExpiry: function(e) {
+	id: null
+	,setExpiry: function(e) {
 	}
 	,init: function() {
 		return tink.core._Future.Future_Impl_.sync(tink.core.Outcome.Success(tink.core.Noise.Noise));
@@ -18386,7 +22601,14 @@ ufront.web.upload.FileUpload = function() { };
 $hxClasses["ufront.web.upload.FileUpload"] = ufront.web.upload.FileUpload;
 ufront.web.upload.FileUpload.__name__ = ["ufront","web","upload","FileUpload"];
 ufront.web.upload.FileUpload.prototype = {
-	__class__: ufront.web.upload.FileUpload
+	postName: null
+	,originalFileName: null
+	,size: null
+	,getBytes: null
+	,getString: null
+	,writeToFile: null
+	,process: null
+	,__class__: ufront.web.upload.FileUpload
 };
 ufront.web.upload.TmpFileUploadMiddleware = function() {
 	this.files = [];
@@ -18395,7 +22617,8 @@ $hxClasses["ufront.web.upload.TmpFileUploadMiddleware"] = ufront.web.upload.TmpF
 ufront.web.upload.TmpFileUploadMiddleware.__name__ = ["ufront","web","upload","TmpFileUploadMiddleware"];
 ufront.web.upload.TmpFileUploadMiddleware.__interfaces__ = [ufront.app.UFMiddleware];
 ufront.web.upload.TmpFileUploadMiddleware.prototype = {
-	requestIn: function(ctx) {
+	files: null
+	,requestIn: function(ctx) {
 		if(ctx.request.get_httpMethod().toLowerCase() == "post" && ctx.request.isMultipart()) throw "Not implemented"; else return ufront.core.Sync.success();
 	}
 	,responseOut: function(ctx) {
@@ -18433,7 +22656,11 @@ $hxClasses["ufront.web.upload.TmpFileUploadSync"] = ufront.web.upload.TmpFileUpl
 ufront.web.upload.TmpFileUploadSync.__name__ = ["ufront","web","upload","TmpFileUploadSync"];
 ufront.web.upload.TmpFileUploadSync.__interfaces__ = [ufront.web.upload.FileUpload];
 ufront.web.upload.TmpFileUploadSync.prototype = {
-	getBytes: function() {
+	postName: null
+	,originalFileName: null
+	,size: null
+	,tmpFileName: null
+	,getBytes: function() {
 		throw "Not implemented";
 	}
 	,getString: function() {
@@ -18483,7 +22710,10 @@ ufront.web.url.PartialUrl.feed = function(u,url) {
 	u.segments = segments;
 };
 ufront.web.url.PartialUrl.prototype = {
-	queryString: function() {
+	segments: null
+	,query: null
+	,fragment: null
+	,queryString: function() {
 		var params = [];
 		var $it0 = this.query.keys();
 		while( $it0.hasNext() ) {
@@ -18531,14 +22761,17 @@ ufront.web.url.VirtualUrl.feed = function(u,url) {
 };
 ufront.web.url.VirtualUrl.__super__ = ufront.web.url.PartialUrl;
 ufront.web.url.VirtualUrl.prototype = $extend(ufront.web.url.PartialUrl.prototype,{
-	__class__: ufront.web.url.VirtualUrl
+	isPhysical: null
+	,__class__: ufront.web.url.VirtualUrl
 });
 ufront.web.url.filter = {};
 ufront.web.url.filter.UFUrlFilter = function() { };
 $hxClasses["ufront.web.url.filter.UFUrlFilter"] = ufront.web.url.filter.UFUrlFilter;
 ufront.web.url.filter.UFUrlFilter.__name__ = ["ufront","web","url","filter","UFUrlFilter"];
 ufront.web.url.filter.UFUrlFilter.prototype = {
-	__class__: ufront.web.url.filter.UFUrlFilter
+	filterIn: null
+	,filterOut: null
+	,__class__: ufront.web.url.filter.UFUrlFilter
 };
 ufront.web.url.filter.DirectoryUrlFilter = function(directory) {
 	if(StringTools.endsWith(directory,"/")) directory = HxOverrides.substr(directory,0,directory.length - 1);
@@ -18549,7 +22782,9 @@ $hxClasses["ufront.web.url.filter.DirectoryUrlFilter"] = ufront.web.url.filter.D
 ufront.web.url.filter.DirectoryUrlFilter.__name__ = ["ufront","web","url","filter","DirectoryUrlFilter"];
 ufront.web.url.filter.DirectoryUrlFilter.__interfaces__ = [ufront.web.url.filter.UFUrlFilter];
 ufront.web.url.filter.DirectoryUrlFilter.prototype = {
-	filterIn: function(url,request) {
+	directory: null
+	,segments: null
+	,filterIn: function(url,request) {
 		var pos = 0;
 		while(url.segments.length > 0 && url.segments[0] == this.segments[pos++]) url.segments.shift();
 	}
@@ -18568,7 +22803,9 @@ $hxClasses["ufront.web.url.filter.PathInfoUrlFilter"] = ufront.web.url.filter.Pa
 ufront.web.url.filter.PathInfoUrlFilter.__name__ = ["ufront","web","url","filter","PathInfoUrlFilter"];
 ufront.web.url.filter.PathInfoUrlFilter.__interfaces__ = [ufront.web.url.filter.UFUrlFilter];
 ufront.web.url.filter.PathInfoUrlFilter.prototype = {
-	filterIn: function(url,request) {
+	frontScript: null
+	,useCleanRoot: null
+	,filterIn: function(url,request) {
 		if(url.segments[0] == this.frontScript) url.segments.shift();
 	}
 	,filterOut: function(url,request) {
@@ -18698,6 +22935,9 @@ app.MainController.__meta__ = { fields : { index : { wrapResult : [4]}, home : {
 app.SubController.__meta__ = { fields : { subA : { wrapResult : [3]}, subB : { wrapResult : [3]}, subElse : { wrapResult : [3]}}};
 app.SeqController.__meta__ = { fields : { seqA : { wrapResult : [3]}, seqB : { wrapResult : [3]}, seqTest : { wrapResult : [3]}}};
 app.ScoreController.__meta__ = { fields : { seqA : { wrapResult : [3]}, seqB : { wrapResult : [3]}, scoreFile : { wrapResult : [3]}}};
+audiotools.Wav16Tools.SAMPLERATE = 48000;
+audiotools.sound.Wav16Sound.__meta__ = { obj : { 'interface' : null}};
+audiotools.webaudio.pitch.PitchRecognizer.analyzePitch = false;
 cx.TEA.base = haxe.io.Bytes.ofString("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=.");
 cx.TEA.key = [1,2,3,4];
 dtx.DOMType.DOCUMENT_NODE = 9;
@@ -18820,6 +23060,7 @@ nx3.PSystemBarsGenerator.defaultClef = nx3.EClef.ClefF;
 nx3.PSystemBarsGenerator.defaultKey = nx3.EKey.Flat2;
 nx3.PSystemBarsGenerator.defaultTime = nx3.ETime.Time6_4;
 nx3.action.IInteractivity.__meta__ = { obj : { 'interface' : null}};
+nx3.audio.NotenrTools.stemtonestable = nx3.audio.NotenrTools.getNotenrTable(nx3.EKey.Natural);
 nx3.render.ITarget.__meta__ = { obj : { 'interface' : null}};
 nx3.render.scaling.Scaling.MID = { linesWidth : 0.8, space : 12.0, unitY : 6.0, noteWidth : 10, unitX : 5, quarterNoteWidth : 2.5, signPosWidth : 14.0, svgScale : .27, svgX : 0, svgY : -55.0, fontScaling : 1.5};
 nx3.render.scaling.Scaling.NORMAL = { linesWidth : .5, space : 8.0, unitY : 4.0, noteWidth : 7.0, unitX : 3.5, quarterNoteWidth : 1.75, signPosWidth : 9.5, svgScale : .175, svgX : 0, svgY : -36.0, fontScaling : 1.0};
@@ -18872,6 +23113,17 @@ nx3.render.svg.SvgElements.tpl5 = "\r\n<svg ><g visibility=\"visible\" id=\"page
 nx3.render.svg.SvgElements.tpl6x = "\r\n<svg ><g visibility=\"visible\" id=\"page1\"><desc>Slide</desc><g><desc>Drawing</desc><g><g style=\"stroke:none;fill:none\"><rect x=\"0\" y=\"464\" width=\"503\" height=\"1205\"/></g><g/></g></g><g><desc>Drawing</desc><g><g style=\"stroke:none;fill:#000000\"><path d=\"M 124,150 L 111,151 C 110,146 108,143 106,141 103,138 99,136 94,136 90,136 86,137 83,139 80,142 77,145 74,150 72,155 71,162 71,172 74,168 78,165 82,162 86,160 91,159 96,159 104,159 111,162 117,168 123,174 126,182 126,192 126,198 125,204 122,209 119,215 115,219 110,222 105,225 100,226 94,226 83,226 75,222 68,215 61,207 58,195 58,178 58,158 62,144 69,135 75,128 84,124 95,124 103,124 110,126 115,131 120,136 123,142 124,150 Z M 71,191 C 71,195 72,199 74,203 76,206 78,209 82,211 85,213 89,214 93,214 99,214 103,212 107,208 111,204 113,199 113,192 113,186 111,180 107,177 104,173 99,171 92,171 86,171 81,173 77,177 73,180 71,185 71,191 Z\"/></g><g style=\"stroke:none;fill:none\"><rect x=\"58\" y=\"124\" width=\"69\" height=\"104\"/></g><g/></g></g></g></svg>\t\r\n\t";
 nx3.render.svg.SvgElements.tpl6 = "\r\n<svg ><g style=\"stroke:none;fill:#000000\"><path d=\"M 124,150 L 111,151 C 110,146 108,143 106,141 103,138 99,136 94,136 90,136 86,137 83,139 80,142 77,145 74,150 72,155 71,162 71,172 74,168 78,165 82,162 86,160 91,159 96,159 104,159 111,162 117,168 123,174 126,182 126,192 126,198 125,204 122,209 119,215 115,219 110,222 105,225 100,226 94,226 83,226 75,222 68,215 61,207 58,195 58,178 58,158 62,144 69,135 75,128 84,124 95,124 103,124 110,126 115,131 120,136 123,142 124,150 Z M 71,191 C 71,195 72,199 74,203 76,206 78,209 82,211 85,213 89,214 93,214 99,214 103,212 107,208 111,204 113,199 113,192 113,186 111,180 107,177 104,173 99,171 92,171 86,171 81,173 77,177 73,180 71,185 71,191 Z\"/></g></svg>\t\r\n\t";
 nx3.render.svg.SvgElements.tpl7 = "\r\n<svg ><g visibility=\"visible\" id=\"page1\"><desc>Slide</desc><g><desc>Drawing</desc><g><g style=\"stroke:none;fill:none\"><rect x=\"0\" y=\"464\" width=\"503\" height=\"1205\"/></g><g/></g></g><g><desc>Drawing</desc><g><g style=\"stroke:none;fill:#000000\"><path d=\"M 61,138 L 61,125 126,125 126,136 C 120,142 114,152 108,163 102,174 97,186 94,197 91,206 90,215 89,225 L 76,225 C 76,217 78,208 81,196 83,185 87,175 93,164 98,154 104,145 110,138 L 61,138 Z\"/></g><g style=\"stroke:none;fill:none\"><rect x=\"61\" y=\"125\" width=\"67\" height=\"101\"/></g><g/></g></g></g></svg>\t\r\n\t";
+nx3.utils.ScriptScoreX.MIN_SCORE_WIDTH = 400;
+nx3.utils.ScriptScoreX.SCORE_RIGHT_MARGIN = 40;
+nx3.utils.ScriptScoreX.SCORE_DEFAULT_WIDTH = 780;
+nx3.utils.ScriptScoreX.TOOLBAR_HEIGHT = 30;
+nx3.utils.ScriptScoreX.ID_PARENT = "-parent";
+nx3.utils.ScriptScoreX.ID_SVG = "-svg";
+nx3.utils.ScriptScoreX.ID_CANVAS = "-canvas";
+nx3.utils.ScriptScoreX.ID_TOOLBAR = "-toolbar";
+nx3.utils.ScriptScoreX.ID_PLAY = "-play";
+nx3.utils.ScriptScoreX.ID_STOP = "-stop";
+nx3.utils.ScriptScoreX.ID_LABEL = "-label";
 nx3.xml.BarXML.XBAR = "bar";
 nx3.xml.BarXML.XBAR_TYPE = "type";
 nx3.xml.BarXML.XBAR_TIME = "time";
@@ -18976,4 +23228,4 @@ ufront.web.upload.FileUpload.__meta__ = { obj : { 'interface' : null}};
 ufront.web.upload.TmpFileUploadMiddleware.subDir = "uf-upload-tmp";
 ufront.web.url.filter.UFUrlFilter.__meta__ = { obj : { 'interface' : null}};
 Main.main();
-})();
+})(typeof window != "undefined" ? window : exports);

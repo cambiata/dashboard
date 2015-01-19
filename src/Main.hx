@@ -1,5 +1,6 @@
 package;
 
+import app.ClientUI;
 import app.Iso;
 import app.MainController;
 import haxe.ds.StringMap;
@@ -19,12 +20,12 @@ using Lambda;
  */
 class Main 
 {
-	public static var app:ufront.app.UfrontApplication;
+	public static var application:ufront.app.UfrontApplication;
 	
 	public static function main() 
 	{
 		initApplication();	
-	
+		
 		#if Client			
 			// All clientside url actions are controlled through pushstate
 			pushstate.PushState.init();
@@ -36,33 +37,36 @@ class Main
 					// Timer can be used to dely the client side execution - useful when finding out what's going on...
 					//haxe.Timer.delay(function() {					
 					
-						app.execute(new  ufront.web.context.HttpContext( new ClientRequest(), new ClientResponse() , null,  new app.ClientSession(), new TestAuth()));
+						application.execute(new  ufront.web.context.HttpContext( new ClientRequest(), new ClientResponse() , null,  new app.ClientSession(), new TestAuth()));
 						
 						
 					//}, 1000);
 				}
 				Iso.setUI(js.Browser.window.location.pathname);
+				
 			});
 			
 			// This is used to put the add the very first  server-generated content to the clientside content cache
 			// to prevent the later  need of ajax-reloding it a second time...
 			Iso.addFirstRequestToCache();		
 			dashboard.Dashboard.init();
+			app.ClientUI.initScores('first');
+			
 		#end
 	
 		#if Server
-			app.executeRequest();
+			application.executeRequest();
 		#end		
 	}
 	
 	static function initApplication() {		
-		if ( app==null ) {
+		if ( application==null ) {
 			var config:ufront.web.UfrontConfiguration = {
 				indexController: MainController,
 				basePath: '/',	
 				authImplementation: TestAuth,
 			}						
-			app = new ufront.app.UfrontApplication(config);
+			application = new ufront.app.UfrontApplication(config);
 		}
 	}	
 }
@@ -95,7 +99,8 @@ class ClientResponse extends  ufront.web.context.HttpResponse {
 		// Note! Only the content part of the page is served here...
 		var contentHtml = _buff.toString();
 		// and injected into the content div
-		js.Browser.document.getElementById('content').innerHTML = contentHtml;		
+		js.Browser.document.getElementById('content').innerHTML = contentHtml;	
+		app.ClientUI.initScores();
 	}
 }
 

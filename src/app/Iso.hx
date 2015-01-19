@@ -36,7 +36,22 @@ class Iso
 	#if js
 	public static function isFirstRequest():Bool return ++stateChangeCount <= 1 ;
 	public static var stateChangeCount:Int = 0;	
-	public static var contentCache = new StringMap<String>();	
+	 static var contentCache = new StringMap<String>();	
+	 
+	 static public function contentCacheSet(id:String, content:String) {
+		// js.Lib.alert('SET : ' +  id + ' : ' +  content);
+		 contentCache.set(id, content);		 
+	 }
+	 
+	 static public function contentCacheGet(id:String):String {
+		 return contentCache.get(id);
+	 }
+	 
+	 static public function contentCacheExists(id:String) return contentCache.exists(id);
+	 
+	 
+	 
+	 
 	public static function addFirstRequestToCache() {
 				var contentEl = js.Browser.document.getElementById('content');
 				if (contentEl == null) {
