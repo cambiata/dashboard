@@ -1,4 +1,4 @@
-.nx-parent{margin-top:8px;border:3px solid #dddddd;border-radius:5px;margin-bottom:8px;padding:4px;box-sizing:content-box;}
+.nx-parent{margin-top:8px;border:3px solid #dddddd;border-radius:3px;margin-bottom:8px;padding:4px;box-sizing:content-box;}
 .nx-active{border:3px solid #348fe2;border-radius:5px;}
 .nx-activating{border:3px solid #ff5b57;border-radius:5px;}
 .nx-button{border:none;cursor:pointer;display:inline-block;border-radius:3px;font-weight:300;line-height:1.42857;margin-bottom:0;padding-top:1px;padding-bottom:2px;padding-left:8px;padding-right:8px;margin-right:3px;text-align:center;vertical-align:middle;white-space:nowrap;}

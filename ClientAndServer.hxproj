@@ -44,7 +44,7 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxe  -lib ufront-mvc -lib detox -lib jQueryExtern -cp src -cp ../nx3/src -cp ../HxAudioTools/src -js bin/client.js -D Client -main Main -lib format -dce std</preBuildCommand>
+  <preBuildCommand>haxe  -lib ufront-mvc -lib detox -lib jQueryExtern -cp src -cp ../nx3/src -cp ../HxAudioTools/src -js bin/client.js -D Client -main Main -lib format -dce full</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False">haxe  -lib ufront-mvc -lib detox -lib nme -cp src -cp ../nx3/src   -neko bin/index.n -D Server -main Main</postBuildCommand>
   <!-- Other project options -->

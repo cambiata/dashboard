@@ -1,18 +1,16 @@
 <div class="jumbotron nx-jumbo">
         <h1>Välkommen till primavista.nu!</h1>
-        <p>Nätbaserad musikteori och gehörsträning.</p>        
+        <p>Nätplatsen för musikteori och gehörsträning.</p>        
 </div>
 
-
-
 <p>
-	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/intervall1">
+	<h2>Hello, world!</h2>
+	<p>Primavista.nu har sett dagens ljus. </p>
+	<hr />
+	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/tpless1">
 		<i class="fa fa-file fa-2x pull-left"></i>
-		Intervall 1a
-		
+		Tonplatser<br/>Ess-dur 1
 	</a>
-
-
 	
 </p>
 
