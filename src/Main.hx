@@ -52,6 +52,8 @@ class Main
 			dashboard.Dashboard.init();
 			app.ClientUI.initScores('first');
 			
+			Exercises;
+			
 		#end
 	
 		#if Server
@@ -70,6 +72,9 @@ class Main
 		}
 	}	
 }
+
+
+
 
 
 
