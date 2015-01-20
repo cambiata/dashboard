@@ -357,7 +357,7 @@ ufront.web.context.HttpResponse.prototype = {
 		this._flushed = true;
 	}
 	,flush: function() {
-		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 108, className : "ufront.web.context.HttpResponse", methodName : "flush"});
+		throw new thx.core.error.NotImplemented({ fileName : "HttpResponse.hx", lineNumber : 110, className : "ufront.web.context.HttpResponse", methodName : "flush"});
 	}
 	,clear: function() {
 		this.clearCookies();
@@ -10396,7 +10396,7 @@ nx3.audio.NotenrTools.getNotesNotenritems = function(partsnotes) {
 };
 nx3.audio.NotenrTools.getPartsnotesMp3files = function(partsnotes,partsSounds,path,soundFallback) {
 	if(soundFallback == null) soundFallback = "piano";
-	if(path == null) path = "sounds/";
+	if(path == null) path = "/sounds/";
 	var result = [];
 	if(partsSounds == null) partsSounds = [];
 	while(partsSounds.length < partsnotes.length) partsSounds.push(soundFallback);
@@ -11953,12 +11953,14 @@ nx3.utils.ScriptScoresXInteraction.prototype = {
 		this.activateScore(scriptScore);
 	}
 	,onPlay: function(scriptScore) {
+		haxe.Log.trace("play " + scriptScore.id,{ fileName : "ScriptScoresXInteraction.hx", lineNumber : 34, className : "nx3.utils.ScriptScoresXInteraction", methodName : "onPlay"});
 		this.play(scriptScore);
 	}
 	,onStop: function() {
 		this.stop();
 	}
 	,onInteract: function(scriptScore,interaction) {
+		haxe.Log.trace("interact " + scriptScore.id + " : " + Std.string(interaction),{ fileName : "ScriptScoresXInteraction.hx", lineNumber : 45, className : "nx3.utils.ScriptScoresXInteraction", methodName : "onInteract"});
 		switch(interaction[1]) {
 		case 0:
 			var sound = interaction[5];
@@ -11966,7 +11968,7 @@ nx3.utils.ScriptScoresXInteraction.prototype = {
 			var note = interaction[3];
 			var scoreId = interaction[2];
 			var midinr = noteinfo.midinr;
-			var filename = "sounds/piano/" + midinr + ".mp3";
+			var filename = "/sounds/piano/" + midinr + ".mp3";
 			var this1 = (audiotools.sound.Wav16SoundLoader.instance == null?audiotools.sound.Wav16SoundLoader.instance = new audiotools.sound.Wav16SoundLoader():audiotools.sound.Wav16SoundLoader.instance).getWav16s([filename],function(val) {
 			});
 			this1(function(map) {
@@ -12196,6 +12198,12 @@ nx3.xml.NoteXML.fromXmlStr = function(xmlStr) {
 		if(midinotestr != null) midinote = Std.parseInt(midinotestr); else midinote = 0;
 		type = nx3.ENoteType.Pitch(level,midinote);
 		break;
+	case "tpl":
+		var levelstr1 = xml.get("level");
+		var level1;
+		if(levelstr1 != null) level1 = Std.parseInt(levelstr1); else level1 = 0;
+		type = nx3.ENoteType.Tpl(level1);
+		break;
 	}
 	var valStr = xml.get("val");
 	var value = nx3.ENoteValTools.fromValString(valStr);
@@ -12219,7 +12227,7 @@ nx3.xml.PartXML.fromXmlStr = function(xmlStr) {
 	if(typeStr == "pitchchain") {
 		var leveloffset = Std.parseInt(xml.get("leveloffset"));
 		type = nx3.EPartType.PitchChain(leveloffset);
-	} else type = cx.EnumTools.createFromString(nx3.EPartType,typeStr);
+	} else if(typeStr == "tplchain") type = nx3.EPartType.Tplchain; else type = cx.EnumTools.createFromString(nx3.EPartType,typeStr);
 	var str = xml.get("clef");
 	var clef = null;
 	if(str != null) clef = cx.EnumTools.createFromString(nx3.EClef,str);
@@ -12395,7 +12403,7 @@ thx.core.Strings.__name__ = ["thx","core","Strings"];
 thx.core.Strings.contains = function(s,test) {
 	return s.indexOf(test) >= 0;
 };
-thx.core.Strings.trimCharsLeft = function(value,charlist) {
+thx.core.Strings.trimLeft = function(value,charlist) {
 	var pos = 0;
 	var _g1 = 0;
 	var _g = value.length;
@@ -12405,7 +12413,7 @@ thx.core.Strings.trimCharsLeft = function(value,charlist) {
 	}
 	return value.substring(pos);
 };
-thx.core.Strings.trimCharsRight = function(value,charlist) {
+thx.core.Strings.trimRight = function(value,charlist) {
 	var len = value.length;
 	var pos = len;
 	var i;
@@ -12837,7 +12845,7 @@ ufront.app.HttpApplication.prototype = {
 					return f3(a13,a21);
 				};
 			})($bind(m3,m3.log),_g.messages);
-			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+			var b3 = ufront.web.HttpError.fakePosition(m3,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 278, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 			return { a : a4, b : b3};
 		});
 		var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(this.init(),function(n) {
@@ -12904,7 +12912,7 @@ ufront.app.HttpApplication.prototype = {
 						return f(a1,a2);
 					};
 				})($bind(m,m.handleError),err);
-				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
+				var b = ufront.web.HttpError.fakePosition(m,"handleError",[{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 365, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("err"))}]);
 				return { a : a, b : b};
 			});
 			var resMidModules = this.responseMiddleware.map(function(m1) {
@@ -12922,7 +12930,7 @@ ufront.app.HttpApplication.prototype = {
 						return f2(a12,a21);
 					};
 				})($bind(m2,m2.log),_g.messages);
-				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "f:\\_haxelib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
+				var b2 = ufront.web.HttpError.fakePosition(m2,"log",["{HttpContext}",{ pos : { fileName : "F:\\_lib/ufront-mvc/1,0,0-rc,10/src/ufront/app/HttpApplication.hx", lineNumber : 367, className : ""}, expr : haxe.macro.ExprDef.EConst(haxe.macro.Constant.CIdent("messages"))}]);
 				return { a : a4, b : b2};
 			});
 			var allDone = tink.core._Future.Future_Impl_._tryFailingFlatMap(tink.core._Future.Future_Impl_._tryFailingFlatMap(this.executeModules(errHandlerModules,ctx,ufront.web.context.RequestCompletion.CErrorHandlersComplete),function(n) {
@@ -13052,7 +13060,7 @@ ufront.app.UfrontApplication = function(optionsIn) {
 		this.addLogHandler(new ufront.log.RemotingLogger(),null,null);
 	}
 	if(null != this.configuration.logFile) this.addLogHandler(new ufront.log.FileLogger(this.configuration.logFile),null,null);
-	var path = thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(this.configuration.basePath,"/"),"/");
+	var path = thx.core.Strings.trimRight(thx.core.Strings.trimLeft(this.configuration.basePath,"/"),"/");
 	if(path.length > 0) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.DirectoryUrlFilter(path));
 	if(this.configuration.urlRewrite != true) ufront.app.HttpApplication.prototype.addUrlFilter.call(this,new ufront.web.url.filter.PathInfoUrlFilter());
 	if(this.configuration.sessionImplementation != null) this.inject(ufront.web.session.UFHttpSession,null,this.configuration.sessionImplementation);

@@ -1,9 +1,7 @@
 <h1>Intervall 1</h1>
 
-
-
 <div>
-	<script class="nx-score" id="test1" type="text/xml" data-tempo="100" data-sounds="piano,guitar,bass" data-scaling="mid">
+	<script class="nx-score" id="intervall1" type="text/xml" data-tempo="100" data-sounds="piano" data-scaling="normal">
 		<score>
 			<config test="12345"/>
 			<bar time="C">
@@ -19,10 +17,16 @@
 				<note><headx level="-3"/></note>				
 			</voice></part>
 			
-			<part clef="ClefG" key="Flat3" type="pitchchain"><voice>
-				<tpl><headx level="4"/></tpl>
+			<part clef="ClefG" key="Flat3" type="tplchain"><voice>
+				<tpl level="0" />
+				<tpl level="-1" />
+				<tpl level="-2" />
+				<tpl level="-3" />
+				<tpl level="-4" />
+				<tpl level="-5" />
+				<tpl level="-6" />
+				<tpl level="-7" />
 			</voice></part>
-			
 			
 			</bar>
 		</score>
