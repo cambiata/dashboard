@@ -152,22 +152,8 @@ Exercises.random = function(scoreId) {
 		default:
 		}
 	};
-	Exercises.showInstructions("<p>En slumpvis tonföljd (" + Exercises.count + " toner lång) har skapats. Klicka nu på playknappen för att höra tonföljden spelas.</p><button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button>");
-	var div = window.document.getElementById("feedbackdiv");
-	var _g1 = 0;
-	var _g = Exercises.count;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var span;
-		var _this = window.document;
-		span = _this.createElement("span");
-		span.textContent = Std.string(i + 1);
-		span.classList.add("btn");
-		span.classList.add("btn-default");
-		span.classList.add("btn-circle");
-		span.style.marginLeft = "4px";
-		div.appendChild(span);
-	}
+	Exercises.showInstructions("\r\n\t\t\t<button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button>\r\n\t\t\t<hr />\r\n\t\t\t<p>En ny slumpgenererad tonföljd har skapats, " + Exercises.count + " toner lång. Tonerna motsvaras av " + Exercises.count + " runda grå cirklar ovan. Klicka nu på playknappen för att höra tonföljden spelas.</p>\r\n\t\t");
+	Exercises.drawBlank();
 };
 Exercises.feedback = function() {
 	var div = window.document.getElementById("feedbackdiv");
@@ -202,7 +188,7 @@ Exercises.feedback = function() {
 		var span;
 		var _this = window.document;
 		span = _this.createElement("span");
-		span.textContent = Std.string(anidx + 1);
+		span.innerHTML = "&nbsp;&nbsp;";
 		span.classList.add("btn");
 		span.classList.add("btn-default");
 		span.classList.add("btn-circle");
@@ -211,31 +197,20 @@ Exercises.feedback = function() {
 		div.appendChild(span);
 		anidx++;
 	}
-	var _g31 = anidx;
-	var _g22 = randomTags.length;
-	while(_g31 < _g22) {
-		var i = _g31++;
-		var span1;
-		var _this1 = window.document;
-		span1 = _this1.createElement("span");
-		span1.textContent = Std.string(i + 1);
-		span1.classList.add("btn");
-		span1.classList.add("btn-default");
-		span1.classList.add("btn-circle");
-		span1.style.marginLeft = "4px";
-		div.appendChild(span1);
-	}
+	Exercises.drawBlank(anidx);
 	var correct = Std.string(randomTags) == Std.string(answerTags);
 	if(correct) {
 		Exercises.correctCount++;
 		if(Exercises.correctCount > Exercises.correctIncrease) {
 			Exercises.correctCount = 0;
 			Exercises.count++;
-			Exercises.showInstructions("<h3>Bravo!</h3><p>Nu förlängs övningen till " + Exercises.count + " toner.</p><button class=\"btn btn-primary\" onmousedown=\"Exercises.random(\"" + Exercises.currentScoreId + "\")\">Skapa nytt slumpexempel</button>",true);
-			Exercises.random(Exercises.currentScoreId);
-		} else {
-			Exercises.showInstructions("<h3>Rätt!</h3><p>Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.</p><button id=\"btnRandomCreate\" class=\"btn btn-primary\" onmousedown=\"Exercises.random(\"" + Exercises.currentScoreId + "\")\">Skapa nytt slumpexempel</button>",true);
+			Exercises.showInstructions("\r\n\t\t\t\t<button id=\"btnRandomCreate\" class=\"btn btn-primary\" >Skapa nytt slumpexempel</button>\t\r\n\t\t\t\t<hr />\r\n\t\t\t\t<p><b>Bravo!</b>Nu förlängs övningen till " + Exercises.count + " toner.</p>\r\n\t\t\t\t",true);
 			window.document.getElementById("btnRandomCreate").onmousedown = function(e) {
+				Exercises.random(Exercises.currentScoreId);
+			};
+		} else {
+			Exercises.showInstructions("\r\n\t\t\t\t\t<button id=\"btnRandomCreate\" class=\"btn btn-primary\" >Skapa nytt slumpexempel</button>\r\n\t\t\t\t\t<hr />\r\n\t\t\t\t\t<p><b>Rätt!</b> Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.</p>\r\n\t\t\t\t",true);
+			window.document.getElementById("btnRandomCreate").onmousedown = function(e1) {
 				Exercises.random(Exercises.currentScoreId);
 			};
 		}
@@ -244,7 +219,25 @@ Exercises.feedback = function() {
 	}
 	if(answerTags.length >= randomTags.length) {
 		Exercises.clear(true,true);
-		Exercises.showInstructions("<p>Du har svarat genom att klicka på " + Exercises.count + " toner. Inte alla rätt! Klicka på Play-knappen och försök igen!</p>");
+		Exercises.showInstructions("\r\n\t\t\t\t<button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button>\r\n\t\t\t\t<hr />\r\n\t\t\t\t<p>Du har svarat genom att klicka på " + Exercises.count + " toner. Inte alla rätt! Klicka på Play-knappen och försök igen!</p>\r\n\t\t\t");
+	}
+};
+Exercises.drawBlank = function(startIdx) {
+	if(startIdx == null) startIdx = 0;
+	var div = window.document.getElementById("feedbackdiv");
+	var _g1 = startIdx;
+	var _g = Exercises.count;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var span;
+		var _this = window.document;
+		span = _this.createElement("span");
+		span.innerHTML = "&nbsp;&nbsp;";
+		span.classList.add("btn");
+		span.classList.add("btn-default");
+		span.classList.add("btn-circle");
+		span.style.marginLeft = "4px";
+		div.appendChild(span);
 	}
 };
 Exercises.playRandom = function() {
@@ -256,17 +249,17 @@ Exercises.playRandom = function() {
 	};
 	var this1 = (audiotools.utils.Wav16PartsBuilder.instance == null?audiotools.utils.Wav16PartsBuilder.instance = new audiotools.utils.Wav16PartsBuilder():audiotools.utils.Wav16PartsBuilder.instance).getScoreWav16Async(Exercises.nscoreRandom,60);
 	this1(function(wav16) {
-		haxe.Log.trace("FINISHED nscore1",{ fileName : "Exercises.hx", lineNumber : 191, className : "Exercises", methodName : "playRandom"});
+		haxe.Log.trace("FINISHED nscore1",{ fileName : "Exercises.hx", lineNumber : 207, className : "Exercises", methodName : "playRandom"});
 		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).initSound(wav16,playCallback,Exercises.nscoreRandom.uuid + "60");
 		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).start(0);
-		Exercises.showInstructions("<p>När tonföljden (" + Exercises.count + " toner lång) spelats färdig: Klicka på de noterna ovan i den ordning du uppfattar dem. För varje ton du klickar på så visas en rund markering nedan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p><button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button><button class=\"btn btn-warning\" onmousedown=\"Exercises.clear()\">Rensa</button>");
+		Exercises.showInstructions("\r\n\t\t\t <button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button><button class=\"btn btn-warning\" style=\"margin-left:4px\" onmousedown=\"Exercises.clear(true, false)\">Rensa</button>\r\n\t\t\t <hr />\r\n\t\t\t <p>När tonföljden (" + Exercises.count + " toner lång) spelats färdig: Klicka på nothuvudena ovan i den ordning du uppfattar dem. För varje ton du klickar på så färgas motsvarande runda markering ovan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p>\r\n\t\t\t ");
 	});
 };
-Exercises.clear = function(clearFeedback,clearRandom) {
-	if(clearRandom == null) clearRandom = true;
+Exercises.clear = function(clearFeedback,clearInstructions) {
+	if(clearInstructions == null) clearInstructions = true;
 	if(clearFeedback == null) clearFeedback = false;
 	if(clearFeedback) window.document.getElementById("feedbackdiv").innerHTML = "";
-	if(clearRandom) window.document.getElementById("instructions").innerHTML = "";
+	if(clearInstructions) window.document.getElementById("instructions").innerHTML = "";
 	Exercises.answerNotes = [];
 };
 Exercises.getNScore = function(scoreId) {
@@ -16733,7 +16726,8 @@ nx3.utils.ScriptScoreX.prototype = {
 			var $it0 = notesrects.keys();
 			while( $it0.hasNext() ) {
 				var note = $it0.next();
-				var rect1 = notesrects.h[note.__id__];
+				var rect1 = notesrects.h[note.__id__].clone();
+				rect1.inflate(2,1);
 				if(rect1.containsPoint(point)) {
 					var noteinfo;
 					var this1 = _g.drawingtools.getNotesNotenritems();

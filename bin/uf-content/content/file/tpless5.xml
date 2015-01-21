@@ -45,16 +45,17 @@
 	</script>
 </div>
 
-<p id="randomFeedback">Klicka på Skapa-knappen för att skapa ett nytt övningsexempel.</p>
+<div id="feedbackdiv" style="margin-left:0px;height: 50px"></div>
 
-<div class="nx-randomrow" data-score="intervall1">
-	
-	<button class="btn btn-primary" onmousedown="Exercises.random('intervall1')">Skapa nytt slumpexempel</button>		
-	<button class="btn btn-primary" onmousedown="Exercises.playRandom()">Play</button>		
-	<button class="btn btn-primary" onmousedown="Exercises.clear()">Rensa</button>		
-	
-	<div id="feedbackdiv" style="float:right;margin-left:20px;"></div>
+<div id="instructions">
+	<div class="alert alert-warning">
+		<button class="btn btn-primary" onmousedown="Exercises.init(); Exercises.random('intervall1');">Skapa nytt slumpexempel</button>
+		<hr />
+		<p>Klicka på Skapa-knappen ovan för att skapa ett nytt exempel.</p>
+	</div>
 </div>
+
+
 <hr />
  <ul class="pagination pagination-lg">
     <li><a rel="pushstate" href="/file/tpless1" >1</a></li>

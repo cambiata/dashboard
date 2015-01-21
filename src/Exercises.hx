@@ -36,15 +36,12 @@ class Exercises
 	*/
 	
 	static public function init() {
-		
+		count = 2;
 		//Lib.alert('init');
-		
 	}
 	
-	
-	
 	static var count:Int = 2;
-	static var correctIncrease = 5;
+	static var correctIncrease = 4;
 	static var correctCount = 0;
 
 	
@@ -78,19 +75,13 @@ class Exercises
 			
 			//Lib.alert(scoreId + ' ' + scriptScore.id);
 		}
-		showInstructions('<p>En slumpvis tonföljd ($count toner lång) har skapats. Klicka nu på playknappen för att höra tonföljden spelas.</p><button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button>');
+		showInstructions('
+			<button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button>
+			<hr />
+			<p>En ny slumpgenererad tonföljd har skapats, $count toner lång. Tonerna motsvaras av $count runda grå cirklar ovan. Klicka nu på playknappen för att höra tonföljden spelas.</p>
+		');
 		
-		var div = Browser.document.getElementById('feedbackdiv');
-		for (i in 0 ... count) {
-			var span = Browser.document.createSpanElement();
-			span.textContent = Std.string(i + 1);
-			span.classList.add('btn');
-			span.classList.add('btn-default');
-			span.classList.add('btn-circle');
-			span.style.marginLeft = '4px';
-			div.appendChild(span);	
-		}		
-		
+		drawBlank();
 	}
 	
 	static function feedback() {
@@ -117,7 +108,7 @@ class Exercises
 			var noteExists:Bool = randomTags.has(at);
 			
 			var span = Browser.document.createSpanElement();
-			span.textContent = Std.string(anidx + 1);
+			span.innerHTML = '&nbsp;&nbsp;'; // Std.string(anidx + 1);
 			span.classList.add('btn');
 			span.classList.add('btn-default');
 			span.classList.add('btn-circle');
@@ -134,16 +125,7 @@ class Exercises
 			
 			anidx++;
 		}
-		for (i in anidx ... randomTags.length) {
-			var span = Browser.document.createSpanElement();
-			span.textContent = Std.string(i + 1);
-			span.classList.add('btn');
-			span.classList.add('btn-default');
-			span.classList.add('btn-circle');
-			span.style.marginLeft = '4px';
-			div.appendChild(span);	
-			
-		}
+		drawBlank(anidx);
 		
 		var correct = (Std.string(randomTags) == Std.string(answerTags));
 		if (correct) {
@@ -152,11 +134,21 @@ class Exercises
 				correctCount = 0;
 				count++;			
 				//Lib.alert('Bravo! Nu förlängs övningen till $count toner.');
-				showInstructions('<h3>Bravo!</h3><p>Nu förlängs övningen till $count toner.</p><button class="btn btn-primary" onmousedown="Exercises.random("$currentScoreId")">Skapa nytt slumpexempel</button>', true);
-				Exercises.random(currentScoreId);
+				showInstructions('
+				<button id="btnRandomCreate" class="btn btn-primary" >Skapa nytt slumpexempel</button>	
+				<hr />
+				<p><b>Bravo!</b>Nu förlängs övningen till $count toner.</p>
+				', true);
+				Browser.document.getElementById('btnRandomCreate').onmousedown = function(e) {
+					Exercises.random(currentScoreId);
+				}
 			} else {
 				//Lib.alert('Korrekt!');
-				showInstructions('<h3>Rätt!</h3><p>Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.</p><button id="btnRandomCreate" class="btn btn-primary" onmousedown="Exercises.random("$currentScoreId")">Skapa nytt slumpexempel</button>', true);
+				showInstructions('
+					<button id="btnRandomCreate" class="btn btn-primary" >Skapa nytt slumpexempel</button>
+					<hr />
+					<p><b>Rätt!</b> Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.</p>
+				', true);
 				Browser.document.getElementById('btnRandomCreate').onmousedown = function(e) {
 					Exercises.random(currentScoreId);
 				}
@@ -168,10 +160,30 @@ class Exercises
 		
 		if (answerTags.length >= randomTags.length) {
 			clear(true, true);
-			showInstructions('<p>Du har svarat genom att klicka på $count toner. Inte alla rätt! Klicka på Play-knappen och försök igen!</p>');
+			showInstructions('
+				<button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button>
+				<hr />
+				<p>Du har svarat genom att klicka på $count toner. Inte alla rätt! Klicka på Play-knappen och försök igen!</p>
+			');
 		}
 		
 	}
+	
+	static function drawBlank(startIdx = 0) {
+		
+		var div = Browser.document.getElementById('feedbackdiv');
+		for (i in startIdx ... count) {
+			var span = Browser.document.createSpanElement();
+			span.innerHTML = '&nbsp;&nbsp;'; // Std.string(i + 1);
+			span.classList.add('btn');
+			span.classList.add('btn-default');
+			span.classList.add('btn-circle');
+			span.style.marginLeft = '4px';
+			div.appendChild(span);	
+		}			
+	}
+	
+	
 	
 	static var answerNotes:NNotes = [];
 	
@@ -192,14 +204,18 @@ class Exercises
 			 Wav16SoundManager.getInstance().initSound(wav16, playCallback, nscoreRandom.uuid + '60');
 			 //this.drawingTools.drawColumnFromTime(0);
 			 Wav16SoundManager.getInstance().start(0);										
-			 showInstructions('<p>När tonföljden ($count toner lång) spelats färdig: Klicka på de noterna ovan i den ordning du uppfattar dem. För varje ton du klickar på så visas en rund markering nedan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p><button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button><button class="btn btn-warning" onmousedown="Exercises.clear()">Rensa</button>');
+			 showInstructions('
+			 <button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button><button class="btn btn-warning" style="margin-left:4px" onmousedown="Exercises.clear(true, false)">Rensa</button>
+			 <hr />
+			 <p>När tonföljden ($count toner lång) spelats färdig: Klicka på nothuvudena ovan i den ordning du uppfattar dem. För varje ton du klickar på så färgas motsvarande runda markering ovan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p>
+			 ');
 		});			
 		
 	}
 	
-	static public function clear(clearFeedback:Bool=false, clearRandom=true) {
+	static public function clear(clearFeedback:Bool=false, clearInstructions=true) {
 		if (clearFeedback) Browser.document.getElementById('feedbackdiv').innerHTML = '';	
-		if (clearRandom) Browser.document.getElementById('instructions').innerHTML = '';
+		if (clearInstructions) Browser.document.getElementById('instructions').innerHTML = '';
 		answerNotes = [];	
 		//feedback();
 		//Browser.document.getElementById('randomFeedback').textContent = Std.string(answerNotes.length);
