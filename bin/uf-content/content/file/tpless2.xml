@@ -1,3 +1,9 @@
+<script>
+	alert('init2');
+	//Exercises.init();
+</script>
+
+
 <h1>Tonplatser • Ess-dur 2</h1>
 <p>Med denna modul skapas slumpmässiga tonplatsföljder i tonarten Ess-dur, inledningsvis med två olika tonhöjder. I takt med dina lyckade försök så utökas exemplet med fler och fler toner.</p>
 <h3>Gör så här:</h3>

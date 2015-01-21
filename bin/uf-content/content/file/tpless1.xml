@@ -32,7 +32,13 @@
 	</script>
 </div>
 
-<p id="randomFeedback">Klicka på Skapa-knappen för att skapa ett nytt övningsexempel.</p>
+<div id="instructions">
+	<div class="alert alert-warning">
+		<p>Starta här</p>
+		<button class="btn btn-primary" onmousedown="Exercises.random('intervall1')">Skapa nytt slumpexempel</button>		
+	</div>
+	
+</div>
 
 <div class="nx-randomrow" data-score="intervall1" >
 	

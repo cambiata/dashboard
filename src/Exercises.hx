@@ -35,6 +35,14 @@ class Exercises
 	}
 	*/
 	
+	static public function init() {
+		
+		//Lib.alert('init');
+		
+	}
+	
+	
+	
 	static var count:Int = 2;
 	static var correctIncrease = 5;
 	static var correctCount = 0;
@@ -43,8 +51,10 @@ class Exercises
 	static var nscoreRandom:NScore;
 	static var currentScoreId:String;
 	
+	
+	
 	static public function random(scoreId:String = '') {
-		
+		currentScoreId = scoreId;
 		var nscore = getNScore(scoreId);
 		//Lib.alert(scoreId);
 		clear(true, true);
@@ -68,7 +78,7 @@ class Exercises
 			
 			//Lib.alert(scoreId + ' ' + scriptScore.id);
 		}
-		showFeedback('Ett slumpvis tonföljd ($count toner lång) har skapats. Klicka nu på playknappen för att höra tonföljden spelas.');
+		showInstructions('<p>En slumpvis tonföljd ($count toner lång) har skapats. Klicka nu på playknappen för att höra tonföljden spelas.</p><button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button>');
 		
 		var div = Browser.document.getElementById('feedbackdiv');
 		for (i in 0 ... count) {
@@ -137,25 +147,28 @@ class Exercises
 		
 		var correct = (Std.string(randomTags) == Std.string(answerTags));
 		if (correct) {
-			
-			
 			correctCount++;
 			if (correctCount > correctIncrease) {
 				correctCount = 0;
 				count++;			
 				//Lib.alert('Bravo! Nu förlängs övningen till $count toner.');
-				showFeedback('Bravo! Nu förlängs övningen till $count toner.', true);
+				showInstructions('<h3>Bravo!</h3><p>Nu förlängs övningen till $count toner.</p><button class="btn btn-primary" onmousedown="Exercises.random("$currentScoreId")">Skapa nytt slumpexempel</button>', true);
+				Exercises.random(currentScoreId);
 			} else {
 				//Lib.alert('Korrekt!');
-				showFeedback('Korrekt! Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.', true);
+				showInstructions('<h3>Rätt!</h3><p>Klicka på Skapa-knappen och därefter på Play-knappen för att lyssna till ett nytt exempel.</p><button id="btnRandomCreate" class="btn btn-primary" onmousedown="Exercises.random("$currentScoreId")">Skapa nytt slumpexempel</button>', true);
+				Browser.document.getElementById('btnRandomCreate').onmousedown = function(e) {
+					Exercises.random(currentScoreId);
+				}
+				//Exercises.random(currentScoreId);
 			}
 			answerNotes = [];
 			return;
 		}
 		
 		if (answerTags.length >= randomTags.length) {
-			showFeedback('Du har svarat genom att klicka på $count toner. Inte alla rätt! Klicka på Rensa-knappen, och därefter på Play-knappen och försök igen!');
-			clear(false, false);
+			clear(true, true);
+			showInstructions('<p>Du har svarat genom att klicka på $count toner. Inte alla rätt! Klicka på Play-knappen och försök igen!</p>');
 		}
 		
 	}
@@ -179,14 +192,14 @@ class Exercises
 			 Wav16SoundManager.getInstance().initSound(wav16, playCallback, nscoreRandom.uuid + '60');
 			 //this.drawingTools.drawColumnFromTime(0);
 			 Wav16SoundManager.getInstance().start(0);										
-			 showFeedback('När tonföljden ($count toner lång) spelats färdig: Klicka på de noterna ovan i den ordning du uppfattar dem. För varje ton du klickar på så visas en rund markering nedan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.');
+			 showInstructions('<p>När tonföljden ($count toner lång) spelats färdig: Klicka på de noterna ovan i den ordning du uppfattar dem. För varje ton du klickar på så visas en rund markering nedan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p><button class="btn btn-success" onmousedown="Exercises.playRandom()">Play</button><button class="btn btn-warning" onmousedown="Exercises.clear()">Rensa</button>');
 		});			
 		
 	}
 	
 	static public function clear(clearFeedback:Bool=false, clearRandom=true) {
 		if (clearFeedback) Browser.document.getElementById('feedbackdiv').innerHTML = '';	
-		if (clearRandom) Browser.document.getElementById('randomFeedback').innerHTML = '';
+		if (clearRandom) Browser.document.getElementById('instructions').innerHTML = '';
 		answerNotes = [];	
 		//feedback();
 		//Browser.document.getElementById('randomFeedback').textContent = Std.string(answerNotes.length);
@@ -203,14 +216,14 @@ class Exercises
 		return nscore;
 	}	
 	
-	static public function showFeedback(msg:String, alert:Bool=false) {
+	static public function showInstructions(msg:String, alert:Bool=false) {
 		if (alert) {
 			var html = '<div class="alert alert-success">$msg</div>';
-			Browser.document.getElementById('randomFeedback').innerHTML = html;
+			Browser.document.getElementById('instructions').innerHTML = html;
 		} else 
 		{
 			var html = '<div class="alert alert-warning">$msg</div>';
-			Browser.document.getElementById('randomFeedback').innerHTML = html;
+			Browser.document.getElementById('instructions').innerHTML = html;
 		}
 	}
 	
