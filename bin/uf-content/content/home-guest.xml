@@ -1,16 +1,28 @@
 <div class="jumbotron nx-jumbo">
-        <h1>Välkommen till primavista.nu!</h1>
-        <p>Nätplatsen för musikteori och gehörsträning.</p>        
+	<p>Välkommen till</p>   
+	<h1>Körakademin Plus</h1>
+             
 </div>
 
 <p>
-	<h2>Hello, world!</h2>
-	<p>Primavista.nu har sett dagens ljus. </p>
-	<hr />
+	<h3>Aktuellt</h3>
+	
 	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/tpless1">
 		<i class="fa fa-file fa-2x pull-left"></i>
 		Tonplatser<br/>Ess-dur 1
-	</a>
+	</a>	
+	<hr />
+	
+	<h1>Välkommen kursdeltagare i Körakademin Plus!</h1>
+	<p>Här på kurssajten kan du botanisera i övningsmaterial för rösten, för notläsning och gehör och öka på dina musikkunskaper.Vi arbetar vidare för att denna nätplats ska bli en riktigt bra resurs för dej som vill utvecklas som körsångare. Du får gärna komma med önskemål och tips om vad du skulle vilja veta mer om gällande körsång och musik. Kontakta då projektledare lillemor.bodin.carlson.mellansel@folkbildning.net. Du kan också ringa tel 0661-654412</p>
+	
+	<h3>Så här fungerar Körakademin Plus</h3>
+	<p>Du jobbar i egen takt och övar på det som är relevant för dej. Längre ned på sidan finns en kursplan som vi tänker att du kan följa. Du registreras som deltagare i distanskurs vid Mellansels folkhögskola för ett läsår i taget. I kurstiden ingår dina övningar, konserter och annat engagemang i din lokala kör, dina scorx-studier, konsertbesök och liknande som kan bidra till din musikaliska utveckling. Vi beräknar att detta tar i snitt fem timmar i veckan.</p>
+
+	<p>Som deltagare i Körakademin Plus har du unik tillgång till Körakademins hela notbibliotek. Passa på att under din kurstid botanisera bland den inspelade körmusiken som du kan spela upp i Scorx-spelaren via ditt konto på scorx-org. Ditt övande i din egen hemmakör är också en del av kurstiden så ju mer repertoar som din kör använder från biblioteket desto mer relevant blir ditt scorx-övande.</p>
+
+	<p>Inspelningarna görs av Körakademin, med professionella sångare och musiker. Vi fyller på musikbiblioteket så raskt vi kan beroende på rättigheter och ekonomi. Våra repertoarval styrs av efterfrågan och vi vill gärna vara en tillgång för Sveriges alla olika körer. Musik som är flitigt använd av körerna kommer att prioriteras för nya inspelningar. Körakademin är ett samarbete mellan Sensus och Mellansels folkhögskola.</p>
+
 	
 </p>
 

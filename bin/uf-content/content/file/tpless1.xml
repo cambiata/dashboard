@@ -1,53 +1,93 @@
-<h1>Tonplatser • Ess-dur 1</h1>
-<p>Med denna modul skapas slumpmässiga tonplatsföljder i tonarten Ess-dur, inledningsvis med två olika tonhöjder. I takt med dina lyckade försök så utökas exemplet med fler och fler toner.</p>
-<h3>Gör så här:</h3>
-<ol>
+<h1>Tonplatser Ess-dur 1</h1>
+
+<p>Här skapas slumpmässiga tonplatsföljder i tonarten Ess-dur, inledningsvis med två olika tonhöjder. I takt med dina lyckade försök så utökas exemplet med fler och fler toner.</p>
+<h4>Gör så här:</h4>
+<ul>
 	<li>Börja med att bekanta dig med tonmaterialet genom att klicka på nothuvudena i notexemplet nedan. Sjung med (gärna på tonplatssiffror) och memorera tonhöjderna.</li>
 	<li>Klicka på Skapa-knappen nedan, och följ de instruktioner som visas.</li>
-</ol>
+</ul>
 <hr />
 
 <div>
-	<script class="nx-score" id="intervall1" type="text/xml" data-tempo="100" data-sounds="piano,silent" data-scaling="normal">
+	<script class="nx-score"
+	        id="intervall1"
+	        type="text/xml"
+	        data-tempo="100"
+	        data-sounds="piano,silent"
+	        data-scaling="normal">
 		<score>
-			<config test="12345"/>
+			<config test="12345" />
 			<bar time="C">
-			
-			<part clef="ClefG" key="Flat3"><voice>
-				<note><headx level="5"/></note>
-				<note><headx level="4"/></note>
-				<note><headx level="3"/></note>
-				<note><headx level="2"/></note>
-			</voice></part>
-			
-			<part clef="ClefG" key="Flat3" type="tplchain"><voice>
-				<tpl level="1" />
-				<tpl level="0" />
-				<tpl level="-1" />
-				<tpl level="-2" />
-			</voice></part>
-			
+
+				<part clef="ClefG"
+				      key="Flat3">
+					<voice>
+						<note>
+							<headx level="5" />
+						</note>
+						<note>
+							<headx level="4" />
+						</note>
+						<note>
+							<headx level="3" />
+						</note>
+						<note>
+							<headx level="2" />
+						</note>
+					</voice>
+				</part>
+
+				<part clef="ClefG"
+				      key="Flat3"
+				      type="tplchain">
+					<voice>
+						<tpl level="1" />
+						<tpl level="0" />
+						<tpl level="-1" />
+						<tpl level="-2" />
+					</voice>
+				</part>
+
 			</bar>
 		</score>
 	</script>
 </div>
 
-<div id="feedbackdiv" style="margin-left:0px;height: 50px"></div>
+<div id="feedbackdiv"
+     style="margin-left:0px;height: 50px">
+</div>
 
 <div id="instructions">
 	<div class="alert alert-warning">
-		<button class="btn btn-primary" onmousedown="Exercises.init(); Exercises.random('intervall1');">Skapa nytt slumpexempel</button>
+		<button class="btn btn-primary"
+		        onmousedown="Exercises.init(); Exercises.random('intervall1');">Skapa nytt slumpexempel</button>
 		<hr />
 		<p>Klicka på Skapa-knappen ovan för att skapa ett nytt exempel.</p>
 	</div>
 </div>
 
 
-<hr />
- <ul class="pagination pagination-lg">
-    <li><a rel="pushstate" href="/file/tpless1" >1</a></li>
-    <li><a rel="pushstate" href="/file/tpless2" >2</a></li>
-    <li><a rel="pushstate" href="/file/tpless3" >3</a></li>
-    <li><a rel="pushstate" href="/file/tpless4" >4</a></li>
-    <li><a rel="pushstate" href="/file/tpless5" >5</a></li>
- </ul>
+<h4>Välj svårighetsgrad</h4>
+<ul class="pagination pagination-lg" >
+	<li>
+		<a rel="pushstate" class="active"
+		   href="/file/tpless1">1</a>
+	</li>
+	<li>
+		<a rel="pushstate"
+		   href="/file/tpless2">2</a>
+	</li>
+	<li>
+		<a rel="pushstate"
+		   href="/file/tpless3">3</a>
+	</li>
+	<li>
+		<a rel="pushstate"
+		   href="/file/tpless4">4</a>
+	</li>
+	<li>
+		<a rel="pushstate"
+		   href="/file/tpless5">5</a>
+	</li>
+</ul>
+
