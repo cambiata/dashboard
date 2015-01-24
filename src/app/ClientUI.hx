@@ -22,6 +22,7 @@ class ClientUI
 		
 		 js.Browser.window.setTimeout(function() {			 
 			 ScriptScoresX.getInstance().invokeBodyScores();
+			 ExerciseManager.getInstance().init();
 		 }, 0);
 		//ScriptScores.getInstanceX().init();
 		//ScriptScores.getInstance().render();			

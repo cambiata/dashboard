@@ -1,0 +1,51 @@
+
+<h1>Exercise</h1>
+<div class="nx-exercisex" data-type="test" >
+		<script class="nx-score"
+	        id="intervall123"
+	        type="text/xml"
+		  data-invoke="true"
+	        data-tempo="100"
+	        data-sounds="piano,silent"
+	        data-scaling="normal">
+		<score>
+			<config test="12345" />
+			<bar time="C">
+
+				<part clef="ClefG"
+				      key="Flat3">
+					<voice>
+						<note>
+							<headx level="5" />
+						</note>
+						<note>
+							<headx level="4" />
+						</note>
+						<note>
+							<headx level="3" />
+						</note>
+						<note>
+							<headx level="2" />
+						</note>
+					</voice>
+				</part>
+
+				<part clef="ClefG"
+				      key="Flat3"
+				      type="tplchain">
+					<voice>
+						<tpl level="1" />
+						<tpl level="0" />
+						<tpl level="-1" />
+						<tpl level="-2" />
+					</voice>
+				</part>
+
+			</bar>
+		</score>
+	</script>
+	
+</div>
+
+<hr />
+<div id="ex-test-parent">TESTPARENT</div>
