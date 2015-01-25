@@ -13,7 +13,7 @@
 	        id="intervall1"
 	        type="text/xml"
 	        data-tempo="100"
-	        data-sounds="piano,silent"
+	        data-sounds="piano,tpl-eflatmaj"
 	        data-scaling="normal">
 		<score>
 			<config test="12345" />

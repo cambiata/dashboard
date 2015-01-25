@@ -6,7 +6,7 @@
 	        type="text/xml"
 		  data-invoke="true"
 	        data-tempo="100"
-	        data-sounds="piano,silent"
+	        data-sounds="piano,acoustic-guitar"
 	        data-scaling="normal">
 		<score>
 			<config test="12345" />

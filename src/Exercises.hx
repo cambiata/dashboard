@@ -2,10 +2,14 @@ package;
 import js.Browser;
 import js.html.Element;
 import js.Lib;
+import nx3.audio.NotenrItem;
 import nx3.js.MouseInteraction;
 import nx3.NNote;
 import nx3.NNotes;
 import nx3.NScore;
+import nx3.PBar;
+import nx3.PNote;
+import nx3.PVoice;
 import nx3.utils.PartFilter;
 import nx3.utils.RandomBuilder;
 import nx3.utils.ScriptScoresX;
@@ -64,8 +68,18 @@ class Exercises
 			switch interaction {
 				case MouseInteraction.PlayNote(scoreId, pnote, noteinfo, sound): {
 					var note:NNote = pnote.nnote;
-					answerNotes.push(note);
 					
+					var pn:PNote = pnote;
+					var voice:PVoice = pn.getVoice();
+					var bar:PBar =  voice.getPart().getBar();
+					var noteidx = voice.getNotes().indexOf(pnote);
+					var baridx = bar.getScore().getBars().indexOf(bar);
+					var ninfo:NotenrItem = noteinfo;
+					if (ninfo.partnr > 0) {						
+						note = bar.getPart(0).getVoice(0).getNote(noteidx).nnote;						
+					}
+					
+					answerNotes.push(note);
 					feedback();
 					
 					//Browser.document.getElementById('randomFeedback').textContent = Std.string(answerNotes.length);
