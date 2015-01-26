@@ -1,0 +1,84 @@
+<h4>Att sjunga med tonplatser</h4>
+<h1>2. Sju tonplatser</h1>
+
+<p>Klicka på gröna playknappen nedan och lyssna till slingan som sjungs. Upprepa och sjung med:</p>
+
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-2"
+	        type="text/xml"
+	        data-tempo="50"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="4" />
+						<tpl level="-1" val="4" />
+						<tpl level="-2" val="4" />
+						<tpl level="-3" val="4" />
+						<tpl level="-4" val="4" />
+						<tpl level="-5" val="4" />
+						<tpl level="-6" val="4" />
+						<tpl level="-7" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+
+			
+		</score>
+	</script>
+</div>
+
+<p>När vi har klättrat sju steg i skalan kommer vi till grundtonen (tonplats 1) igen - det ryms med andra ord sju tonplatser inom en oktav.
+<br />Om vi sjunger en rörelse nedåt från grundtonen så kommer vi därför att under grundtonen hitta tonplats 7, under den tonplats 6 osv. Klicka på playknappen nedan och sjung med:</p>
+
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-2b"
+	        type="text/xml"
+	        data-tempo="50"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="4" />
+						<tpl level="1" val="4" />
+						<tpl level="2" val="4" />
+						<tpl level="3" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+
+			
+		</score>
+	</script>
+</div>
+
+<hr />
+
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-1">
+		<i class="fa fa-arrow-circle-o-left fa-2x pull-left"></i>
+		1. Räkna från grundtonen
+	</a>
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-3">
+		<i class="fa fa-arrow-circle-o-right fa-2x pull-right"></i>
+		3. Tonplatskedjor
+	</a>
+
+
+
+
+
+

@@ -1,0 +1,83 @@
+<h4>Att sjunga med tonplatser</h4>
+<h1>1. Räkna från grundtonen</h1>
+
+<p>Klicka på gröna playknappen nedan och lyssna till slingan som sjungs. Upprepa och sjung med:</p>
+
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-1"
+	        type="text/xml"
+	        data-tempo="60"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<!--part clef="ClefG"
+				      key="Sharp2">
+					<voice>
+						<note val="8"><headx level="5" /></note>
+						<note val="8"><headx level="4" /></note >
+						<note val="8"><headx level="3" /></note>
+						<note val="8"><headx level="2" /></note>
+						<note val="8"><headx level="1" /></note>
+						<note val="8"><headx level="2" /></note >
+						<note val="8"><headx level="3" /></note>
+						<note val="8"><headx level="4" /></note>
+					</voice>
+				</part-->
+
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-3" val="8" />
+						<tpl level="-4" val="8" />
+						<tpl level="-3" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-1" val="8" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			<bar >
+				<!--part>
+					<voice>
+						<note val="4"><headx level="5" /></note>
+						<note val="4"><headx level="6" /></note >
+						<note val="2"><headx level="5" /></note>
+					</voice>
+				</part-->
+
+				<part type="tplchain">
+					<voice>
+						<tpl level="0" val="4" />
+						<tpl level="1" val="4" />
+						<tpl level="0" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			
+		</score>
+	</script>
+</div>
+
+<p>Som du märker så använder vi här siffror för att skilja de olika tonhöjderna åt. Vi kallar dessa siffror för <b>tonplatser</b>.</p>
+<h3>Gruntonen - tonplats 1</h3>
+<p>Den viktigaste tonplatsen är tonplats 1 - vi kallar den för <b>grundton</b>. Det blir grundtonen som blir det "utgångsupunkten", "navet" som vi utgår från och relaterar de övriga tonhöjderna till.</p>
+<h3 class="label label-success">Tips</h3>
+<p>Du kan klicka på tonplatserna i exemplet ovan för att höra hur de låter.</p>
+
+<hr />
+
+<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-2">
+	<i class="fa fa-arrow-circle-o-right fa-2x pull-right"></i>
+	2. Sju tonplatser
+</a>
+
+

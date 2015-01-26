@@ -1,0 +1,72 @@
+<h4>Att sjunga med tonplatser</h4>
+<h1>4. Att tänka tonplatser</h1>
+
+<p>Nedan finner du samma tonplatskedja som du tidigare mött i avsnittet 1. Räkna från grundtonen. Den är dock förändrad så att vissa tonhöjder är gråfärgade. Dessa hörs inte heller när du spelar upp exemplet.</p>
+<h3>4a. Sjung paustonerna</h3>
+<p>Klicka på playknappen nedan och sjung med i exemplet. Sjung de gråfärgade tonplatserna. Försök sjunga dem så "stabilt" och "säkert" som du kan, trots att du inte har något stöd just på dessa.</p>
+
+<h3>4a. Tänk paustonerna</h3>
+<p>Upprepa, men sjung nu inte de gråfärgade paustonerna, utan "tänk" dem istället. Stäva efter att "tänka dem så ljudligt och tydligt" för ditt inre hörande som du kan.</p>
+
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-1"
+	        type="text/xml"
+	        data-tempo="40"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-3" val="8" />
+						<tpl level="-4" val="8" />
+						<tpl level="-3" val="8" pause="true" />
+						<tpl level="-2" val="8" pause="true" />
+						<tpl level="-1" val="8" pause="true" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			<bar >
+
+				<part type="tplchain">
+					<voice>
+						<tpl level="0" val="4" />
+						<tpl level="1" val="4" pause="true" />
+						<tpl level="0" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			
+		</score>
+	</script>
+</div>
+
+<h3 class="label label-success">Tips!</h3>
+<p>Om du vill så kan som steg på vägen mot ett "ljudlöst inre hörande" vissla eller nynna paustonerna, successivt allt svagare tills de är helt ljudlösa.</p>
+
+
+<hr />
+
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-3">
+		<i class="fa fa-arrow-circle-o-left fa-2x pull-left"></i>
+		3. Tonplatskedjor
+	</a>
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-5">
+		<i class="fa fa-arrow-circle-o-right fa-2x pull-right"></i>
+		5. Inre hörande - övningar
+	</a>
+
+

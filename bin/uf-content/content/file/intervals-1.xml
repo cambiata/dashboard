@@ -1,0 +1,7 @@
+<h1>Intervall</h1>	
+
+<h3>Stora och små terser och sexter</h3>
+<div class="ex-intervals" data-alternatives="L3, S3, L6, S6"></div>
+
+<h3>Stor sekund, ren kvart, förminskad kvint och liten septim</h3>
+<div class="ex-intervals" data-alternatives="S2, F5, R4, L7"></div>

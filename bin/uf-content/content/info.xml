@@ -1,7 +1,7 @@
 <h1>Levande notexempel</h1>
 <p>Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula. </p>
 	<div>
-		<script class="nx-score" id="test1" type="text/xml" data-tempo="100" data-sounds="piano,guitar,bass" data-scaling="small">
+		<script class="nx-score" id="test1" type="text/xml" data-tempo="100" data-sounds="piano" data-scaling="small">
 			<score><config test="12345"/><bar time="4/4"><part clef="ClefG" key="Flat2"><voice><note><headx level="4"/></note><note><headx level="5"/></note><note><headx level="4"/></note><note><headx level="3"/></note></voice></part></bar><bar><part><voice><note val="8"><headx level="2"/></note><note val="8"><headx level="3"/></note><note val="8"><headx level="4"/></note><note val="8"><headx level="5"/></note><note val="2"><headx level="4"/></note></voice></part></bar></score>
 		</script>
 	</div>
@@ -10,14 +10,14 @@
 <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla. </p>
 	
 	<div>
-		<script class="nx-score" id="test2" type="text/xml" data-scaling="mid">
+		<script class="nx-score" id="test2" type="text/xml" data-scaling="mid" data-sounds="piano">
 			<score><config test="12345"/><bar time="4/4"><part clef="ClefC" key="Sharp1"><voice><note><headx level="2"/></note><note><headx level="3"/></note><note val="2"><headx level="-2"/></note></voice></part></bar></score>
 		</script>
 	</div>
 <h2>Dynamiskt anpassad vidd</h2>
 <p>Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. </p>
 	<div >
-		<script class="nx-score" id="bach2" type="text/xml" data-tempo="80" data-scaling="small" data-width="auto">
+		<script class="nx-score" id="bach2" type="text/xml" data-tempo="80" data-scaling="small" data-width="auto" data-sounds="acoustic-guitar,acoustic-guitar">
 			<score>
 	<config test="12345" />
 	<bar time="C">

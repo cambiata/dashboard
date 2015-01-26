@@ -18,6 +18,7 @@ class MainDevExe
 		Wav16SoundManager.getInstance();
 		ScriptScoresX.getInstance().invokeBodyScores();
 		//ExerciseManager.getInstance().init();
+		ExerciseIntervals.getInstance().init();
 	}
 	
 }

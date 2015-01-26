@@ -7,10 +7,22 @@
 <p>
 	<h3>Aktuellt</h3>
 	
+	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/tpl-grund-1">
+		<i class="fa fa-file fa-2x pull-left"></i>
+		Att sjunga med <br />tonplatser
+	</a>	
+	
 	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/tpless1">
 		<i class="fa fa-file fa-2x pull-left"></i>
 		Tonplatser<br/>Ess-dur 1
 	</a>	
+
+	<a rel="pushstate" class="btn btn-lg btn-success" href="/file/intervals-1">
+		<i class="fa fa-file fa-2x pull-left"></i>
+		Intervall
+	</a>	
+	
+	
 	<hr />
 	
 	<h1>Välkommen kursdeltagare i Körakademin Plus!</h1>

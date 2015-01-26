@@ -126,6 +126,209 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var ExerciseIntervals = function() {
+};
+$hxClasses["ExerciseIntervals"] = ExerciseIntervals;
+ExerciseIntervals.__name__ = ["ExerciseIntervals"];
+ExerciseIntervals.getInstance = function() {
+	if(ExerciseIntervals.instance == null) return ExerciseIntervals.instance = new ExerciseIntervals(); else return ExerciseIntervals.instance;
+};
+ExerciseIntervals.prototype = {
+	init: function() {
+		var collection = dtx.Tools.find(".ex-intervals");
+		var $it0 = HxOverrides.iter(collection.collection);
+		while( $it0.hasNext() ) {
+			var node = $it0.next();
+			new Interval(node);
+		}
+	}
+	,__class__: ExerciseIntervals
+};
+var Interval = function(node) {
+	var _g = this;
+	this.parent = node;
+	this.alternatives = dtx.single.ElementManipulation.attr(node,"data-alternatives").split(",").map(function(a) {
+		return StringTools.trim(a);
+	});
+	this.semitones = this.alternatives.map(function(a1) {
+		return _g.getSemitones(a1);
+	});
+	haxe.Log.trace("new Inteval: " + Std.string(this.alternatives) + " " + Std.string(this.semitones),{ fileName : "ExerciseIntervals.hx", lineNumber : 61, className : "Interval", methodName : "new"});
+	this.createUI();
+	this.id = "ID-" + this.alternatives.join("") + StringTools.replace(Std.string(Math.random()),".","-");
+	this.waveId = "";
+	this.usediff = true;
+	this.newinterval();
+};
+$hxClasses["Interval"] = Interval;
+Interval.__name__ = ["Interval"];
+Interval.prototype = {
+	parent: null
+	,alternatives: null
+	,semitones: null
+	,id: null
+	,notenritems: null
+	,wave: null
+	,waveId: null
+	,usediff: null
+	,correct: null
+	,info: null
+	,createWave: function() {
+		var _g = this;
+		nx3.audio.NotenrTools.calculateSoundLengths(this.notenritems,null,60);
+		var this1 = (audiotools.utils.Wav16PartsBuilder.instance == null?audiotools.utils.Wav16PartsBuilder.instance = new audiotools.utils.Wav16PartsBuilder():audiotools.utils.Wav16PartsBuilder.instance).getPartsnotesWav16Async(this.waveId,this.notenritems,["piano","piano"]);
+		this1(function(wave) {
+			haxe.Log.trace("WAVE :-)",{ fileName : "ExerciseIntervals.hx", lineNumber : 75, className : "Interval", methodName : "createWave"});
+			haxe.Log.trace(wave.get_length(),{ fileName : "ExerciseIntervals.hx", lineNumber : 76, className : "Interval", methodName : "createWave"});
+			_g.wave = wave;
+		});
+	}
+	,getSemitones: function(type) {
+		type = type.toUpperCase();
+		switch(type) {
+		case "R1":case "F2":
+			return 0;
+		case "L2":case "Ö1":
+			return 1;
+		case "S2":case "F3":
+			return 2;
+		case "Ö2":case "L3":
+			return 3;
+		case "S3":case "F4":
+			return 4;
+		case "R4":case "Ö3":
+			return 5;
+		case "Ö4":case "F5":
+			return 6;
+		case "R5":case "F6":
+			return 7;
+		case "Ö5":case "L6":
+			return 8;
+		case "S6":case "F7":
+			return 9;
+		case "L7":case "Ö6":
+			return 10;
+		case "S7":case "F8":
+			return 11;
+		case "R8":case "F9":
+			return 12;
+		case "L9":case "Ö8":
+			return 1;
+		case "S9":case "F10":
+			return 2;
+		case "Ö9":case "L10":
+			return 3;
+		case "S10":case "F11":
+			return 4;
+		case "R11":case "Ö10":
+			return 5;
+		case "Ö11":case "F12":
+			return 6;
+		case "R12":
+			return 7;
+		default:
+			throw "Unimplemented interval size: " + type;
+		}
+	}
+	,createUI: function() {
+		var _g = this;
+		haxe.Log.trace(this.semitones,{ fileName : "ExerciseIntervals.hx", lineNumber : 109, className : "Interval", methodName : "createUI"});
+		var playbutton = dtx.Tools.create("button");
+		playbutton.textContent = "Play";
+		this.parent.appendChild(playbutton);
+		dtx.single.EventManagement.on(playbutton,"mousedown",null,$bind(this,this.play));
+		dtx.single.ElementManipulation.setAttr(playbutton,"class","nx-button nx-green");
+		var label = dtx.Tools.create("label");
+		label.textContent = " Spela samtidigt ";
+		var checkbox = dtx.Tools.create("input");
+		dtx.single.ElementManipulation.setAttr(checkbox,"type","checkbox");
+		dtx.single.EventManagement.on(checkbox,"change",null,function(e) {
+			_g.usediff = !checkbox.checked;
+			_g.newinterval();
+		});
+		label.appendChild(checkbox);
+		this.parent.appendChild(label);
+		dtx.single.DOMManipulation.append(this.parent,dtx.Tools.create("br"));
+		this.info = dtx.Tools.create("span");
+		this.info.textContent = "Info";
+		this.parent.appendChild(this.info);
+		dtx.single.DOMManipulation.append(this.parent,dtx.Tools.create("br"));
+		var idx = 0;
+		var _g1 = 0;
+		var _g11 = this.alternatives;
+		while(_g1 < _g11.length) {
+			var alt = _g11[_g1];
+			++_g1;
+			var abutton = dtx.Tools.create("button");
+			abutton.textContent = this.alternatives[idx];
+			var semi = [this.semitones[idx]];
+			dtx.single.ElementManipulation.setAttr(abutton,"class","btn btn-primary btn-icon btn-circle btn-lg");
+			dtx.single.ElementManipulation.setAttr(abutton,"style","margin:4px");
+			this.parent.appendChild(abutton);
+			dtx.single.EventManagement.on(abutton,"mousedown",null,(function(semi) {
+				return function(e1) {
+					_g.answer(semi[0]);
+				};
+			})(semi));
+			idx++;
+		}
+	}
+	,newinterval: function(e,delay) {
+		if(delay == null) delay = 0;
+		var _g = this;
+		var rnd = Math.floor(Math.random() * this.alternatives.length);
+		var rndsemi = this.semitones[rnd];
+		var rnd1 = Std["int"](Math.random() * 24) + 60;
+		var rnd2;
+		if(Math.random() > 0.5) rnd2 = rnd1 + rndsemi; else rnd2 = rnd1 - rndsemi;
+		this.waveId = this.id + "-" + rnd1 + "-" + rnd2;
+		while(rnd1 < 48) {
+			rnd1++;
+			rnd2++;
+		}
+		while(rnd2 < 48) {
+			rnd1++;
+			rnd2++;
+		}
+		haxe.Log.trace(Std.string([rnd,rndsemi,rnd1,rnd2,this.waveId]),{ fileName : "ExerciseIntervals.hx", lineNumber : 173, className : "Interval", methodName : "newinterval"});
+		var diff;
+		if(this.usediff) diff = nx3.ENoteValTools.value(nx3.ENoteVal.Nv4); else diff = 0;
+		this.notenritems = this.createNotenrItems(rnd1,rnd2,diff);
+		this.createWave();
+		this.correct = rndsemi;
+		var altcopy = this.alternatives.slice();
+		var lastalt = altcopy.pop();
+		var otheralts = altcopy.join(", ");
+		window.setTimeout(function() {
+			_g.info.textContent = "Ett nytt slumpintervall bestående av något av intervallen " + otheralts + " och " + lastalt + " har skapats. Klicka på playknappen för att höra intervallet spelas.";
+		},delay);
+	}
+	,playCallback: function(id,pos) {
+	}
+	,play: function(e) {
+		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).initSound(this.wave,$bind(this,this.playCallback),this.waveId);
+		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).start(0);
+		this.info.textContent = "Klicka på den knapp nedan som motsvarar det intervall du hör spelas";
+	}
+	,createNotenrItems: function(rnd1,rnd2,diff) {
+		if(diff == null) diff = 0;
+		haxe.Log.trace("diff: " + diff,{ fileName : "ExerciseIntervals.hx", lineNumber : 204, className : "Interval", methodName : "createNotenrItems"});
+		var notenritem1 = nx3.audio.NotenrTools.createNotenrItem(0,0,nx3.ENoteValTools.value(nx3.ENoteVal.Nv4),0,0,rnd1,null,null,null,"",false,true,0,0,nx3.ENoteValTools.value(nx3.ENoteVal.Nv1) + nx3.ENoteValTools.value(nx3.ENoteVal.Nv1),null);
+		var notenritem2 = nx3.audio.NotenrTools.createNotenrItem(0,diff,nx3.ENoteValTools.value(nx3.ENoteVal.Nv4),0,0,rnd2,null,null,null,"",false,true,1,0,nx3.ENoteValTools.value(nx3.ENoteVal.Nv1) + nx3.ENoteValTools.value(nx3.ENoteVal.Nv1),null);
+		var part1 = [notenritem1];
+		var part2 = [notenritem2];
+		var parts = [part1,part2];
+		return parts;
+	}
+	,answer: function(a) {
+		haxe.Log.trace("answer : " + a,{ fileName : "ExerciseIntervals.hx", lineNumber : 216, className : "Interval", methodName : "answer"});
+		if(this.correct == a) {
+			dtx.single.ElementManipulation.setInnerHTML(this.info,"<b>Rätt!</b> Vänta medan ett nytt slumpexempel skapas...");
+			this.newinterval(null,1200);
+		} else this.info.textContent = "Nänä! Klicka på playknappen, lyssna och försök igen.";
+	}
+	,__class__: Interval
+};
 var ExerciseManager = function() {
 };
 $hxClasses["ExerciseManager"] = ExerciseManager;
@@ -304,7 +507,7 @@ Exercises.playRandom = function() {
 	};
 	var this1 = (audiotools.utils.Wav16PartsBuilder.instance == null?audiotools.utils.Wav16PartsBuilder.instance = new audiotools.utils.Wav16PartsBuilder():audiotools.utils.Wav16PartsBuilder.instance).getScoreWav16Async(Exercises.nscoreRandom,60);
 	this1(function(wav16) {
-		haxe.Log.trace("FINISHED nscore1",{ fileName : "Exercises.hx", lineNumber : 219, className : "Exercises", methodName : "playRandom"});
+		haxe.Log.trace("FINISHED nscore1",{ fileName : "Exercises.hx", lineNumber : 217, className : "Exercises", methodName : "playRandom"});
 		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).initSound(wav16,playCallback,Exercises.nscoreRandom.uuid + "60");
 		(audiotools.sound.Wav16SoundManager.instance == null?audiotools.sound.Wav16SoundManager.instance = new audiotools.sound.Wav16SoundManager():audiotools.sound.Wav16SoundManager.instance).start(0);
 		Exercises.showInstructions("\r\n\t\t\t <button class=\"btn btn-success\" onmousedown=\"Exercises.playRandom()\">Play</button><button class=\"btn btn-warning\" style=\"margin-left:4px\" onmousedown=\"Exercises.clear(true, false)\">Rensa</button>\r\n\t\t\t <hr />\r\n\t\t\t <p>När tonföljden (" + Exercises.count + " toner lång) spelats färdig: Klicka på nothuvudena ovan i den ordning du uppfattar dem. För varje ton du klickar på så färgas motsvarande runda markering ovan. Grön markering visar att tonhöjden är riktig, gul markering visar att tonhöjden du klickat på finns med i lösningen, men på annan plats.</p>\r\n\t\t\t ");
@@ -1623,6 +1826,7 @@ app.ClientUI.initScores = function(id) {
 	window.setTimeout(function() {
 		(nx3.utils.ScriptScoresX.instance == null?nx3.utils.ScriptScoresX.instance = new nx3.utils.ScriptScoresX():nx3.utils.ScriptScoresX.instance).invokeBodyScores();
 		(ExerciseManager.instance == null?ExerciseManager.instance = new ExerciseManager():ExerciseManager.instance).init();
+		(ExerciseIntervals.instance == null?ExerciseIntervals.instance = new ExerciseIntervals():ExerciseIntervals.instance).init();
 	},0);
 	try {
 		window.document.getElementById("btnPitch").onmousedown = function(e) {
@@ -3121,13 +3325,33 @@ audiotools.utils.Wav16PartsBuilder.prototype = {
 		}
 		return f.future;
 	}
+	,getPartsnotesWav16Async: function(id,partsnotes,partsSounds) {
+		var _g = this;
+		var f = new tink.core.FutureTrigger();
+		var key = id + "";
+		if(this.scorecache.exists(key)) {
+			haxe.Log.trace("Get wav16 from cache " + key,{ fileName : "Wav16PartsBuilder.hx", lineNumber : 225, className : "audiotools.utils.Wav16PartsBuilder", methodName : "getPartsnotesWav16Async"});
+			var wav16 = this.scorecache.get(key);
+			f.trigger(wav16);
+		} else {
+			var files = nx3.audio.NotenrTools.getPartsnotesMp3files(partsnotes,partsSounds);
+			var this1 = this.initAsync(files);
+			this1(function(soundmap) {
+				var wav161 = _g.buildSoundmap(partsnotes,soundmap);
+				_g.scorecache.set(key,wav161);
+				haxe.Log.trace("Set wav16 to cache " + key,{ fileName : "Wav16PartsBuilder.hx", lineNumber : 234, className : "audiotools.utils.Wav16PartsBuilder", methodName : "getPartsnotesWav16Async"});
+				f.trigger(wav161);
+			});
+		}
+		return f.future;
+	}
 	,removeScoreFromCache: function(nscore,tempo,partsSounds) {
 		if(tempo == null) tempo = 60;
 		var key = nscore.uuid + (":" + tempo + ":" + Std.string(partsSounds));
 		if(this.scorecache.exists(key)) {
 			this.scorecache.remove(key);
-			haxe.Log.trace("remove key " + key,{ fileName : "Wav16PartsBuilder.hx", lineNumber : 222, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
-		} else haxe.Log.trace("can not find key " + key + " to remove",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 224, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
+			haxe.Log.trace("remove key " + key,{ fileName : "Wav16PartsBuilder.hx", lineNumber : 248, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
+		} else haxe.Log.trace("can not find key " + key + " to remove",{ fileName : "Wav16PartsBuilder.hx", lineNumber : 250, className : "audiotools.utils.Wav16PartsBuilder", methodName : "removeScoreFromCache"});
 	}
 	,__class__: audiotools.utils.Wav16PartsBuilder
 };
@@ -15300,6 +15524,10 @@ nx3.audio.NotenrTools.getPartsnotes = function(nbars,tempo,resolveTies) {
 };
 nx3.audio.NotenrTools.tplToNotenritem = function(partkey,partmodus,partoctave,level,sign) {
 	return null;
+};
+nx3.audio.NotenrTools.createNotenrItem = function(partpos,pos,noteval,level,notenr,midinr,headsign,keysign,playsign,notename,tie,playable,partnr,barnr,barvalue,note) {
+	var item = { partposition : partpos, position : pos, noteval : noteval, level : level, notenr : notenr, midinr : midinr, headsign : headsign, keysign : keysign, playsign : playsign, notename : notename, tie : tie, playable : playable, partnr : partnr, barnr : barnr, barvalue : barvalue, note : note};
+	return item;
 };
 nx3.audio.NotenrTools.prototype = {
 	clef: null

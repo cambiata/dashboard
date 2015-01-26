@@ -1,0 +1,123 @@
+<h4>Att sjunga med tonplatser</h4>
+<h1>3. Tonplatskedjor</h1>
+
+<p>Med hjälp av tonplatserna kan vi utforma små melodier - "tonplatskedjor". Klicka på playknappen i exemplen nedan och sjung med:</p>
+
+<p>Exempel 3a</p>
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-3a"
+	        type="text/xml"
+	        data-tempo="40"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-3" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="0" val="1" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			
+		</score>
+	</script>
+</div>
+
+<p>Exempel 3b</p>
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-3b"
+	        type="text/xml"
+	        data-tempo="40"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="8" />
+						<tpl level="1" val="8" />
+						<tpl level="0" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="1" val="8" />
+						<tpl level="2" val="8" />
+						<tpl level="3" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="0" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			
+		</score>
+	</script>
+</div>
+
+<p>Exempel 3c</p>
+<div>
+	<script class="nx-score"
+	        id="tpl-grund-3c"
+	        type="text/xml"
+	        data-tempo="40"
+	        data-sounds="tpl-dmaj"
+	        data-scaling="normal">
+		<score>
+			<bar time="C">
+				<part clef="ClefG"
+				      key="Sharp2"
+				      type="tplchain">
+					<voice>
+						<tpl level="0" val="8" />
+						<tpl level="-1" val="8" />
+						<tpl level="-2" val="8" />
+						<tpl level="-3" val="8" />
+						<tpl level="-4" val="8" />
+						<tpl level="0" val="8" />
+						<tpl level="-4" val="8" />
+						<tpl level="1" val="8" />
+						<tpl level="0" val="2" />
+					</voice>
+				</part>
+
+			</bar>
+			
+			
+		</score>
+	</script>
+</div>
+
+<h3 class="label label-warning">Uppgift</h3>
+<p>Pröva nu att gå tillbaka till melodierna ovan och sjunga dem på egen hand. Om du känner dig osäker på hur en tonplats låter så kan du klicka på tonplatsen ifråga - då hör du den sjungas. </p>
+
+
+<hr />
+
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-2">
+		<i class="fa fa-arrow-circle-o-left fa-2x pull-left"></i>
+		2. Sju tonplatser
+	</a>
+
+	<a rel="pushstate" class="btn btn-primary" href="/file/tpl-grund-4">
+		<i class="fa fa-arrow-circle-o-right fa-2x pull-right"></i>
+		4. Att tänka tonplatser
+	</a>
+
+
+
